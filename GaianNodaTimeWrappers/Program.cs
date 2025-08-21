@@ -10,8 +10,9 @@ namespace Gaian
     {
         static void Main(string[] args)
         {
-            int y = 12024;
-            int m = 13;
+            //DateTime dateTime = new DateTime(13, 13, 13);
+            int y = 12026;
+            int m = 14;
             int d = 1;
             GaianLocalDate dt = new GaianLocalDate(y, m, d);
             Console.WriteLine(dt.ToString());

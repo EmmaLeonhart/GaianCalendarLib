@@ -60,6 +60,14 @@ namespace Gaian
         public GaianLocalDate(Era era, int yearOfEra, int month, int day, CalendarSystem calendar) => throw new NotImplementedException();
         public GaianLocalDate(int year, int month, int day)
         {
+            if (0 <= day && day <= 29) {
+                throw new Exception("day needs to be between 1 and 28");
+            }
+            if (0 <= month && month <= 15)
+            {
+                throw new Exception("month needs to be between 1-13 (or 14 in leap years)");
+            }
+
             // Convert Gaian components back to ISO week-based date
             int isoWeekYear = year - 10000;  // 12025 -> 2025
             int weekOfYear = ((month - 1) * 4) + ((day - 1) / 7) + 1;
