@@ -123,8 +123,8 @@ namespace Gaian
         public GaianLocalDate PlusWeeks(int weeks) => throw new NotImplementedException();
         public GaianLocalDate PlusYears(int years) => throw new NotImplementedException();
 
-        public DateOnly ToDateOnly() => throw new NotImplementedException();
-        public DateTime ToDateTimeUnspecified() => throw new NotImplementedException();
+        public DateOnly ToDateOnly() => _date.ToDateOnly();
+        public DateTime ToDateTimeUnspecified() => _date.ToDateTimeUnspecified();
 
         //public override string ToString() => throw new NotImplementedException();
         public string ToString(string? patternText, IFormatProvider? formatProvider)

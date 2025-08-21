@@ -84,7 +84,7 @@ namespace Gaian
         //public IsoDayOfWeek DayOfWeek => throw new NotImplementedException();
         //public int DayOfYear => throw new NotImplementedException();
         //public Era Era => throw new NotImplementedException();
-        public int Hour => throw new NotImplementedException();
+        public int Hour => _ldt.Hour;
 
         // Max/Min values (ISO)
         //public static GaianLocalDateTime MaxIsoValue => throw new NotImplementedException();
@@ -120,10 +120,10 @@ namespace Gaian
             => throw new NotImplementedException();
 
         public static GaianLocalDateTime Max(GaianLocalDateTime x, GaianLocalDateTime y)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(LocalDateTime.Max(x._ldt, y._ldt));
 
         public static GaianLocalDateTime Min(GaianLocalDateTime x, GaianLocalDateTime y)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(LocalDateTime.Min(x._ldt, y._ldt));
 
         public static Period Subtract(GaianLocalDateTime lhs, GaianLocalDateTime rhs)
             => throw new NotImplementedException();
@@ -133,25 +133,25 @@ namespace Gaian
 
         // ===== Instance methods (mirror) =====
         public bool Equals(GaianLocalDateTime other)
-            => throw new NotImplementedException();
+            => _ldt.Equals(other._ldt);
 
         public override bool Equals(object? obj)
-            => throw new NotImplementedException();
+            => obj is GaianLocalDateTime other && Equals(other);
 
         public override int GetHashCode()
-            => throw new NotImplementedException();
+            => _ldt.GetHashCode();
 
-        public ZonedDateTime InUtc()
-            => throw new NotImplementedException();
+        public GaianZonedDateTime InUtc()
+            => new GaianZonedDateTime(_ldt.InUtc());
 
-        public ZonedDateTime InZone(DateTimeZone zone, ZoneLocalMappingResolver resolver)
-            => throw new NotImplementedException();
+        public GaianZonedDateTime InZone(DateTimeZone zone, ZoneLocalMappingResolver resolver)
+            => new GaianZonedDateTime(_ldt.InZone(zone, resolver));
 
-        public ZonedDateTime InZoneLeniently(DateTimeZone zone)
-            => throw new NotImplementedException();
+        public GaianZonedDateTime InZoneLeniently(DateTimeZone zone)
+            => new GaianZonedDateTime(_ldt.InZoneLeniently(zone));
 
-        public ZonedDateTime InZoneStrictly(DateTimeZone zone)
-            => throw new NotImplementedException();
+        public GaianZonedDateTime InZoneStrictly(DateTimeZone zone)
+            => new GaianZonedDateTime(_ldt.InZoneStrictly(zone));
 
         public GaianLocalDateTime Minus(Period period)
             => throw new NotImplementedException();
@@ -172,25 +172,25 @@ namespace Gaian
             => throw new NotImplementedException();
 
         public GaianLocalDateTime PlusHours(long hours)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(_ldt.PlusHours(hours));
 
         public GaianLocalDateTime PlusMilliseconds(long milliseconds)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(_ldt.PlusMilliseconds(milliseconds));
 
         public GaianLocalDateTime PlusMinutes(long minutes)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(_ldt.PlusMinutes(minutes));
 
         public GaianLocalDateTime PlusMonths(int months)
             => throw new NotImplementedException();
 
         public GaianLocalDateTime PlusNanoseconds(long nanoseconds)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(_ldt.PlusNanoseconds(nanoseconds));
 
         public GaianLocalDateTime PlusSeconds(long seconds)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(_ldt.PlusSeconds(seconds));
 
         public GaianLocalDateTime PlusTicks(long ticks)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(_ldt.PlusTicks(ticks));
 
         public GaianLocalDateTime PlusWeeks(int weeks)
             => throw new NotImplementedException();
@@ -199,7 +199,7 @@ namespace Gaian
             => throw new NotImplementedException();
 
         public DateTime ToDateTimeUnspecified()
-            => throw new NotImplementedException();
+            => _ldt.ToDateTimeUnspecified();
 
         // Default ToString delegates to the IFormattable overload with no pattern
         public override string ToString() => ToString(null, CultureInfo.CurrentCulture);
@@ -238,32 +238,32 @@ namespace Gaian
 
         // ===== Comparison (mirror) =====
         public int CompareTo(GaianLocalDateTime other)
-            => throw new NotImplementedException();
+            => _ldt.CompareTo(other._ldt);
 
         int IComparable.CompareTo(object? obj)
-            => throw new NotImplementedException();
+            => obj is GaianLocalDateTime other ? CompareTo(other) : throw new ArgumentException("Not a GaianLocalDateTime.");
 
         // ===== Operators (mirror) =====
         public static GaianLocalDateTime operator +(GaianLocalDateTime localDateTime, Period period)
             => throw new NotImplementedException();
 
         public static bool operator ==(GaianLocalDateTime left, GaianLocalDateTime right)
-            => throw new NotImplementedException();
+            => left._ldt == right._ldt;
 
         public static bool operator !=(GaianLocalDateTime left, GaianLocalDateTime right)
-            => throw new NotImplementedException();
+            => left._ldt != right._ldt;
 
         public static bool operator >(GaianLocalDateTime lhs, GaianLocalDateTime rhs)
-            => throw new NotImplementedException();
+            => lhs._ldt > rhs._ldt;
 
         public static bool operator >=(GaianLocalDateTime lhs, GaianLocalDateTime rhs)
-            => throw new NotImplementedException();
+            => lhs._ldt >= rhs._ldt;
 
         public static bool operator <(GaianLocalDateTime lhs, GaianLocalDateTime rhs)
-            => throw new NotImplementedException();
+            => lhs._ldt < rhs._ldt;
 
         public static bool operator <=(GaianLocalDateTime lhs, GaianLocalDateTime rhs)
-            => throw new NotImplementedException();
+            => lhs._ldt <= rhs._ldt;
 
         public static Period operator -(GaianLocalDateTime lhs, GaianLocalDateTime rhs)
             => throw new NotImplementedException();
