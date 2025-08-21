@@ -149,12 +149,15 @@ namespace Gaian
         // --- Operators (mirror) ---
         public static LocalDateTime operator +(GaianLocalDate date, LocalTime time) => throw new NotImplementedException();
         public static GaianLocalDate operator +(GaianLocalDate date, Period period) => throw new NotImplementedException();
-        public static bool operator ==(GaianLocalDate lhs, GaianLocalDate rhs) => throw new NotImplementedException();
-        public static bool operator !=(GaianLocalDate lhs, GaianLocalDate rhs) => throw new NotImplementedException();
-        public static bool operator <(GaianLocalDate lhs, GaianLocalDate rhs) => throw new NotImplementedException();
-        public static bool operator <=(GaianLocalDate lhs, GaianLocalDate rhs) => throw new NotImplementedException();
-        public static bool operator >(GaianLocalDate lhs, GaianLocalDate rhs) => throw new NotImplementedException();
-        public static bool operator >=(GaianLocalDate lhs, GaianLocalDate rhs) => throw new NotImplementedException();
+        // Equality / inequality
+        public static bool operator ==(GaianLocalDate lhs, GaianLocalDate rhs) => lhs._date == rhs._date;
+        public static bool operator !=(GaianLocalDate lhs, GaianLocalDate rhs) => lhs._date != rhs._date;
+
+        // Ordering (use LocalDate's comparison)
+        public static bool operator <(GaianLocalDate lhs, GaianLocalDate rhs) => lhs._date < rhs._date;
+        public static bool operator <=(GaianLocalDate lhs, GaianLocalDate rhs) => lhs._date <= rhs._date;
+        public static bool operator >(GaianLocalDate lhs, GaianLocalDate rhs) => lhs._date > rhs._date;
+        public static bool operator >=(GaianLocalDate lhs, GaianLocalDate rhs) => lhs._date >= rhs._date;
         public static Period operator -(GaianLocalDate lhs, GaianLocalDate rhs) => throw new NotImplementedException();
         public static GaianLocalDate operator -(GaianLocalDate date, Period period) => throw new NotImplementedException();
 
