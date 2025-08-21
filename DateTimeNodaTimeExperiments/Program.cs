@@ -12,72 +12,64 @@ namespace DateTimeNodaTimeExperiments
             // Example date
             var zone = DateTimeZoneProviders.Tzdb.GetSystemDefault(); // or: DateTimeZoneProviders.Tzdb["America/Vancouver"]
             LocalDate date = SystemClock.Instance.GetCurrentInstant().InZone(zone).Date;
-            date = new LocalDate(2026, 1, 1);
-            // Use ISO week rules
-            var weekYearRules = WeekYearRules.Iso;
+            date = new LocalDate(30, 4, 7);
 
-            // Get the ISO week year and ISO week number
-            int weekYear = weekYearRules.GetWeekYear(date);
-            int weekOfYear = weekYearRules.GetWeekOfWeekYear(date);
-            int day = (int)date.DayOfWeek; // Mon=1 … Sun=7
 
-            //Console.WriteLine($"ISO Week Year: {weekYear}, Week: {weekOfYear}, Day: {day}");
 
-            var (q, r) = Math.DivRem(weekOfYear, 4);
+            Console.WriteLine(GaiaDateString(date));
 
-            //Console.WriteLine("q = zero indexed month");
-            //Console.WriteLine("q: " + q);
-            //Console.WriteLine("q + 1 = " + (q + 1));
-            int month = q + 1;
-            //Console.WriteLine("r = 1 indexed week");
-            //Console.WriteLine("r: " + r);
+            date = new LocalDate(33, 4, 3);
 
-            string monthName = GetMonth(month);
-            int monthday = day + weekOfYear - 1;
 
-            Console.WriteLine("Day name: " + monthName + " " + monthday);
+            Console.WriteLine(GaiaDateString(date));
 
-            int i = 1;
+            bool q = true;
 
-            while (i < 365)
+            while (q)
             {
-                date = date.PlusDays(1);
-                //Console.WriteLine(date);
-                string g = GaiaDateString(date);
-                Console.WriteLine(g);
-                i++;
+
+                date = date.PlusDays(-1);
+
+                Console.WriteLine(GaiaDateString(date));
             }
 
-            //Console.WriteLine("Hello, World!");
-            //DateTime dt = DateTime.Now;
-            //Console.WriteLine(dt.ToString());
 
-            //var tz = DateTimeZoneProviders.Tzdb.GetSystemDefault();
-            //var clock = SystemClock.Instance;
 
-            //// Snapshot "now"
-            //Instant start = clock.GetCurrentInstant();
-            //ZonedDateTime startLocal = start.InZone(tz);
+            //// Use ISO week rules
+            //var weekYearRules = WeekYearRules.Iso;
 
-            //// Keep the wall-clock time constant
-            //LocalDate startDate = startLocal.Date;
-            //LocalTime startTime = startLocal.TimeOfDay;
+            //// Get the ISO week year and ISO week number
+            //int weekYear = weekYearRules.GetWeekYear(date);
+            //int weekOfYear = weekYearRules.GetWeekOfWeekYear(date);
+            //int day = (int)date.DayOfWeek; // Mon=1 … Sun=7
 
-            //StarDate sd = new StarDate(startTime);
+            ////Console.WriteLine($"ISO Week Year: {weekYear}, Week: {weekOfYear}, Day: {day}");
 
-            //sd = StarDate.Now;
+            //var (q, r) = Math.DivRem(weekOfYear, 4);
 
-            //Console.WriteLine($"Start (local): {startLocal}");
+            ////Console.WriteLine("q = zero indexed month");
+            ////Console.WriteLine("q: " + q);
+            ////Console.WriteLine("q + 1 = " + (q + 1));
+            //int month = q + 1;
 
-            //for (int i = 0; i < 365; i++)
+
+            //string monthName = GetMonth(month);
+            //int monthday = day + weekOfYear - 1;
+
+            //Console.WriteLine("Day name: " + monthName + " " + monthday);
+
+            //int i = 1;
+
+            //while (i < 365)
             //{
-            //    LocalDate d = startDate.PlusDays(i);
-            //    LocalDateTime ldt = d + startTime;
-
-            //    // Resolve DST gaps/overlaps sensibly
-            //    ZonedDateTime zdt = tz.AtLeniently(ldt);
-            //    Console.WriteLine(zdt);
+            //    date = date.PlusDays(1);
+            //    //Console.WriteLine(date);
+            //    string g = GaiaDateString(date);
+            //    Console.WriteLine(g);
+            //    i++;
             //}
+
+
         }
 
         private static string GaiaDateString(LocalDate date)
