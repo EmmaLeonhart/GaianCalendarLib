@@ -9,8 +9,6 @@ namespace Gaian
     {
         static void Main(string[] args)
         {
-            //Console.WriteLine(DateTime.Now.MonthName);
-            // Example _date
             // Pick your time zone
             DateTimeZone zone = DateTimeZoneProviders.Tzdb["America/Vancouver"];
 
@@ -20,73 +18,27 @@ namespace Gaian
             // Get the current "now" instant
             Instant now = clock.GetCurrentInstant();
 
-            // Convert that to a ZonedDateTime
+            // Convert to a ZonedDateTime
             ZonedDateTime zdt = now.InZone(zone);
 
-            // Extract the LocalDate
-            LocalDateTime today = zdt.LocalDateTime;
+            // Convert to an OffsetDateTime
+            OffsetDateTime odt = zdt.ToOffsetDateTime();
 
-            Console.WriteLine(zdt);  // e.g. 2025-08-20
+            Console.WriteLine(odt); // baseline NodaTime output
 
+            // Wrap in your GaianOffsetDateTime
+            GaianOffsetDateTime gdt = new GaianOffsetDateTime(odt);
 
-            GaianZonedDateTime dt = new GaianZonedDateTime(zdt);
-
-            Console.WriteLine(dt);
-
-            Console.WriteLine(dt.Year);
-
-            Console.WriteLine(dt.Month.ToString());
-
-
-            Console.WriteLine(dt.DayOfWeek);
-
-
-            Console.WriteLine(dt.DayOfYear);
-
-
-            Console.WriteLine(dt.Day);
-
-
-
-
-
-
-            //// Use ISO week rules
-            //var weekYearRules = WeekYearRules.Iso;
-
-            //// Get the ISO week year and ISO week number
-            //int weekYear = weekYearRules.GetWeekYear(_date);
-            //int weekOfYear = weekYearRules.GetWeekOfWeekYear(_date);
-            //int day = (int)_date.DayOfWeek; // Mon=1 … Sun=7
-
-            ////Console.WriteLine($"ISO Week Year: {weekYear}, Week: {weekOfYear}, Day: {day}");
-
-            //var (q, r) = Math.DivRem(weekOfYear, 4);
-
-            ////Console.WriteLine("q = zero indexed month");
-            ////Console.WriteLine("q: " + q);
-            ////Console.WriteLine("q + 1 = " + (q + 1));
-            //int month = q + 1;
-
-
-            //string monthName = GetMonth(month);
-            //int monthday = day + weekOfYear - 1;
-
-            //Console.WriteLine("Day name: " + monthName + " " + monthday);
-
-            //int i = 1;
-
-            //while (i < 365)
-            //{
-            //    _date = _date.PlusDays(1);
-            //    //Console.WriteLine(_date);
-            //    string g = GaiaDateString(_date);
-            //    Console.WriteLine(g);
-            //    i++;
-            //}
-
-
+            Console.WriteLine(gdt);              // Gaian-style ToString
+            Console.WriteLine(gdt.Year);         // Year number
+            Console.WriteLine(gdt.Month.ToString());        // GaianMonth wrapper (calls ToString → name)
+            Console.WriteLine(gdt.DayOfWeek);    // IsoDayOfWeek
+            Console.WriteLine(gdt.DayOfYear);    // 1..365/366
+            Console.WriteLine(gdt.Day);          // Day number in month
+            Console.WriteLine(gdt.Offset);       // Offset, e.g. -07
         }
+
+
 
         private static string GaiaDateString(LocalDate date)
         {
