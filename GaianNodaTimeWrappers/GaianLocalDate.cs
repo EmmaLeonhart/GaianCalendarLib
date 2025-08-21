@@ -8,6 +8,7 @@ using NodaTime.Text;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System;
+using System.ComponentModel.Design;
 
 namespace Gaian
 {
@@ -66,19 +67,25 @@ namespace Gaian
                 throw new ArgumentOutOfRangeException(nameof(day), "Day must be between 1 and 28");
             }
 
-            // Check if this is a leap year (has 53 weeks, allowing month 14)
-            int isoWeekYear = year - 10000;
+                // Check if this is a leap year (has 53 weeks, allowing month 14)
+                int isoWeekYear = year - 10000;
             var weekYearRules = WeekYearRules.Iso;
             int weeksInYear = weekYearRules.GetWeeksInWeekYear(isoWeekYear);
             bool isLeapYear = weeksInYear == 53;
             int maxMonth = isLeapYear ? 14 : 13;
 
+            
+
             // Validate month range
             if (month < 1 || month > maxMonth)
             {
-                string leapInfo = isLeapYear ? " (leap year with 14 months)" : " (regular year with 13 months)";
+                string leapInfo = isLeapYear ? " (" + year + " is a leap year with 14 months)" : " (" + year + " is a regular year with 13 months)";
                 throw new ArgumentOutOfRangeException(nameof(month), 
                     $"Month must be between 1 and {maxMonth}{leapInfo}");
+            }
+
+            if (month == 14 && day > 7) {
+                throw new ArgumentOutOfRangeException("Leap month (14) only has 7 days");
             }
 
             try
