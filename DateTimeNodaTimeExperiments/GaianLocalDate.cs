@@ -50,14 +50,14 @@ namespace Gaian
 
         // --- Properties (mirror) ---
         public CalendarSystem Calendar => throw new NotImplementedException();
-        public int Day => throw new NotImplementedException();
-        public IsoDayOfWeek DayOfWeek => throw new NotImplementedException();
-        public int DayOfYear => throw new NotImplementedException();
+        public int Day => GaianTools.GetDay(_date);
+        public IsoDayOfWeek DayOfWeek => GaianTools.GetDayOfWeek(_date);
+        public int DayOfYear => GaianTools.GetDayOfYear(_date);
         public Era Era => throw new NotImplementedException();
         public static GaianLocalDate MaxIsoValue => throw new NotImplementedException();
         public static GaianLocalDate MinIsoValue => throw new NotImplementedException();
-        public int Month => throw new NotImplementedException();
-        public int Year => throw new NotImplementedException();
+        public int Month => GaianTools.GetMonth(_date);
+        public int Year => GaianTools.GetYear(_date);
         public int YearOfEra => throw new NotImplementedException();
 
         // --- Static methods (mirror) ---

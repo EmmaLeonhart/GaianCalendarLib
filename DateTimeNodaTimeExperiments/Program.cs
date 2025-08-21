@@ -28,10 +28,22 @@ namespace Gaian
             Console.WriteLine(today);  // e.g. 2025-08-20
 
 
-            GaianLocalDate lsd = new GaianLocalDate(today);
+            GaianLocalDate dt = new GaianLocalDate(today);
 
-            Console.WriteLine(lsd);
+            Console.WriteLine(dt);
 
+            Console.WriteLine(dt.Year);
+
+            Console.WriteLine(dt.Month);
+
+
+            Console.WriteLine(dt.DayOfWeek);
+
+
+            Console.WriteLine(dt.DayOfYear);
+
+
+            Console.WriteLine(dt.Day);
 
 
 
