@@ -101,29 +101,29 @@ namespace Gaian
         // ========= Instance methods (mirror) =========
         public void Deconstruct(out GaianLocalDateTime localDateTime, out DateTimeZone dateTimeZone, out Offset offset) => throw new NotImplementedException(); // L42-43 (Gaian-adapted)
 
-        public bool Equals(GaianZonedDateTime other) => throw new NotImplementedException();   // L44
-        public override bool Equals(object? obj) => throw new NotImplementedException();       // L45-46
-        public override int GetHashCode() => throw new NotImplementedException();              // L49
+        public bool Equals(GaianZonedDateTime other) => _zdt.Equals(other._zdt);   // L44
+        public override bool Equals(object? obj) => obj is GaianZonedDateTime other && Equals(other);       // L45-46
+        public override int GetHashCode() => _zdt.GetHashCode();              // L49
 
-        public ZoneInterval GetZoneInterval() => throw new NotImplementedException();          // L49-50
-        public bool IsDaylightSavingTime() => throw new NotImplementedException();             // L51-56
+        public ZoneInterval GetZoneInterval() => _zdt.GetZoneInterval();          // L49-50
+        public bool IsDaylightSavingTime() => _zdt.IsDaylightSavingTime();             // L51-56
 
         public GaianZonedDateTime Minus(Duration duration) => throw new NotImplementedException();      // L56-60
         public Duration Minus(GaianZonedDateTime other) => throw new NotImplementedException();         // L61-63
         public GaianZonedDateTime Plus(Duration duration) => throw new NotImplementedException();       // L64-68
 
-        public GaianZonedDateTime PlusHours(int hours) => throw new NotImplementedException();          // L69-71
-        public GaianZonedDateTime PlusMilliseconds(long milliseconds) => throw new NotImplementedException(); // L71-73
-        public GaianZonedDateTime PlusMinutes(int minutes) => throw new NotImplementedException();      // L74-76
-        public GaianZonedDateTime PlusNanoseconds(long nanoseconds) => throw new NotImplementedException(); // L76-78
-        public GaianZonedDateTime PlusSeconds(long seconds) => throw new NotImplementedException();     // L79-80
-        public GaianZonedDateTime PlusTicks(long ticks) => throw new NotImplementedException();         // L81-83
+        public GaianZonedDateTime PlusHours(int hours) => new GaianZonedDateTime(_zdt.PlusHours(hours));          // L69-71
+        public GaianZonedDateTime PlusMilliseconds(long milliseconds) => new GaianZonedDateTime(_zdt.PlusMilliseconds(milliseconds)); // L71-73
+        public GaianZonedDateTime PlusMinutes(int minutes) => new GaianZonedDateTime(_zdt.PlusMinutes(minutes));      // L74-76
+        public GaianZonedDateTime PlusNanoseconds(long nanoseconds) => new GaianZonedDateTime(_zdt.PlusNanoseconds(nanoseconds)); // L76-78
+        public GaianZonedDateTime PlusSeconds(long seconds) => new GaianZonedDateTime(_zdt.PlusSeconds(seconds));     // L79-80
+        public GaianZonedDateTime PlusTicks(long ticks) => new GaianZonedDateTime(_zdt.PlusTicks(ticks));         // L81-83
 
-        public DateTimeOffset ToDateTimeOffset() => throw new NotImplementedException();        // L92-96
-        public DateTime ToDateTimeUnspecified() => throw new NotImplementedException();         // L97-101
-        public DateTime ToDateTimeUtc() => throw new NotImplementedException();                 // L101-103
-        public Instant ToInstant() => throw new NotImplementedException();                      // L103-104
-        public OffsetDateTime ToOffsetDateTime() => throw new NotImplementedException();        // L105
+        public DateTimeOffset ToDateTimeOffset() => _zdt.ToDateTimeOffset();        // L92-96
+        public DateTime ToDateTimeUnspecified() => _zdt.ToDateTimeUnspecified();         // L97-101
+        public DateTime ToDateTimeUtc() => _zdt.ToDateTimeUtc();                 // L101-103
+        public Instant ToInstant() => _zdt.ToInstant();                      // L103-104
+        public OffsetDateTime ToOffsetDateTime() => _zdt.ToOffsetDateTime();        // L105
 
 
         public override string ToString() => ToString(null, CultureInfo.CurrentCulture);
@@ -157,8 +157,8 @@ namespace Gaian
 
         // ========= Operators (mirror) =========
         public static GaianZonedDateTime operator +(GaianZonedDateTime zonedDateTime, Duration duration) => throw new NotImplementedException(); // L112-117
-        public static bool operator ==(GaianZonedDateTime left, GaianZonedDateTime right) => throw new NotImplementedException();               // L118-119
-        public static bool operator !=(GaianZonedDateTime left, GaianZonedDateTime right) => throw new NotImplementedException();               // L120
+        public static bool operator ==(GaianZonedDateTime left, GaianZonedDateTime right) => left._zdt == right._zdt;               // L118-119
+        public static bool operator !=(GaianZonedDateTime left, GaianZonedDateTime right) => left._zdt != right._zdt;               // L120
         public static GaianZonedDateTime operator -(GaianZonedDateTime zonedDateTime, Duration duration) => throw new NotImplementedException(); // L121-125
         public static Duration operator -(GaianZonedDateTime end, GaianZonedDateTime start) => throw new NotImplementedException();             // L126-128
 
@@ -168,8 +168,8 @@ namespace Gaian
         void IXmlSerializable.WriteXml(XmlWriter writer) => throw new NotImplementedException();// L131-132
 
         // ========= Bridges to raw Noda types (helpers for your impl) =========
-        public static GaianZonedDateTime FromNoda(ZonedDateTime zdt) => throw new NotImplementedException();
-        public ZonedDateTime ToNoda() => throw new NotImplementedException();
+        public static GaianZonedDateTime FromNoda(ZonedDateTime zdt) => new GaianZonedDateTime(zdt);
+        public ZonedDateTime ToNoda() => _zdt;
 
         // Optional: raw deconstruct (for interop)
         public void Deconstruct(out LocalDateTime localDateTime, out DateTimeZone zone, out Offset offset) => throw new NotImplementedException();

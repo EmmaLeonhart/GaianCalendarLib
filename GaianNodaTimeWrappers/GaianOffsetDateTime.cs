@@ -92,34 +92,34 @@ namespace Gaian
 
         // ===== Instance methods =====
         public bool Equals(GaianOffsetDateTime other)
-            => throw new NotImplementedException();
+            => _odt.Equals(other._odt);
 
         public override bool Equals(object? obj)
-            => throw new NotImplementedException();
+            => obj is GaianOffsetDateTime other && Equals(other);
 
         public override int GetHashCode()
-            => throw new NotImplementedException();
+            => _odt.GetHashCode();
 
         public GaianOffsetDateTime Plus(Duration duration)
             => throw new NotImplementedException();                                      // docs: Plus(Duration)
 
         public GaianOffsetDateTime PlusHours(int hours)
-            => throw new NotImplementedException();                                      // docs: PlusHours(int)
+            => new GaianOffsetDateTime(_odt.PlusHours(hours));                                      // docs: PlusHours(int)
 
         public GaianOffsetDateTime PlusMinutes(int minutes)
-            => throw new NotImplementedException();                                      // docs: PlusMinutes(int)
+            => new GaianOffsetDateTime(_odt.PlusMinutes(minutes));                                      // docs: PlusMinutes(int)
 
         public GaianOffsetDateTime PlusSeconds(long seconds)
-            => throw new NotImplementedException();                                      // docs: PlusSeconds(long)
+            => new GaianOffsetDateTime(_odt.PlusSeconds(seconds));                                      // docs: PlusSeconds(long)
 
         public GaianOffsetDateTime PlusMilliseconds(long milliseconds)
-            => throw new NotImplementedException();                                      // docs: PlusMilliseconds(long)
+            => new GaianOffsetDateTime(_odt.PlusMilliseconds(milliseconds));                                      // docs: PlusMilliseconds(long)
 
         public GaianOffsetDateTime PlusTicks(long ticks)
-            => throw new NotImplementedException();                                      // docs: PlusTicks(long)
+            => new GaianOffsetDateTime(_odt.PlusTicks(ticks));                                      // docs: PlusTicks(long)
 
         public GaianOffsetDateTime PlusNanoseconds(long nanoseconds)
-            => throw new NotImplementedException();                                      // docs: PlusNanoseconds(long)
+            => new GaianOffsetDateTime(_odt.PlusNanoseconds(nanoseconds));                                      // docs: PlusNanoseconds(long)
 
         public GaianOffsetDateTime Minus(Duration duration)
             => throw new NotImplementedException();                                      // symmetry
@@ -128,16 +128,16 @@ namespace Gaian
             => throw new NotImplementedException();                                      // docs: Minus(OffsetDateTime)
 
         public DateTimeOffset ToDateTimeOffset()
-            => throw new NotImplementedException();                                      // docs: ToDateTimeOffset()
+            => _odt.ToDateTimeOffset();                                      // docs: ToDateTimeOffset()
 
         public Instant ToInstant()
-            => throw new NotImplementedException();                                      // docs: ToInstant()
+            => _odt.ToInstant();                                      // docs: ToInstant()
 
         public OffsetDate ToOffsetDate()
-            => throw new NotImplementedException();                                      // docs: ToOffsetDate()
+            => _odt.ToOffsetDate();                                      // docs: ToOffsetDate()
 
         public OffsetTime ToOffsetTime()
-            => throw new NotImplementedException();                                      // docs: ToOffsetTime()
+            => _odt.ToOffsetTime();                                      // docs: ToOffsetTime()
 
         public override string ToString() => ToString(null, CultureInfo.CurrentCulture);
 
@@ -184,10 +184,10 @@ namespace Gaian
             => throw new NotImplementedException();                                      // docs: operator -(OffsetDateTime, OffsetDateTime)
 
         public static bool operator ==(GaianOffsetDateTime left, GaianOffsetDateTime right)
-            => throw new NotImplementedException();                                      // docs: operator ==
+            => left._odt == right._odt;                                      // docs: operator ==
 
         public static bool operator !=(GaianOffsetDateTime left, GaianOffsetDateTime right)
-            => throw new NotImplementedException();                                      // docs: operator !=
+            => left._odt != right._odt;                                      // docs: operator !=
 
         // ===== XML serialization (explicit) =====
         XmlSchema? IXmlSerializable.GetSchema()
@@ -201,9 +201,9 @@ namespace Gaian
 
         // ===== Bridge helpers (optional, for your implementation) =====
         public static GaianOffsetDateTime FromNoda(OffsetDateTime odt)
-            => throw new NotImplementedException();
+            => new GaianOffsetDateTime(odt);
 
         public OffsetDateTime ToNoda()
-            => throw new NotImplementedException();
+            => _odt;
     }
 }
