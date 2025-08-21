@@ -73,7 +73,7 @@ namespace Gaian
         // Noda has Between(LocalDate, LocalDate)
         public static GaianPeriod Between(GaianLocalDate start, GaianLocalDate end) => throw new NotImplementedException(); // :contentReference[oaicite:30]{index=30}
 
-        // Noda has Between(LocalDateTime, LocalDateTime) and Between(..., PeriodUnits)
+        // Noda has Between(_ldt, _ldt) and Between(..., PeriodUnits)
         public static GaianPeriod Between(GaianLocalDateTime start, GaianLocalDateTime end) => throw new NotImplementedException(); // :contentReference[oaicite:31]{index=31}
         public static GaianPeriod Between(GaianLocalDateTime start, GaianLocalDateTime end, PeriodUnits units) => throw new NotImplementedException(); // :contentReference[oaicite:32]{index=32}
 
@@ -87,8 +87,8 @@ namespace Gaian
         // Noda helper: DaysBetween(LocalDate, LocalDate)
         public static int DaysBetween(GaianLocalDate start, GaianLocalDate end) => throw new NotImplementedException(); // mirrors Period.DaysBetween :contentReference[oaicite:35]{index=35}
 
-        // CreateComparer(LocalDateTime) -> comparer for periods based on a base _date/time
-        public static IComparer<GaianPeriod?> CreateComparer(GaianLocalDateTime baseDateTime) => throw new NotImplementedException(); // mirrors Period.CreateComparer(LocalDateTime) :contentReference[oaicite:36]{index=36}
+        // CreateComparer(_ldt) -> comparer for periods based on a base _date/time
+        public static IComparer<GaianPeriod?> CreateComparer(GaianLocalDateTime baseDateTime) => throw new NotImplementedException(); // mirrors Period.CreateComparer(_ldt) :contentReference[oaicite:36]{index=36}
 
         // ===== Instance methods (mirror semantics) =====
         public GaianPeriod Normalize() => throw new NotImplementedException();            // mirrors Period.Normalize() rules (months/years unchanged, weeks→days, time normalized) :contentReference[oaicite:37]{index=37}

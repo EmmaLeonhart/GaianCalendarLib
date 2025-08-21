@@ -11,11 +11,14 @@ using NodaTime;
 using NodaTime.Calendars;
 using NodaTime.TimeZones;
 using System.Xml.Serialization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using NodaTime.Text;
+using System.Globalization;
 
 namespace Gaian
 {
     /// <summary>
-    /// Gaian-local _date and time wrapper mirroring NodaTime.LocalDateTime (3.2.x).
+    /// Gaian-local nodaDate and time wrapper mirroring NodaTime._ldt (3.2.x).
     /// </summary>
     public readonly struct GaianLocalDateTime :
         IEquatable<GaianLocalDateTime>,
@@ -29,6 +32,8 @@ namespace Gaian
         IComparisonOperators<GaianLocalDateTime, GaianLocalDateTime, bool>,
         IEqualityOperators<GaianLocalDateTime, GaianLocalDateTime, bool>
     {
+        private readonly LocalDateTime _ldt;
+
         // ===== Constructors (mirror) =====
         public GaianLocalDateTime(int year, int month, int day, int hour, int minute)
             => throw new NotImplementedException();
@@ -48,31 +53,54 @@ namespace Gaian
         public GaianLocalDateTime(int year, int month, int day, int hour, int minute, int second, int millisecond, CalendarSystem calendar)
             => throw new NotImplementedException();
 
-        // ===== Properties (mirror) =====
+        public GaianLocalDateTime(LocalDateTime today)
+        {
+            this._ldt = today;
+        }
+
+
+
+
+        // --- Properties taken from LocalDate ---
         public CalendarSystem Calendar => throw new NotImplementedException();
-        public int ClockHourOfHalfDay => throw new NotImplementedException();
-        public LocalDate Date => throw new NotImplementedException();
-        public int Day => throw new NotImplementedException();
-        public IsoDayOfWeek DayOfWeek => throw new NotImplementedException();
-        public int DayOfYear => throw new NotImplementedException();
+        public int Day => GaianTools.GetDay(nodaDate);
+        public IsoDayOfWeek DayOfWeek => GaianTools.GetDayOfWeek(nodaDate);
+        public int DayOfYear => GaianTools.GetDayOfYear(nodaDate);
         public Era Era => throw new NotImplementedException();
+        public static GaianLocalDate MaxIsoValue => throw new NotImplementedException();
+        public static GaianLocalDate MinIsoValue => throw new NotImplementedException();
+        public GaianMonth Month => GaianTools.GetMonth(nodaDate);
+        public int Year => GaianTools.GetYear(nodaDate);
+        public int YearOfEra => throw new NotImplementedException();
+
+
+
+        // ===== Properties (mirror) =====
+        //public CalendarSystem Calendar => throw new NotImplementedException();
+        public int ClockHourOfHalfDay => throw new NotImplementedException();
+        public LocalDate nodaDate => this._ldt.Date;
+        public GaianLocalDate Date => new GaianLocalDate(nodaDate);
+        //public int Day => throw new NotImplementedException();
+        //public IsoDayOfWeek DayOfWeek => throw new NotImplementedException();
+        //public int DayOfYear => throw new NotImplementedException();
+        //public Era Era => throw new NotImplementedException();
         public int Hour => throw new NotImplementedException();
 
         // Max/Min values (ISO)
-        public static GaianLocalDateTime MaxIsoValue => throw new NotImplementedException();
-        public static GaianLocalDateTime MinIsoValue => throw new NotImplementedException();
+        //public static GaianLocalDateTime MaxIsoValue => throw new NotImplementedException();
+        //public static GaianLocalDateTime MinIsoValue => throw new NotImplementedException();
 
         public int Millisecond => throw new NotImplementedException();
         public int Minute => throw new NotImplementedException();
-        public int Month => throw new NotImplementedException();
+        //public int Month => throw new NotImplementedException();
         public long NanosecondOfDay => throw new NotImplementedException();
         public int NanosecondOfSecond => throw new NotImplementedException();
         public int Second => throw new NotImplementedException();
         public long TickOfDay => throw new NotImplementedException();
         public int TickOfSecond => throw new NotImplementedException();
         public LocalTime TimeOfDay => throw new NotImplementedException();
-        public int Year => throw new NotImplementedException();
-        public int YearOfEra => throw new NotImplementedException();
+        //public int Year => throw new NotImplementedException();
+        //public int YearOfEra => throw new NotImplementedException();
 
         // ===== Static methods (mirror) =====
         public static GaianLocalDateTime Add(GaianLocalDateTime localDateTime, Period period)
@@ -173,7 +201,20 @@ namespace Gaian
             => throw new NotImplementedException();
 
         public string ToString(string? patternText, IFormatProvider? formatProvider)
-            => throw new NotImplementedException();
+        {
+            var culture = (formatProvider as CultureInfo) ?? CultureInfo.CurrentCulture;
+
+            if (string.IsNullOrEmpty(patternText))
+            {
+                // Fall back to default ISO
+                return LocalDateTimePattern.ExtendedIso.Format(_ldt);
+            }
+
+            // Create pattern based on caller’s text and culture
+            var pattern = LocalDateTimePattern.Create(patternText, culture);
+
+            return pattern.Format(_ldt);
+        }
 
         public GaianLocalDateTime With(Func<LocalDate, LocalDate> adjuster)
             => throw new NotImplementedException();

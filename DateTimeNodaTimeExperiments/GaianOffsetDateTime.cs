@@ -26,20 +26,20 @@ namespace Gaian
         ISubtractionOperators<GaianOffsetDateTime, GaianOffsetDateTime, Duration>,
         IEqualityOperators<GaianOffsetDateTime, GaianOffsetDateTime, bool>
     {
-        // ===== Constructor (mirrors: OffsetDateTime(LocalDateTime, Offset)) =====
+        // ===== Constructor (mirrors: OffsetDateTime(_ldt, Offset)) =====
         public GaianOffsetDateTime(GaianLocalDateTime localDateTime, Offset offset)
             => throw new NotImplementedException();
 
         // ===== Properties (mapped 1:1; Local types adapted to Gaian) =====
         public CalendarSystem Calendar => throw new NotImplementedException();           // docs: Calendar
         public int ClockHourOfHalfDay => throw new NotImplementedException();            // docs: ClockHourOfHalfDay
-        public GaianLocalDate Date => throw new NotImplementedException();               // docs: Date (adapted)
+        public GaianLocalDate Date => throw new NotImplementedException();               // docs: nodaDate (adapted)
         public int Day => throw new NotImplementedException();                           // docs: Day
         public IsoDayOfWeek DayOfWeek => throw new NotImplementedException();            // docs: DayOfWeek
         public int DayOfYear => throw new NotImplementedException();                     // docs: DayOfYear
         public Era Era => throw new NotImplementedException();                           // docs: Era
         public int Hour => throw new NotImplementedException();                          // docs: Hour
-        public GaianLocalDateTime LocalDateTime => throw new NotImplementedException();  // docs: LocalDateTime (adapted)
+        public GaianLocalDateTime LocalDateTime => throw new NotImplementedException();  // docs: _ldt (adapted)
         public int Millisecond => throw new NotImplementedException();                   // docs: Millisecond
         public int Minute => throw new NotImplementedException();                        // docs: Minute
         public int Month => throw new NotImplementedException();                         // docs: Month

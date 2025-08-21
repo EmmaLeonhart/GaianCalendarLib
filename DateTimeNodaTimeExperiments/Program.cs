@@ -24,12 +24,12 @@ namespace Gaian
             ZonedDateTime zdt = now.InZone(zone);
 
             // Extract the LocalDate
-            LocalDate today = zdt.Date;
+            LocalDateTime today = zdt.LocalDateTime;
 
             Console.WriteLine(today);  // e.g. 2025-08-20
 
 
-            GaianLocalDate dt = new GaianLocalDate(today);
+            GaianLocalDateTime dt = new GaianLocalDateTime(today);
 
             Console.WriteLine(dt);
 

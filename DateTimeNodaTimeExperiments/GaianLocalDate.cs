@@ -114,7 +114,7 @@ namespace Gaian
 
             var culture = (formatProvider as CultureInfo) ?? CultureInfo.CurrentCulture;
 
-            // For example, if this is a LocalDateTime-like struct:
+            // For example, if this is a _ldt-like struct:
             var pattern = LocalDateTimePattern.Create(patternText, culture);
             throw new NotImplementedException();
             //return pattern.Format(_date);
