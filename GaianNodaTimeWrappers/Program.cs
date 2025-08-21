@@ -14,9 +14,11 @@ namespace Gaian
             int y = 12026;
             int m = 13;
             int d = 1;
-            GaianLocalDateTime dt = new GaianLocalDateTime(y, m, d, 1, 1);
+            Offset offset = new Offset();
+            GaianOffsetDateTime dt = new GaianOffsetDateTime(y, m, d, 1, 1, offset);
             Console.WriteLine(dt.ToString());
-            Console.WriteLine(dt.ToDateTimeUnspecified());
+            string s = dt.ToDateTimeOffset().ToString();
+            Console.WriteLine(s);
         }
 
 
