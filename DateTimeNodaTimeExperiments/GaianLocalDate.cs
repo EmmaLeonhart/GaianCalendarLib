@@ -29,6 +29,17 @@ namespace Gaian
         //this operates as a simple wrapper for a LocalDate in NodaTime
         private readonly LocalDate _date;
 
+
+        //putting these at the front 
+
+        public bool Equals(GaianLocalDate other) => _date.Equals(other._date);
+        public override bool Equals(object? obj) => obj is GaianLocalDate g && Equals(g);
+        public override int GetHashCode() => _date.GetHashCode();
+
+        public int CompareTo(GaianLocalDate other) => _date.CompareTo(other._date);
+        int IComparable.CompareTo(object? obj) =>
+            obj is GaianLocalDate g ? CompareTo(g) : throw new ArgumentException("Not a GaianLocalDate.");
+
         public GaianLocalDate(LocalDate date) => _date = date;
 
         // Expose underlying date if needed
@@ -90,15 +101,15 @@ namespace Gaian
         public LocalDateTime AtMidnight() => throw new NotImplementedException();
         public ZonedDateTime AtStartOfDayInZone(DateTimeZone zone) => throw new NotImplementedException();
 
-        public int CompareTo(GaianLocalDate other) => throw new NotImplementedException();
-        int IComparable.CompareTo(object? obj) => throw new NotImplementedException();
+        //public int CompareTo(GaianLocalDate other) => throw new NotImplementedException();
+        //int IComparable.CompareTo(object? obj) => throw new NotImplementedException();
 
         public void Deconstruct(out int year, out int month, out int day) => throw new NotImplementedException();
         public void Deconstruct(out int year, out int month, out int day, out CalendarSystem calendar) => throw new NotImplementedException();
 
-        public bool Equals(GaianLocalDate other) => throw new NotImplementedException();
-        public override bool Equals(object? obj) => throw new NotImplementedException();
-        public override int GetHashCode() => throw new NotImplementedException();
+        //public bool Equals(GaianLocalDate other) => throw new NotImplementedException();
+        //public override bool Equals(object? obj) => throw new NotImplementedException();
+        //public override int GetHashCode() => throw new NotImplementedException();
 
         public GaianLocalDate Minus(Period period) => throw new NotImplementedException();
         public Period Minus(GaianLocalDate date) => throw new NotImplementedException();
@@ -160,6 +171,11 @@ namespace Gaian
         public static bool operator >=(GaianLocalDate lhs, GaianLocalDate rhs) => lhs._date >= rhs._date;
         public static Period operator -(GaianLocalDate lhs, GaianLocalDate rhs) => throw new NotImplementedException();
         public static GaianLocalDate operator -(GaianLocalDate date, Period period) => throw new NotImplementedException();
+
+
+
+
+
 
         // --- XML serialization (explicit, mirror) ---
         XmlSchema? IXmlSerializable.GetSchema() => throw new NotImplementedException();
