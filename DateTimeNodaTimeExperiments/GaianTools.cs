@@ -5,6 +5,7 @@ namespace Gaian
 {
     internal class GaianTools
     {
+        //Many common operations that occur between many of these. Like formation of dates and such. No need to calculate everything afresh all the time
 
         public static string GaiaDateString(LocalDate date)
         {
