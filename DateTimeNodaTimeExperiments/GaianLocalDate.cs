@@ -58,7 +58,7 @@ namespace Gaian
         public static GaianLocalDate MinIsoValue => throw new NotImplementedException();
         public GaianMonth Month => GaianTools.GetMonth(_date);
         public int Year => GaianTools.GetYear(_date);
-        public int YearOfEra => throw new NotImplementedException();
+        //I am not including  => throw new NotImplementedException();
 
         // --- Static methods (mirror) ---
         public static GaianLocalDate Add(GaianLocalDate date, Period period) => throw new NotImplementedException();

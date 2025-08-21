@@ -71,7 +71,7 @@ namespace Gaian
         public static GaianLocalDate MinIsoValue => throw new NotImplementedException();
         public GaianMonth Month => GaianTools.GetMonth(nodaDate);
         public int Year => GaianTools.GetYear(nodaDate);
-        public int YearOfEra => throw new NotImplementedException();
+        //I am not including  => throw new NotImplementedException();
 
 
 
@@ -100,7 +100,7 @@ namespace Gaian
         public int TickOfSecond => throw new NotImplementedException();
         public LocalTime TimeOfDay => throw new NotImplementedException();
         //public int Year => throw new NotImplementedException();
-        //public int YearOfEra => throw new NotImplementedException();
+        ////I am not including  => throw new NotImplementedException();
 
         // ===== Static methods (mirror) =====
         public static GaianLocalDateTime Add(GaianLocalDateTime localDateTime, Period period)

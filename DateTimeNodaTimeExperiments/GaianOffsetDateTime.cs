@@ -51,7 +51,7 @@ namespace Gaian
         public static GaianLocalDate MinIsoValue => throw new NotImplementedException();
         public GaianMonth Month => GaianTools.GetMonth(nodaDate);
         public int Year => GaianTools.GetYear(nodaDate);
-        public int YearOfEra => throw new NotImplementedException();
+        //I am not including  => throw new NotImplementedException();
 
 
         // ===== Properties (mapped 1:1; Local types adapted to Gaian) =====
@@ -75,7 +75,7 @@ namespace Gaian
         public int TickOfSecond => throw new NotImplementedException();                  // docs: TickOfSecond
         public LocalTime TimeOfDay => throw new NotImplementedException();               // docs: TimeOfDay
         //public int Year => throw new NotImplementedException();                          // docs: Year
-        //public int YearOfEra => throw new NotImplementedException();                     // docs: YearOfEra
+        ////I am not including  => throw new NotImplementedException();                     // docs: YearOfEra
 
         public LocalDate nodaDate { get => _odt.Date;  }
 

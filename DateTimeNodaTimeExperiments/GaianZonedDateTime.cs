@@ -59,7 +59,7 @@ namespace Gaian
         public static GaianLocalDate MinIsoValue => throw new NotImplementedException();
         public GaianMonth Month => GaianTools.GetMonth(nodaDate);
         public int Year => GaianTools.GetYear(nodaDate);
-        public int YearOfEra => throw new NotImplementedException();
+        //I am not including  => throw new NotImplementedException();
 
 
         // ========= Core properties (mirror names/semantics) =========
@@ -83,7 +83,7 @@ namespace Gaian
         public int TickOfSecond => throw new NotImplementedException();                        // L32
         public LocalTime TimeOfDay => throw new NotImplementedException();                     // L33
         //public int Year => throw new NotImplementedException();                                // L34
-        //public int YearOfEra => throw new NotImplementedException();                           // L35
+        ////I am not including  => throw new NotImplementedException();                           // L35
         public DateTimeZone Zone => throw new NotImplementedException();                       // L35-36
 
         // ========= Static helpers (mirror) =========
