@@ -30,6 +30,8 @@ namespace Gaian
     {
         private readonly OffsetDateTime _odt;
 
+        private OffsetDateTime Value => _odt;
+
         // ===== Constructor (mirrors: OffsetDateTime(_ldt, Offset)) =====
         public GaianOffsetDateTime(GaianLocalDateTime localDateTime, Offset offset)
         {

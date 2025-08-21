@@ -34,9 +34,32 @@ namespace Gaian
     {
         private readonly ZonedDateTime _zdt;
 
+        private ZonedDateTime Value => _zdt;
+
         public GaianZonedDateTime(Instant instant, DateTimeZone zone) => throw new NotImplementedException();
         public GaianZonedDateTime(Instant instant, DateTimeZone zone, CalendarSystem calendar) => throw new NotImplementedException();
-        public GaianZonedDateTime(GaianLocalDateTime localDateTime, DateTimeZone zone, Offset offset) => throw new NotImplementedException();
+        public GaianZonedDateTime(GaianLocalDateTime localDateTime, DateTimeZone zone, Offset offset)
+        {
+            _zdt = localDateTime.Value.InZone(zone, ZoneLocalMappingResolver.CreateMappingResolver(Resolvers.LenientResolver, zone, localDateTime.Value, offset));
+        }
+
+        public GaianZonedDateTime(int year, int month, int day, int hour, int minute, DateTimeZone zone)
+        {
+            var gaianDateTime = new GaianLocalDateTime(year, month, day, hour, minute);
+            _zdt = gaianDateTime.Value.InZoneLeniently(zone);
+        }
+
+        public GaianZonedDateTime(int year, int month, int day, int hour, int minute, int second, DateTimeZone zone)
+        {
+            var gaianDateTime = new GaianLocalDateTime(year, month, day, hour, minute, second);
+            _zdt = gaianDateTime.Value.InZoneLeniently(zone);
+        }
+
+        public GaianZonedDateTime(int year, int month, int day, int hour, int minute, int second, int millisecond, DateTimeZone zone)
+        {
+            var gaianDateTime = new GaianLocalDateTime(year, month, day, hour, minute, second, millisecond);
+            _zdt = gaianDateTime.Value.InZoneLeniently(zone);
+        }
 
         public GaianZonedDateTime(ZonedDateTime zdt)
         {
