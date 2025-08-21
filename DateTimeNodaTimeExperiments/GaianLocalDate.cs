@@ -6,6 +6,8 @@ using System.Xml;
 using System.Xml.Serialization;
 using NodaTime.Text;
 using System.Globalization;
+using System.Runtime.CompilerServices;
+using System;
 
 namespace Gaian
 {
@@ -63,8 +65,18 @@ namespace Gaian
         // --- Static methods (mirror) ---
         public static GaianLocalDate Add(GaianLocalDate date, Period period) => throw new NotImplementedException();
         public static XmlQualifiedName AddSchema(XmlSchemaSet xmlSchemaSet) => throw new NotImplementedException();
-        public static GaianLocalDate FromDateOnly(DateOnly date) => throw new NotImplementedException();
-        public static GaianLocalDate FromDateTime(DateTime dateTime) => throw new NotImplementedException();
+        public static GaianLocalDate FromDateOnly(DateOnly date)
+        {
+            return new GaianLocalDate(LocalDate.FromDateOnly(date));
+            throw new NotImplementedException();
+        }
+
+        public static GaianLocalDate FromDateTime(DateTime dateTime)
+        {
+            return new GaianLocalDate(LocalDate.FromDateTime(dateTime));
+            throw new NotImplementedException();
+        }
+
         public static GaianLocalDate FromDateTime(DateTime dateTime, CalendarSystem calendar) => throw new NotImplementedException();
         public static GaianLocalDate FromWeekYearWeekAndDay(int weekYear, int weekOfWeekYear, IsoDayOfWeek dayOfWeek) => throw new NotImplementedException();
         public static GaianLocalDate FromYearMonthWeekAndDay(int year, int month, int occurrence, IsoDayOfWeek dayOfWeek) => throw new NotImplementedException();
