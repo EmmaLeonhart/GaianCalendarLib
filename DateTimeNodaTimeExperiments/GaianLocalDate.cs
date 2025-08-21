@@ -25,12 +25,21 @@ namespace Gaian
     {
 
         //this operates as a simple wrapper for a LocalDate in NodaTime
-        private LocalDate date;
+        private readonly LocalDate _date;
 
-        public GaianLocalDate(LocalDate localdate)
-        {
-            this.date = localdate;
-        }
+        public GaianLocalDate(LocalDate date) => _date = date;
+
+        // Expose underlying date if needed
+        public LocalDate Value => _date;
+
+        // Implicit: NodaTime.LocalDate → GaianLocalDate
+        public static implicit operator GaianLocalDate(LocalDate d) => new GaianLocalDate(d);
+
+        // Implicit: GaianLocalDate → NodaTime.LocalDate
+        public static implicit operator LocalDate(GaianLocalDate g) => g._date;
+
+        // Example equality override
+        //public override string ToString() => _date.ToString();
 
 
 
@@ -108,7 +117,7 @@ namespace Gaian
             // For example, if this is a LocalDateTime-like struct:
             var pattern = LocalDateTimePattern.Create(patternText, culture);
             throw new NotImplementedException();
-            //return pattern.Format(date);
+            //return pattern.Format(_date);
         }
 
 
@@ -116,7 +125,7 @@ namespace Gaian
 
         public override string ToString()
         {
-            return GaianTools.GaiaDateString(date);
+            return GaianTools.GaiaDateString(_date);
         }
 
 

@@ -9,7 +9,7 @@ namespace Gaian
     {
         static void Main(string[] args)
         {
-            // Example date
+            // Example _date
             // Pick your time zone
             DateTimeZone zone = DateTimeZoneProviders.Tzdb["America/Vancouver"];
 
@@ -42,9 +42,9 @@ namespace Gaian
             //var weekYearRules = WeekYearRules.Iso;
 
             //// Get the ISO week year and ISO week number
-            //int weekYear = weekYearRules.GetWeekYear(date);
-            //int weekOfYear = weekYearRules.GetWeekOfWeekYear(date);
-            //int day = (int)date.DayOfWeek; // Mon=1 … Sun=7
+            //int weekYear = weekYearRules.GetWeekYear(_date);
+            //int weekOfYear = weekYearRules.GetWeekOfWeekYear(_date);
+            //int day = (int)_date.DayOfWeek; // Mon=1 … Sun=7
 
             ////Console.WriteLine($"ISO Week Year: {weekYear}, Week: {weekOfYear}, Day: {day}");
 
@@ -65,9 +65,9 @@ namespace Gaian
 
             //while (i < 365)
             //{
-            //    date = date.PlusDays(1);
-            //    //Console.WriteLine(date);
-            //    string g = GaiaDateString(date);
+            //    _date = _date.PlusDays(1);
+            //    //Console.WriteLine(_date);
+            //    string g = GaiaDateString(_date);
             //    Console.WriteLine(g);
             //    i++;
             //}

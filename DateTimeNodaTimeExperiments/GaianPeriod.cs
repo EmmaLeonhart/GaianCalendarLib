@@ -87,7 +87,7 @@ namespace Gaian
         // Noda helper: DaysBetween(LocalDate, LocalDate)
         public static int DaysBetween(GaianLocalDate start, GaianLocalDate end) => throw new NotImplementedException(); // mirrors Period.DaysBetween :contentReference[oaicite:35]{index=35}
 
-        // CreateComparer(LocalDateTime) -> comparer for periods based on a base date/time
+        // CreateComparer(LocalDateTime) -> comparer for periods based on a base _date/time
         public static IComparer<GaianPeriod?> CreateComparer(GaianLocalDateTime baseDateTime) => throw new NotImplementedException(); // mirrors Period.CreateComparer(LocalDateTime) :contentReference[oaicite:36]{index=36}
 
         // ===== Instance methods (mirror semantics) =====

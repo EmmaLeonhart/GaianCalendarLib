@@ -15,7 +15,7 @@ using System.Xml.Serialization;
 namespace Gaian
 {
     /// <summary>
-    /// Gaian-local date and time wrapper mirroring NodaTime.LocalDateTime (3.2.x).
+    /// Gaian-local _date and time wrapper mirroring NodaTime.LocalDateTime (3.2.x).
     /// </summary>
     public readonly struct GaianLocalDateTime :
         IEquatable<GaianLocalDateTime>,
