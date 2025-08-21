@@ -58,7 +58,17 @@ namespace Gaian
 
         public GaianLocalDate(Era era, int yearOfEra, int month, int day) => throw new NotImplementedException();
         public GaianLocalDate(Era era, int yearOfEra, int month, int day, CalendarSystem calendar) => throw new NotImplementedException();
-        public GaianLocalDate(int year, int month, int day) => throw new NotImplementedException();
+        public GaianLocalDate(int year, int month, int day)
+        {
+            // Convert Gaian components back to ISO week-based date
+            int isoWeekYear = year - 10000;  // 12025 -> 2025
+            int weekOfYear = ((month - 1) * 4) + ((day - 1) / 7) + 1;
+            int dayOfWeek = ((day - 1) % 7) + 1;
+            
+            // Use NodaTime's week-year construction
+            var weekYearRules = WeekYearRules.Iso;
+            _date = weekYearRules.GetLocalDate(isoWeekYear, weekOfYear, (IsoDayOfWeek)dayOfWeek);
+        }
         public GaianLocalDate(int year, int month, int day, CalendarSystem calendar) => throw new NotImplementedException();
 
         // --- Properties (mirror) ---

@@ -1,5 +1,6 @@
 ﻿using NodaTime;
 using NodaTime.Calendars;
+using System.ComponentModel;
 using System.Net.Http.Headers;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -9,8 +10,48 @@ namespace Gaian
     {
         static void Main(string[] args)
         {
-            GaianLocalDateTime dt = GaianLocalDateTime.FromDateTime(DateTime.Now);
+            int y = 12024;
+            int m = 13;
+            int d = 1;
+            GaianLocalDate dt = new GaianLocalDate(y, m, d);
             Console.WriteLine(dt.ToString());
+            Console.WriteLine(dt.ToDateTimeUnspecified());
+            d++;
+            dt = new GaianLocalDate(y, m, d);
+            Console.WriteLine(dt.ToString());
+            Console.WriteLine(dt.ToDateTimeUnspecified());
+            d++;
+            dt = new GaianLocalDate(y, m, d);
+            Console.WriteLine(dt.ToString());
+            Console.WriteLine(dt.ToDateTimeUnspecified());
+            d++;
+            dt = new GaianLocalDate(y, m, d);
+            Console.WriteLine(dt.ToString());
+            Console.WriteLine(dt.ToDateTimeUnspecified());
+            d++;
+            dt = new GaianLocalDate(y, m, d);
+            Console.WriteLine(dt.ToString());
+            Console.WriteLine(dt.ToDateTimeUnspecified());
+            d++;
+            dt = new GaianLocalDate(y, m, d);
+            Console.WriteLine(dt.ToString());
+            Console.WriteLine(dt.ToDateTimeUnspecified());
+            d++;
+            dt = new GaianLocalDate(y, m, d);
+            Console.WriteLine(dt.ToString());
+            Console.WriteLine(dt.ToDateTimeUnspecified());
+            d++;
+            dt = new GaianLocalDate(y, m, d);
+            Console.WriteLine(dt.ToString());
+            Console.WriteLine(dt.ToDateTimeUnspecified());
+            d++;
+            dt = new GaianLocalDate(y, m, d);
+            Console.WriteLine(dt.ToString());
+            Console.WriteLine(dt.ToDateTimeUnspecified());
+            d++;
+            dt = new GaianLocalDate(y, m, d);
+            Console.WriteLine(dt.ToString());
+            Console.WriteLine(dt.ToDateTimeUnspecified());
         }
 
 
