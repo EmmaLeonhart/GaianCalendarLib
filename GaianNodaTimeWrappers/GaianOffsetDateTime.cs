@@ -32,6 +32,9 @@ namespace Gaian
 
         private OffsetDateTime Value => _odt;
 
+        public static implicit operator GaianOffsetDateTime(OffsetDateTime odt) => new GaianOffsetDateTime(odt);
+        public static implicit operator OffsetDateTime(GaianOffsetDateTime godt) => godt._odt;
+
         // ===== Constructor (mirrors: OffsetDateTime(_ldt, Offset)) =====
         public GaianOffsetDateTime(GaianLocalDateTime localDateTime, Offset offset)
         {

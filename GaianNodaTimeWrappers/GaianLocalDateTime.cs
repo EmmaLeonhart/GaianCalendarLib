@@ -36,6 +36,9 @@ namespace Gaian
 
         internal LocalDateTime Value => _ldt;
 
+        public static implicit operator GaianLocalDateTime(LocalDateTime ldt) => new GaianLocalDateTime(ldt);
+        public static implicit operator LocalDateTime(GaianLocalDateTime gdt) => gdt._ldt;
+
         // ===== Constructors (mirror) =====
         public GaianLocalDateTime(int year, int month, int day, int hour, int minute)
         {

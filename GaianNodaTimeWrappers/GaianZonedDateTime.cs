@@ -36,6 +36,9 @@ namespace Gaian
 
         private ZonedDateTime Value => _zdt;
 
+        public static implicit operator GaianZonedDateTime(ZonedDateTime zdt) => new GaianZonedDateTime(zdt);
+        public static implicit operator ZonedDateTime(GaianZonedDateTime gzdt) => gzdt._zdt;
+
         public GaianZonedDateTime(Instant instant, DateTimeZone zone) => throw new NotImplementedException();
         public GaianZonedDateTime(Instant instant, DateTimeZone zone, CalendarSystem calendar) => throw new NotImplementedException();
         public GaianZonedDateTime(GaianLocalDateTime localDateTime, DateTimeZone zone, Offset offset)
