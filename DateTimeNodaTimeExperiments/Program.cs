@@ -28,7 +28,7 @@ namespace DateTimeNodaTimeExperiments
             Console.WriteLine(today);  // e.g. 2025-08-20
 
 
-            LocalGaianDate lsd = new LocalGaianDate(today);
+            GaianLocalDate lsd = new GaianLocalDate(today);
 
             Console.WriteLine(lsd);
 
