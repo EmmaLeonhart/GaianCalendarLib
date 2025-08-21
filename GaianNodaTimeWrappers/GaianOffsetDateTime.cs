@@ -29,7 +29,6 @@ namespace Gaian
         IEqualityOperators<GaianOffsetDateTime, GaianOffsetDateTime, bool>
     {
         private readonly OffsetDateTime _odt;
-        //private  LocalDate nodaDate1;
 
         // ===== Constructor (mirrors: OffsetDateTime(_ldt, Offset)) =====
         public GaianOffsetDateTime(GaianLocalDateTime localDateTime, Offset offset)
@@ -51,7 +50,6 @@ namespace Gaian
         public static GaianLocalDate MinIsoValue => throw new NotImplementedException();
         public GaianMonth Month => GaianTools.GetMonth(nodaDate);
         public int Year => GaianTools.GetYear(nodaDate);
-        //I am not including  => throw new NotImplementedException();
 
 
 
@@ -60,7 +58,6 @@ namespace Gaian
 
 
         // ===== Properties (mapped 1:1; Local types adapted to Gaian) =====
-        //public CalendarSystem Calendar => throw new NotImplementedException();           // docs: Calendar
         public int ClockHourOfHalfDay => _odt.ClockHourOfHalfDay;
         public int Hour => _odt.Hour;
         public int Minute => _odt.Minute;
@@ -72,23 +69,21 @@ namespace Gaian
         public int TickOfSecond => _odt.TickOfSecond;
         public LocalTime TimeOfDay => _odt.TimeOfDay;
         public Offset Offset => _odt.Offset;
-        //public int Year => throw new NotImplementedException();                          // docs: Year
-        ////I am not including  => throw new NotImplementedException();                     // docs: YearOfEra
 
         public LocalDate nodaDate { get => _odt.Date;  }
 
         // ===== Static methods =====
         public static GaianOffsetDateTime Add(GaianOffsetDateTime value, Duration duration)
-            => throw new NotImplementedException();                                      // docs: Add(OffsetDateTime, Duration)
+            => throw new NotImplementedException();
 
         public static XmlQualifiedName AddSchema(XmlSchemaSet xmlSchemaSet)
-            => throw new NotImplementedException();                                      // docs: AddSchema (added in 3.2)
+            => throw new NotImplementedException();
 
         public static GaianOffsetDateTime Subtract(GaianOffsetDateTime value, Duration duration)
-            => throw new NotImplementedException();                                      // docs: Subtract(OffsetDateTime, Duration)
+            => throw new NotImplementedException();
 
         public static Duration Subtract(GaianOffsetDateTime end, GaianOffsetDateTime start)
-            => throw new NotImplementedException();                                      // docs: Subtract(OffsetDateTime, OffsetDateTime)
+            => throw new NotImplementedException();
 
         // ===== Instance methods =====
         public bool Equals(GaianOffsetDateTime other)
@@ -101,43 +96,43 @@ namespace Gaian
             => _odt.GetHashCode();
 
         public GaianOffsetDateTime Plus(Duration duration)
-            => throw new NotImplementedException();                                      // docs: Plus(Duration)
+            => throw new NotImplementedException();
 
         public GaianOffsetDateTime PlusHours(int hours)
-            => new GaianOffsetDateTime(_odt.PlusHours(hours));                                      // docs: PlusHours(int)
+            => new GaianOffsetDateTime(_odt.PlusHours(hours));
 
         public GaianOffsetDateTime PlusMinutes(int minutes)
-            => new GaianOffsetDateTime(_odt.PlusMinutes(minutes));                                      // docs: PlusMinutes(int)
+            => new GaianOffsetDateTime(_odt.PlusMinutes(minutes));
 
         public GaianOffsetDateTime PlusSeconds(long seconds)
-            => new GaianOffsetDateTime(_odt.PlusSeconds(seconds));                                      // docs: PlusSeconds(long)
+            => new GaianOffsetDateTime(_odt.PlusSeconds(seconds));
 
         public GaianOffsetDateTime PlusMilliseconds(long milliseconds)
-            => new GaianOffsetDateTime(_odt.PlusMilliseconds(milliseconds));                                      // docs: PlusMilliseconds(long)
+            => new GaianOffsetDateTime(_odt.PlusMilliseconds(milliseconds));
 
         public GaianOffsetDateTime PlusTicks(long ticks)
-            => new GaianOffsetDateTime(_odt.PlusTicks(ticks));                                      // docs: PlusTicks(long)
+            => new GaianOffsetDateTime(_odt.PlusTicks(ticks));
 
         public GaianOffsetDateTime PlusNanoseconds(long nanoseconds)
-            => new GaianOffsetDateTime(_odt.PlusNanoseconds(nanoseconds));                                      // docs: PlusNanoseconds(long)
+            => new GaianOffsetDateTime(_odt.PlusNanoseconds(nanoseconds));
 
         public GaianOffsetDateTime Minus(Duration duration)
-            => throw new NotImplementedException();                                      // symmetry
+            => throw new NotImplementedException();
 
         public Duration Minus(GaianOffsetDateTime other)
-            => throw new NotImplementedException();                                      // docs: Minus(OffsetDateTime)
+            => throw new NotImplementedException();
 
         public DateTimeOffset ToDateTimeOffset()
-            => _odt.ToDateTimeOffset();                                      // docs: ToDateTimeOffset()
+            => _odt.ToDateTimeOffset();
 
         public Instant ToInstant()
-            => _odt.ToInstant();                                      // docs: ToInstant()
+            => _odt.ToInstant();
 
         public OffsetDate ToOffsetDate()
-            => _odt.ToOffsetDate();                                      // docs: ToOffsetDate()
+            => _odt.ToOffsetDate();
 
         public OffsetTime ToOffsetTime()
-            => _odt.ToOffsetTime();                                      // docs: ToOffsetTime()
+            => _odt.ToOffsetTime();
 
         public override string ToString() => ToString(null, CultureInfo.CurrentCulture);
 
@@ -162,36 +157,36 @@ namespace Gaian
         }
 
         public GaianOffsetDateTime With(Func<LocalDate, LocalDate> dateAdjuster)
-            => throw new NotImplementedException();                                      // docs: With(Func<LocalDate, LocalDate>)
+            => throw new NotImplementedException();
 
         public GaianOffsetDateTime With(Func<LocalTime, LocalTime> timeAdjuster)
-            => throw new NotImplementedException();                                      // docs: With(Func<LocalTime, LocalTime>)
+            => throw new NotImplementedException();
 
         public GaianOffsetDateTime WithCalendar(CalendarSystem calendar)
-            => throw new NotImplementedException();                                      // docs: WithCalendar(CalendarSystem)
+            => throw new NotImplementedException();
 
         public GaianOffsetDateTime WithOffset(Offset offset)
-            => throw new NotImplementedException();                                      // docs: WithOffset(Offset)
+            => throw new NotImplementedException();
 
         // ===== Operators =====
         public static GaianOffsetDateTime operator +(GaianOffsetDateTime value, Duration duration)
-            => throw new NotImplementedException();                                      // docs: operator +(OffsetDateTime, Duration)
+            => throw new NotImplementedException();
 
         public static GaianOffsetDateTime operator -(GaianOffsetDateTime value, Duration duration)
-            => throw new NotImplementedException();                                      // docs: operator -(OffsetDateTime, Duration)
+            => throw new NotImplementedException();
 
         public static Duration operator -(GaianOffsetDateTime end, GaianOffsetDateTime start)
-            => throw new NotImplementedException();                                      // docs: operator -(OffsetDateTime, OffsetDateTime)
+            => throw new NotImplementedException();
 
         public static bool operator ==(GaianOffsetDateTime left, GaianOffsetDateTime right)
-            => left._odt == right._odt;                                      // docs: operator ==
+            => left._odt == right._odt;
 
         public static bool operator !=(GaianOffsetDateTime left, GaianOffsetDateTime right)
-            => left._odt != right._odt;                                      // docs: operator !=
+            => left._odt != right._odt;
 
         // ===== XML serialization (explicit) =====
         XmlSchema? IXmlSerializable.GetSchema()
-            => throw new NotImplementedException();                                      // added in 3.2
+            => throw new NotImplementedException();
 
         void IXmlSerializable.ReadXml(XmlReader reader)
             => throw new NotImplementedException();

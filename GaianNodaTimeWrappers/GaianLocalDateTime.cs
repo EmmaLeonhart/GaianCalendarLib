@@ -61,7 +61,6 @@ namespace Gaian
 
 
 
-        // --- Properties taken from LocalDate ---
         public CalendarSystem Calendar => throw new NotImplementedException();
         public int Day => GaianTools.GetDay(nodaDate);
         public IsoDayOfWeek DayOfWeek => GaianTools.GetDayOfWeek(nodaDate);
@@ -71,37 +70,22 @@ namespace Gaian
         public static GaianLocalDate MinIsoValue => throw new NotImplementedException();
         public GaianMonth Month => GaianTools.GetMonth(nodaDate);
         public int Year => GaianTools.GetYear(nodaDate);
-        //I am not including  => throw new NotImplementedException();
 
 
 
-        // ===== Properties (mirror) =====
-        //public CalendarSystem Calendar => throw new NotImplementedException();
         public int ClockHourOfHalfDay => throw new NotImplementedException();
         public LocalDate nodaDate => this._ldt.Date;
         public GaianLocalDate Date => new GaianLocalDate(nodaDate);
-        //public int Day => throw new NotImplementedException();
-        //public IsoDayOfWeek DayOfWeek => throw new NotImplementedException();
-        //public int DayOfYear => throw new NotImplementedException();
-        //public Era Era => throw new NotImplementedException();
         public int Hour => _ldt.Hour;
-
-        // Max/Min values (ISO)
-        //public static GaianLocalDateTime MaxIsoValue => throw new NotImplementedException();
-        //public static GaianLocalDateTime MinIsoValue => throw new NotImplementedException();
 
         public int Millisecond => _ldt.Millisecond;
         public int Minute => _ldt.Minute;
-        // public int Month           => ...
         public long NanosecondOfDay => _ldt.NanosecondOfDay;
         public int NanosecondOfSecond => _ldt.NanosecondOfSecond;
         public int Second => _ldt.Second;
         public long TickOfDay => _ldt.TickOfDay;
         public int TickOfSecond => _ldt.TickOfSecond;
         public LocalTime TimeOfDay => _ldt.TimeOfDay;
-
-        //public int Year => throw new NotImplementedException();
-        ////I am not including  => throw new NotImplementedException();
 
         // ===== Static methods (mirror) =====
         public static GaianLocalDateTime Add(GaianLocalDateTime localDateTime, Period period)
@@ -201,25 +185,18 @@ namespace Gaian
         public DateTime ToDateTimeUnspecified()
             => _ldt.ToDateTimeUnspecified();
 
-        // Default ToString delegates to the IFormattable overload with no pattern
         public override string ToString() => ToString(null, CultureInfo.CurrentCulture);
 
         public string ToString(string? patternText, IFormatProvider? formatProvider)
         {
             var culture = (formatProvider as CultureInfo) ?? CultureInfo.CurrentCulture;
 
-            // 1) No pattern -> your custom default: GaianDate + time
             if (string.IsNullOrEmpty(patternText) || string.Equals(patternText, "G", StringComparison.OrdinalIgnoreCase))
             {
                 var gdate = new GaianLocalDate(_ldt.Date);
-                // Pick your preferred default time pattern here
-                // (HH:mm for hour:minute, or HH:mm:ss if you want seconds)
                 string timeText = _ldt.TimeOfDay.ToString("HH':'mm", culture);
                 return $"{gdate.ToString(null, culture)} {timeText}";
             }
-
-            // 2) Pattern supplied -> honor it using NodaTime's pattern engine
-            // (caller explicitly asked for a concrete format; this bypasses Gaian date naming)
             var pattern = LocalDateTimePattern.Create(patternText, culture);
             return pattern.Format(_ldt);
         }
