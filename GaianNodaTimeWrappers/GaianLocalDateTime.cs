@@ -208,7 +208,7 @@ namespace Gaian
             if (string.IsNullOrEmpty(patternText) || string.Equals(patternText, "G", StringComparison.OrdinalIgnoreCase))
             {
                 var gdate = new GaianLocalDate(_ldt.Date);
-                string timeText = _ldt.TimeOfDay.ToString("HH':'mm", culture);
+                string timeText = _ldt.TimeOfDay.ToString();
                 return $"{gdate.ToString(null, culture)} {timeText}";
             }
             var pattern = LocalDateTimePattern.Create(patternText, culture);
