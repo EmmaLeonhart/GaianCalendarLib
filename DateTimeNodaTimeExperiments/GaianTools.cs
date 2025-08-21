@@ -113,7 +113,7 @@ namespace Gaian
             //return $"{monthName} {dayOfMonth}, {gaianYear}";
         }
 
-        internal static int GetMonth(LocalDate date)
+        internal static GaianMonth GetMonth(LocalDate date)
         {
             var weekYearRules = WeekYearRules.Iso;
 
@@ -149,6 +149,7 @@ namespace Gaian
 
             string monthName = GetMonth(month);
             int gaianYear = weekYear + 10000;
+            return gaianYear;
             throw new NotImplementedException();
             //return $"{monthName} {dayOfMonth}, {gaianYear}";
         }

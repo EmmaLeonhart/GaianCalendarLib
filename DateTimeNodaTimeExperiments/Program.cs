@@ -9,6 +9,7 @@ namespace Gaian
     {
         static void Main(string[] args)
         {
+            //Console.WriteLine(DateTime.Now.MonthName);
             // Example _date
             // Pick your time zone
             DateTimeZone zone = DateTimeZoneProviders.Tzdb["America/Vancouver"];
