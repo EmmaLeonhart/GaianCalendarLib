@@ -51,7 +51,7 @@ namespace Gaian
         public bool HasTimeComponent => throw new NotImplementedException(); // Period.HasTimeComponent :contentReference[oaicite:16]{index=16}
 
         // Mirrors: Period.NormalizingEqualityComparer
-        public static IEqualityComparer<GaianPeriod?> NormalizingEqualityComparer => throw new NotImplementedException(); :contentReference[oaicite:17]{index=17}
+        public static IEqualityComparer<GaianPeriod?> NormalizingEqualityComparer => throw new NotImplementedException(); //ontentReference[oaicite:17]{index=17}
 
         // ===== Static factories (mirror names/signatures) =====
         public static GaianPeriod FromYears(int years) => throw new NotImplementedException();             // Period.FromYears :contentReference[oaicite:18]{index=18}
