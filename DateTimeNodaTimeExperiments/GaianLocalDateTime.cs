@@ -110,7 +110,10 @@ namespace Gaian
             => throw new NotImplementedException();
 
         public static GaianLocalDateTime FromDateTime(DateTime dateTime)
-            => throw new NotImplementedException();
+        {
+            return new GaianLocalDateTime(LocalDateTime.FromDateTime(dateTime));    
+            throw new NotImplementedException();
+        }
 
         public static GaianLocalDateTime FromDateTime(DateTime dateTime, CalendarSystem calendar)
             => throw new NotImplementedException();

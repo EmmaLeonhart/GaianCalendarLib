@@ -9,33 +9,8 @@ namespace Gaian
     {
         static void Main(string[] args)
         {
-            // Pick your time zone
-            DateTimeZone zone = DateTimeZoneProviders.Tzdb["America/Vancouver"];
-
-            // Pick your clock (normally the system clock)
-            IClock clock = SystemClock.Instance;
-
-            // Get the current "now" instant
-            Instant now = clock.GetCurrentInstant();
-
-            // Convert to a ZonedDateTime
-            ZonedDateTime zdt = now.InZone(zone);
-
-            // Convert to an OffsetDateTime
-            OffsetDateTime odt = zdt.ToOffsetDateTime();
-
-            Console.WriteLine(odt); // baseline NodaTime output
-
-            // Wrap in your GaianOffsetDateTime
-            GaianOffsetDateTime gdt = new GaianOffsetDateTime(odt);
-
-            Console.WriteLine(gdt);              // Gaian-style ToString
-            Console.WriteLine(gdt.Year);         // Year number
-            Console.WriteLine(gdt.Month.ToString());        // GaianMonth wrapper (calls ToString → name)
-            Console.WriteLine(gdt.DayOfWeek);    // IsoDayOfWeek
-            Console.WriteLine(gdt.DayOfYear);    // 1..365/366
-            Console.WriteLine(gdt.Day);          // Day number in month
-            Console.WriteLine(gdt.Offset);       // Offset, e.g. -07
+            GaianLocalDateTime dt = GaianLocalDateTime.FromDateTime(DateTime.Now);
+            Console.WriteLine(dt.ToString());
         }
 
 

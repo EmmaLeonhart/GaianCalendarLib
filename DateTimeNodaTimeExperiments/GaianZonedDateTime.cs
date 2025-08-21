@@ -89,7 +89,12 @@ namespace Gaian
         // ========= Static helpers (mirror) =========
         public static GaianZonedDateTime Add(GaianZonedDateTime zonedDateTime, Duration duration) => throw new NotImplementedException();      // L36-41
         public static XmlQualifiedName AddSchema(XmlSchemaSet xmlSchemaSet) => throw new NotImplementedException();                           // L41-42
-        public static GaianZonedDateTime FromDateTimeOffset(DateTimeOffset dateTimeOffset) => throw new NotImplementedException();            // L47-48
+        public static GaianZonedDateTime FromDateTimeOffset(DateTimeOffset dateTimeOffset)
+        {
+            return new GaianZonedDateTime(ZonedDateTime.FromDateTimeOffset(dateTimeOffset));
+            throw new NotImplementedException();            // L47-48
+        }
+
         public static GaianZonedDateTime Subtract(GaianZonedDateTime zonedDateTime, Duration duration) => throw new NotImplementedException(); // L84-88
         public static Duration Subtract(GaianZonedDateTime end, GaianZonedDateTime start) => throw new NotImplementedException();             // L89-91
 
