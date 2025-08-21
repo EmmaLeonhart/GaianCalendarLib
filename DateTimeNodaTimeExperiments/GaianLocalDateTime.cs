@@ -197,22 +197,26 @@ namespace Gaian
         public DateTime ToDateTimeUnspecified()
             => throw new NotImplementedException();
 
-        public override string ToString()
-            => throw new NotImplementedException();
+        // Default ToString delegates to the IFormattable overload with no pattern
+        public override string ToString() => ToString(null, CultureInfo.CurrentCulture);
 
         public string ToString(string? patternText, IFormatProvider? formatProvider)
         {
             var culture = (formatProvider as CultureInfo) ?? CultureInfo.CurrentCulture;
 
-            if (string.IsNullOrEmpty(patternText))
+            // 1) No pattern -> your custom default: GaianDate + time
+            if (string.IsNullOrEmpty(patternText) || string.Equals(patternText, "G", StringComparison.OrdinalIgnoreCase))
             {
-                // Fall back to default ISO
-                return LocalDateTimePattern.ExtendedIso.Format(_ldt);
+                var gdate = new GaianLocalDate(_ldt.Date);
+                // Pick your preferred default time pattern here
+                // (HH:mm for hour:minute, or HH:mm:ss if you want seconds)
+                string timeText = _ldt.TimeOfDay.ToString("HH':'mm", culture);
+                return $"{gdate.ToString(null, culture)} {timeText}";
             }
 
-            // Create pattern based on caller’s text and culture
+            // 2) Pattern supplied -> honor it using NodaTime's pattern engine
+            // (caller explicitly asked for a concrete format; this bypasses Gaian date naming)
             var pattern = LocalDateTimePattern.Create(patternText, culture);
-
             return pattern.Format(_ldt);
         }
 
