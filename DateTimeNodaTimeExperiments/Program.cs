@@ -26,10 +26,10 @@ namespace Gaian
             // Extract the LocalDate
             LocalDateTime today = zdt.LocalDateTime;
 
-            Console.WriteLine(today);  // e.g. 2025-08-20
+            Console.WriteLine(zdt);  // e.g. 2025-08-20
 
 
-            GaianLocalDateTime dt = new GaianLocalDateTime(today);
+            GaianZonedDateTime dt = new GaianZonedDateTime(zdt);
 
             Console.WriteLine(dt);
 

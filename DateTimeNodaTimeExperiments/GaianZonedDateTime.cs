@@ -15,6 +15,8 @@ using NodaTime;
 using NodaTime.Calendars;
 using NodaTime.TimeZones;
 using System.Xml.Serialization;
+using NodaTime.Text;
+using System.Globalization;
 
 namespace Gaian
 {
@@ -30,24 +32,49 @@ namespace Gaian
         ISubtractionOperators<GaianZonedDateTime, Duration, GaianZonedDateTime>,
         IEqualityOperators<GaianZonedDateTime, GaianZonedDateTime, bool>
     {
+        private readonly ZonedDateTime _zdt;
+
         // ========= Constructors (mirror Noda) =========
         public GaianZonedDateTime(Instant instant, DateTimeZone zone) => throw new NotImplementedException();                // docs L8
         public GaianZonedDateTime(Instant instant, DateTimeZone zone, CalendarSystem calendar) => throw new NotImplementedException(); // docs L9
         public GaianZonedDateTime(GaianLocalDateTime localDateTime, DateTimeZone zone, Offset offset) => throw new NotImplementedException(); // adapted from docs L10-L11
 
+        public GaianZonedDateTime(ZonedDateTime zdt)
+        {
+            this._zdt = zdt;
+        }
+
+
+
+        public LocalDate nodaDate => this._zdt.Date;
+
+
+        // --- Properties taken from LocalDate ---
+        public CalendarSystem Calendar => throw new NotImplementedException();
+        public int Day => GaianTools.GetDay(nodaDate);
+        public IsoDayOfWeek DayOfWeek => GaianTools.GetDayOfWeek(nodaDate);
+        public int DayOfYear => GaianTools.GetDayOfYear(nodaDate);
+        public Era Era => throw new NotImplementedException();
+        public static GaianLocalDate MaxIsoValue => throw new NotImplementedException();
+        public static GaianLocalDate MinIsoValue => throw new NotImplementedException();
+        public GaianMonth Month => GaianTools.GetMonth(nodaDate);
+        public int Year => GaianTools.GetYear(nodaDate);
+        public int YearOfEra => throw new NotImplementedException();
+
+
         // ========= Core properties (mirror names/semantics) =========
-        public CalendarSystem Calendar => throw new NotImplementedException();                 // L12
+        //public CalendarSystem Calendar => throw new NotImplementedException();                 // L12
         public int ClockHourOfHalfDay => throw new NotImplementedException();                  // L12-13
         public GaianLocalDate Date => throw new NotImplementedException();                          // L14 (Gaian-adapted)
-        public int Day => throw new NotImplementedException();                                 // L15
-        public IsoDayOfWeek DayOfWeek => throw new NotImplementedException();                  // L16
-        public int DayOfYear => throw new NotImplementedException();                           // L16
-        public Era Era => throw new NotImplementedException();                                 // L17
+        //public int Day => throw new NotImplementedException();                                 // L15
+        //public IsoDayOfWeek DayOfWeek => throw new NotImplementedException();                  // L16
+        //public int DayOfYear => throw new NotImplementedException();                           // L16
+        //public Era Era => throw new NotImplementedException();                                 // L17
         public int Hour => throw new NotImplementedException();                                // L17-18
         public GaianLocalDateTime LocalDateTime => throw new NotImplementedException();        // L18-19 (Gaian-adapted)
         public int Millisecond => throw new NotImplementedException();                         // L19-20
         public int Minute => throw new NotImplementedException();                              // L21
-        public int Month => throw new NotImplementedException();                               // L21
+        //public int Month => throw new NotImplementedException();                               // L21
         public long NanosecondOfDay => throw new NotImplementedException();                    // L22-25
         public int NanosecondOfSecond => throw new NotImplementedException();                  // L26
         public Offset Offset => throw new NotImplementedException();                           // L27
@@ -55,8 +82,8 @@ namespace Gaian
         public long TickOfDay => throw new NotImplementedException();                          // L29-31
         public int TickOfSecond => throw new NotImplementedException();                        // L32
         public LocalTime TimeOfDay => throw new NotImplementedException();                     // L33
-        public int Year => throw new NotImplementedException();                                // L34
-        public int YearOfEra => throw new NotImplementedException();                           // L35
+        //public int Year => throw new NotImplementedException();                                // L34
+        //public int YearOfEra => throw new NotImplementedException();                           // L35
         public DateTimeZone Zone => throw new NotImplementedException();                       // L35-36
 
         // ========= Static helpers (mirror) =========
@@ -93,8 +120,32 @@ namespace Gaian
         public Instant ToInstant() => throw new NotImplementedException();                      // L103-104
         public OffsetDateTime ToOffsetDateTime() => throw new NotImplementedException();        // L105
 
-        public override string ToString() => throw new NotImplementedException();               // L106
-        public string ToString(string? patternText, IFormatProvider? formatProvider) => throw new NotImplementedException(); // L107-109
+
+        public override string ToString() => ToString(null, CultureInfo.CurrentCulture);
+
+        public string ToString(string? patternText, IFormatProvider? formatProvider)
+        {
+            var culture = (formatProvider as CultureInfo) ?? CultureInfo.CurrentCulture;
+
+            if (string.IsNullOrEmpty(patternText) ||
+                string.Equals(patternText, "G", StringComparison.OrdinalIgnoreCase))
+            {
+                var gdate = new GaianLocalDate(_zdt.Date).ToString(null, culture);
+                var time = _zdt.TimeOfDay.ToString("HH':'mm", culture);
+                var off = _zdt.Offset.ToString("g", culture);
+                return $"{gdate} {time} [{_zdt.Zone.Id}] {off}";
+            }
+
+            // Provide resolver, zone provider, and template value:
+            var resolver = Resolvers.LenientResolver;                 // or your custom resolver
+            var zoneProv = DateTimeZoneProviders.Tzdb;
+            var template = new LocalDateTime(2000, 1, 1, 0, 0)
+                              .InZoneLeniently(zoneProv["UTC"]);      // reasonable template
+
+            var pattern = ZonedDateTimePattern.Create(patternText, culture, resolver, zoneProv, template);
+            return pattern.Format(_zdt);
+        }
+
 
         public GaianZonedDateTime WithCalendar(CalendarSystem calendar) => throw new NotImplementedException(); // L110-111
         public GaianZonedDateTime WithZone(DateTimeZone targetZone) => throw new NotImplementedException();     // L111-112
