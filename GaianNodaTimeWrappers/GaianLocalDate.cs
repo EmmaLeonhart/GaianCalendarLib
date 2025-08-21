@@ -60,22 +60,41 @@ namespace Gaian
         public GaianLocalDate(Era era, int yearOfEra, int month, int day, CalendarSystem calendar) => throw new NotImplementedException();
         public GaianLocalDate(int year, int month, int day)
         {
-            if (0 <= day && day <= 29) {
-                throw new Exception("day needs to be between 1 and 28");
-            }
-            if (0 <= month && month <= 15)
+            // Validate day range (1-28 for all months)
+            if (day < 1 || day > 28)
             {
-                throw new Exception("month needs to be between 1-13 (or 14 in leap years)");
+                throw new ArgumentOutOfRangeException(nameof(day), "Day must be between 1 and 28");
             }
 
-            // Convert Gaian components back to ISO week-based date
-            int isoWeekYear = year - 10000;  // 12025 -> 2025
-            int weekOfYear = ((month - 1) * 4) + ((day - 1) / 7) + 1;
-            int dayOfWeek = ((day - 1) % 7) + 1;
-            
-            // Use NodaTime's week-year construction
+            // Check if this is a leap year (has 53 weeks, allowing month 14)
+            int isoWeekYear = year - 10000;
             var weekYearRules = WeekYearRules.Iso;
-            _date = weekYearRules.GetLocalDate(isoWeekYear, weekOfYear, (IsoDayOfWeek)dayOfWeek);
+            int weeksInYear = weekYearRules.GetWeeksInWeekYear(isoWeekYear);
+            bool isLeapYear = weeksInYear == 53;
+            int maxMonth = isLeapYear ? 14 : 13;
+
+            // Validate month range
+            if (month < 1 || month > maxMonth)
+            {
+                string leapInfo = isLeapYear ? " (leap year with 14 months)" : " (regular year with 13 months)";
+                throw new ArgumentOutOfRangeException(nameof(month), 
+                    $"Month must be between 1 and {maxMonth}{leapInfo}");
+            }
+
+            try
+            {
+                // Convert Gaian components back to ISO week-based date
+                int weekOfYear = ((month - 1) * 4) + ((day - 1) / 7) + 1;
+                int dayOfWeek = ((day - 1) % 7) + 1;
+                
+                // Use NodaTime's week-year construction
+                _date = weekYearRules.GetLocalDate(isoWeekYear, weekOfYear, (IsoDayOfWeek)dayOfWeek);
+            }
+            catch (ArgumentOutOfRangeException ex)
+            {
+                throw new ArgumentOutOfRangeException($"Invalid Gaian date: {year}/{month}/{day}. " +
+                    $"This combination does not correspond to a valid date in the underlying calendar.", ex);
+            }
         }
         public GaianLocalDate(int year, int month, int day, CalendarSystem calendar) => throw new NotImplementedException();
 
