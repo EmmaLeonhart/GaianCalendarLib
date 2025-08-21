@@ -56,7 +56,7 @@ namespace Gaian
         public Era Era => throw new NotImplementedException();
         public static GaianLocalDate MaxIsoValue => throw new NotImplementedException();
         public static GaianLocalDate MinIsoValue => throw new NotImplementedException();
-        public int GaianMonth => GaianTools.GetMonth(_date);
+        public GaianMonth Month => GaianTools.GetMonth(_date);
         public int Year => GaianTools.GetYear(_date);
         public int YearOfEra => throw new NotImplementedException();
 

@@ -35,7 +35,7 @@ namespace Gaian
 
             Console.WriteLine(dt.Year);
 
-            Console.WriteLine(dt.Month);
+            Console.WriteLine(dt.Month.ToString());
 
 
             Console.WriteLine(dt.DayOfWeek);
