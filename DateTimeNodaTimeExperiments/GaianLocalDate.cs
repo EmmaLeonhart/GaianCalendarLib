@@ -4,6 +4,8 @@ using System.Numerics;
 using System.Xml.Schema;
 using System.Xml;
 using System.Xml.Serialization;
+using NodaTime.Text;
+using System.Globalization;
 
 namespace Gaian
 {
@@ -25,14 +27,11 @@ namespace Gaian
         //this operates as a simple wrapper for a LocalDate in NodaTime
         private LocalDate date;
 
-        public GaianLocalDate(LocalDate date)
+        public GaianLocalDate(LocalDate localdate)
         {
-            this.date = date;
+            this.date = localdate;
         }
 
-        public override string ToString() {
-            return GaianTools.GaiaDateString(date);
-        }
 
 
         public GaianLocalDate(Era era, int yearOfEra, int month, int day) => throw new NotImplementedException();
@@ -96,7 +95,30 @@ namespace Gaian
         public DateTime ToDateTimeUnspecified() => throw new NotImplementedException();
 
         //public override string ToString() => throw new NotImplementedException();
-        public string ToString(string? patternText, IFormatProvider? formatProvider) => throw new NotImplementedException();
+        public string ToString(string? patternText, IFormatProvider? formatProvider)
+        {
+            if (patternText == null)
+            {
+                // Default formatting
+                return ToString();
+            }
+
+            var culture = (formatProvider as CultureInfo) ?? CultureInfo.CurrentCulture;
+
+            // For example, if this is a LocalDateTime-like struct:
+            var pattern = LocalDateTimePattern.Create(patternText, culture);
+            throw new NotImplementedException();
+            //return pattern.Format(date);
+        }
+
+
+
+
+        public override string ToString()
+        {
+            return GaianTools.GaiaDateString(date);
+        }
+
 
         public YearMonth ToYearMonth() => throw new NotImplementedException();
         public GaianLocalDate With(Func<GaianLocalDate, GaianLocalDate> adjuster) => throw new NotImplementedException();
