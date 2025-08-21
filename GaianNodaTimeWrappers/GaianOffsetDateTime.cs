@@ -32,7 +32,27 @@ namespace Gaian
 
         // ===== Constructor (mirrors: OffsetDateTime(_ldt, Offset)) =====
         public GaianOffsetDateTime(GaianLocalDateTime localDateTime, Offset offset)
-            => throw new NotImplementedException();
+        {
+            _odt = localDateTime.Value.WithOffset(offset);
+        }
+
+        public GaianOffsetDateTime(int year, int month, int day, int hour, int minute, Offset offset)
+        {
+            var gaianDateTime = new GaianLocalDateTime(year, month, day, hour, minute);
+            _odt = gaianDateTime.Value.WithOffset(offset);
+        }
+
+        public GaianOffsetDateTime(int year, int month, int day, int hour, int minute, int second, Offset offset)
+        {
+            var gaianDateTime = new GaianLocalDateTime(year, month, day, hour, minute, second);
+            _odt = gaianDateTime.Value.WithOffset(offset);
+        }
+
+        public GaianOffsetDateTime(int year, int month, int day, int hour, int minute, int second, int millisecond, Offset offset)
+        {
+            var gaianDateTime = new GaianLocalDateTime(year, month, day, hour, minute, second, millisecond);
+            _odt = gaianDateTime.Value.WithOffset(offset);
+        }
 
         public GaianOffsetDateTime(OffsetDateTime odt)
         {

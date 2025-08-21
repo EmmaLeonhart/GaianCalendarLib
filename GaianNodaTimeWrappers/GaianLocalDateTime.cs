@@ -36,19 +36,31 @@ namespace Gaian
 
         // ===== Constructors (mirror) =====
         public GaianLocalDateTime(int year, int month, int day, int hour, int minute)
-            => throw new NotImplementedException();
+        {
+            var gaianDate = new GaianLocalDate(year, month, day);
+            var time = new LocalTime(hour, minute);
+            _ldt = gaianDate.Value.At(time);
+        }
 
         public GaianLocalDateTime(int year, int month, int day, int hour, int minute, CalendarSystem calendar)
             => throw new NotImplementedException();
 
         public GaianLocalDateTime(int year, int month, int day, int hour, int minute, int second)
-            => throw new NotImplementedException();
+        {
+            var gaianDate = new GaianLocalDate(year, month, day);
+            var time = new LocalTime(hour, minute, second);
+            _ldt = gaianDate.Value.At(time);
+        }
 
         public GaianLocalDateTime(int year, int month, int day, int hour, int minute, int second, CalendarSystem calendar)
             => throw new NotImplementedException();
 
         public GaianLocalDateTime(int year, int month, int day, int hour, int minute, int second, int millisecond)
-            => throw new NotImplementedException();
+        {
+            var gaianDate = new GaianLocalDate(year, month, day);
+            var time = new LocalTime(hour, minute, second, millisecond);
+            _ldt = gaianDate.Value.At(time);
+        }
 
         public GaianLocalDateTime(int year, int month, int day, int hour, int minute, int second, int millisecond, CalendarSystem calendar)
             => throw new NotImplementedException();
