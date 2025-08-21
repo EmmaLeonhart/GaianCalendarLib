@@ -193,7 +193,7 @@ namespace Gaian
             => new GaianLocalDateTime(_ldt.PlusTicks(ticks));
 
         public GaianLocalDateTime PlusWeeks(int weeks)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(_ldt.PlusTicks(weeks));
 
         public GaianLocalDateTime PlusYears(int years)
             => throw new NotImplementedException();
