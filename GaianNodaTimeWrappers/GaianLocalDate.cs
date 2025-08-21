@@ -118,9 +118,9 @@ namespace Gaian
         public GaianLocalDate Previous(IsoDayOfWeek targetDayOfWeek) => throw new NotImplementedException();
 
         public GaianLocalDate Plus(Period period) => throw new NotImplementedException();
-        public GaianLocalDate PlusDays(int days) => throw new NotImplementedException();
+        public GaianLocalDate PlusDays(int days) => new GaianLocalDate(_date.PlusDays(days));
         public GaianLocalDate PlusMonths(int months) => throw new NotImplementedException();
-        public GaianLocalDate PlusWeeks(int weeks) => throw new NotImplementedException();
+        public GaianLocalDate PlusWeeks(int weeks) => new GaianLocalDate(_date.PlusWeeks(weeks));
         public GaianLocalDate PlusYears(int years) => throw new NotImplementedException();
 
         public DateOnly ToDateOnly() => _date.ToDateOnly();
