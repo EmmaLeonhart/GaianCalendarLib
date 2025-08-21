@@ -90,15 +90,16 @@ namespace Gaian
         //public static GaianLocalDateTime MaxIsoValue => throw new NotImplementedException();
         //public static GaianLocalDateTime MinIsoValue => throw new NotImplementedException();
 
-        public int Millisecond => throw new NotImplementedException();
-        public int Minute => throw new NotImplementedException();
-        //public int Month => throw new NotImplementedException();
-        public long NanosecondOfDay => throw new NotImplementedException();
-        public int NanosecondOfSecond => throw new NotImplementedException();
-        public int Second => throw new NotImplementedException();
-        public long TickOfDay => throw new NotImplementedException();
-        public int TickOfSecond => throw new NotImplementedException();
-        public LocalTime TimeOfDay => throw new NotImplementedException();
+        public int Millisecond => _ldt.Millisecond;
+        public int Minute => _ldt.Minute;
+        // public int Month           => ...
+        public long NanosecondOfDay => _ldt.NanosecondOfDay;
+        public int NanosecondOfSecond => _ldt.NanosecondOfSecond;
+        public int Second => _ldt.Second;
+        public long TickOfDay => _ldt.TickOfDay;
+        public int TickOfSecond => _ldt.TickOfSecond;
+        public LocalTime TimeOfDay => _ldt.TimeOfDay;
+
         //public int Year => throw new NotImplementedException();
         ////I am not including  => throw new NotImplementedException();
 

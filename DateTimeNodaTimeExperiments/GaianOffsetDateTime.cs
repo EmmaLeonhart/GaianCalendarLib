@@ -54,26 +54,24 @@ namespace Gaian
         //I am not including  => throw new NotImplementedException();
 
 
+
+        public GaianLocalDate Date => new GaianLocalDate(nodaDate);
+
+
+
         // ===== Properties (mapped 1:1; Local types adapted to Gaian) =====
         //public CalendarSystem Calendar => throw new NotImplementedException();           // docs: Calendar
-        public int ClockHourOfHalfDay => throw new NotImplementedException();            // docs: ClockHourOfHalfDay
-        public GaianLocalDate Date => throw new NotImplementedException();               // docs: nodaDate (adapted)
-        //public int Day => throw new NotImplementedException();                           // docs: Day
-        //public IsoDayOfWeek DayOfWeek => throw new NotImplementedException();            // docs: DayOfWeek
-        //public int DayOfYear => throw new NotImplementedException();                     // docs: DayOfYear
-        //public Era Era => throw new NotImplementedException();                           // docs: Era
-        public int Hour => throw new NotImplementedException();                          // docs: Hour
-        public GaianLocalDateTime LocalDateTime => throw new NotImplementedException();  // docs: _ldt (adapted)
-        public int Millisecond => throw new NotImplementedException();                   // docs: Millisecond
-        public int Minute => throw new NotImplementedException();                        // docs: Minute
-        //public int Month => throw new NotImplementedException();                         // docs: Month
-        public long NanosecondOfDay => throw new NotImplementedException();              // docs: NanosecondOfDay
-        public int NanosecondOfSecond => throw new NotImplementedException();            // docs: NanosecondOfSecond
-        public Offset Offset => this._odt.Offset;                    // docs: Offset
-        public int Second => throw new NotImplementedException();                        // docs: Second
-        public long TickOfDay => throw new NotImplementedException();                    // docs: TickOfDay
-        public int TickOfSecond => throw new NotImplementedException();                  // docs: TickOfSecond
-        public LocalTime TimeOfDay => throw new NotImplementedException();               // docs: TimeOfDay
+        public int ClockHourOfHalfDay => _odt.ClockHourOfHalfDay;
+        public int Hour => _odt.Hour;
+        public int Minute => _odt.Minute;
+        public int Second => _odt.Second;
+        public int Millisecond => _odt.Millisecond;
+        public long NanosecondOfDay => _odt.NanosecondOfDay;
+        public int NanosecondOfSecond => _odt.NanosecondOfSecond;
+        public long TickOfDay => _odt.TickOfDay;
+        public int TickOfSecond => _odt.TickOfSecond;
+        public LocalTime TimeOfDay => _odt.TimeOfDay;
+        public Offset Offset => _odt.Offset;
         //public int Year => throw new NotImplementedException();                          // docs: Year
         ////I am not including  => throw new NotImplementedException();                     // docs: YearOfEra
 
