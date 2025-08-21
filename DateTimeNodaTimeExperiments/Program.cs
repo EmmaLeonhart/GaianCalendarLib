@@ -10,28 +10,27 @@ namespace DateTimeNodaTimeExperiments
         static void Main(string[] args)
         {
             // Example date
-            var zone = DateTimeZoneProviders.Tzdb.GetSystemDefault(); // or: DateTimeZoneProviders.Tzdb["America/Vancouver"]
-            LocalDate date = SystemClock.Instance.GetCurrentInstant().InZone(zone).Date;
-            date = new LocalDate(30, 4, 7);
+            // Pick your time zone
+            DateTimeZone zone = DateTimeZoneProviders.Tzdb["America/Vancouver"];
+
+            // Pick your clock (normally the system clock)
+            IClock clock = SystemClock.Instance;
+
+            // Get the current "now" instant
+            Instant now = clock.GetCurrentInstant();
+
+            // Convert that to a ZonedDateTime
+            ZonedDateTime zdt = now.InZone(zone);
+
+            // Extract the LocalDate
+            LocalDate today = zdt.Date;
+
+            Console.WriteLine(today);  // e.g. 2025-08-20
 
 
+            LocalStarDate lsd = new LocalStarDate(today);
 
-            Console.WriteLine(GaiaDateString(date));
-
-            date = new LocalDate(33, 4, 3);
-
-
-            Console.WriteLine(GaiaDateString(date));
-
-            bool q = true;
-
-            while (q)
-            {
-
-                date = date.PlusDays(-1);
-
-                Console.WriteLine(GaiaDateString(date));
-            }
+            Console.WriteLine(lsd);
 
 
 
@@ -91,6 +90,8 @@ namespace DateTimeNodaTimeExperiments
 
             return $"{monthName} {dayOfMonth}, {gaianYear}";
         }
+
+
 
         private static string GetMonth(int month)
         {

@@ -1,48 +1,12 @@
-﻿using NodaTime;
-using NodaTime.Calendars;
+﻿using NodaTime.Calendars;
+using NodaTime;
 
 namespace DateTimeNodaTimeExperiments
 {
-    internal class StarDate
+    internal class GaianTools
     {
-        private static StarDate now;
-        private LocalTime startTime;
 
-        public StarDate(LocalTime startTime)
-        {
-            this.startTime = startTime;
-        }
-
-        public static StarDate Now { get => StarDate.GetNow(); internal set => now = value; }
-
-        private static StarDate GetNow()
-        {
-
-            Console.WriteLine("Hello, World!");
-            DateTime dt = DateTime.Now;
-            Console.WriteLine(dt.ToString());
-
-            var tz = DateTimeZoneProviders.Tzdb.GetSystemDefault();
-            var clock = SystemClock.Instance;
-
-            // Snapshot "now"
-            Instant start = clock.GetCurrentInstant();
-            ZonedDateTime startLocal = start.InZone(tz);
-
-            // Keep the wall-clock time constant
-            LocalDate startDate = startLocal.Date;
-            LocalTime startTime = startLocal.TimeOfDay;
-
-            StarDate sd = new StarDate(startTime);
-
-            return sd;
-
-            throw new NotImplementedException();
-        }
-
-
-
-        private static string GaiaDateString(LocalDate date)
+        public static string GaiaDateString(LocalDate date)
         {
             var weekYearRules = WeekYearRules.Iso;
 
@@ -64,7 +28,7 @@ namespace DateTimeNodaTimeExperiments
 
 
 
-        private static string GetMonth(int month)
+        public static string GetMonth(int month)
         {
             // 4-week months; week 53 becomes month 14 ("Horus")
             switch (month)
@@ -86,6 +50,5 @@ namespace DateTimeNodaTimeExperiments
                 default: throw new ArgumentOutOfRangeException(nameof(month), "Month must be 1–14.");
             }
         }
-
     }
 }
