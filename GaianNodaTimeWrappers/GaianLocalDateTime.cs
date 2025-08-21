@@ -34,6 +34,8 @@ namespace Gaian
     {
         private readonly LocalDateTime _ldt;
 
+        public LocalDateTime Value => _ldt;
+
         // ===== Constructors (mirror) =====
         public GaianLocalDateTime(int year, int month, int day, int hour, int minute)
         {
