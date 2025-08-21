@@ -38,7 +38,7 @@ namespace Gaian
         // ========= Core properties (mirror names/semantics) =========
         public CalendarSystem Calendar => throw new NotImplementedException();                 // L12
         public int ClockHourOfHalfDay => throw new NotImplementedException();                  // L12-13
-        public GaianDate Date => throw new NotImplementedException();                          // L14 (Gaian-adapted)
+        public GaianLocalDate Date => throw new NotImplementedException();                          // L14 (Gaian-adapted)
         public int Day => throw new NotImplementedException();                                 // L15
         public IsoDayOfWeek DayOfWeek => throw new NotImplementedException();                  // L16
         public int DayOfYear => throw new NotImplementedException();                           // L16
