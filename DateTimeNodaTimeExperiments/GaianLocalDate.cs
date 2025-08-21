@@ -5,7 +5,7 @@ using System.Xml.Schema;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace DateTimeNodaTimeExperiments
+namespace Gaian
 {
     public struct GaianLocalDate :
         IEquatable<GaianLocalDate>,

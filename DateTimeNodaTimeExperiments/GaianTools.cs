@@ -1,7 +1,7 @@
 ﻿using NodaTime.Calendars;
 using NodaTime;
 
-namespace DateTimeNodaTimeExperiments
+namespace Gaian
 {
     internal class GaianTools
     {

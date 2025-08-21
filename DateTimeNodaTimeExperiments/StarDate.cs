@@ -1,7 +1,7 @@
 ﻿using NodaTime;
 using NodaTime.Calendars;
 
-namespace DateTimeNodaTimeExperiments
+namespace Gaian
 {
     internal class StarDate
     {
