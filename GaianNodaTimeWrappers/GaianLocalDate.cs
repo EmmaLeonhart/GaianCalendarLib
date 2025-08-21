@@ -106,7 +106,7 @@ namespace Gaian
         public GaianLocalDate(int year, int month, int day, CalendarSystem calendar) => throw new NotImplementedException();
 
         // --- Properties (mirror) ---
-        public CalendarSystem Calendar => throw new NotImplementedException();
+        public CalendarSystem Calendar => _date.Calendar;
         public int Day => GaianTools.GetDay(_date);
         public IsoDayOfWeek DayOfWeek => GaianTools.GetDayOfWeek(_date);
         public int DayOfYear => GaianTools.GetDayOfYear(_date);

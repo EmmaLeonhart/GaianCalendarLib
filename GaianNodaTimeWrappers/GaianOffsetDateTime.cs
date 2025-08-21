@@ -66,7 +66,7 @@ namespace Gaian
 
 
         // --- Properties taken from LocalDate ---
-        public CalendarSystem Calendar => throw new NotImplementedException();
+        public CalendarSystem Calendar => _odt.Calendar;
         public int Day => GaianTools.GetDay(nodaDate);
         public IsoDayOfWeek DayOfWeek => GaianTools.GetDayOfWeek(nodaDate);
         public int DayOfYear => GaianTools.GetDayOfYear(nodaDate);

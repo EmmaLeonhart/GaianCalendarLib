@@ -39,8 +39,14 @@ namespace Gaian
         public static implicit operator GaianZonedDateTime(ZonedDateTime zdt) => new GaianZonedDateTime(zdt);
         public static implicit operator ZonedDateTime(GaianZonedDateTime gzdt) => gzdt._zdt;
 
-        public GaianZonedDateTime(Instant instant, DateTimeZone zone) => throw new NotImplementedException();
-        public GaianZonedDateTime(Instant instant, DateTimeZone zone, CalendarSystem calendar) => throw new NotImplementedException();
+        public GaianZonedDateTime(Instant instant, DateTimeZone zone)
+        {
+            _zdt = instant.InZone(zone);
+        }
+        public GaianZonedDateTime(Instant instant, DateTimeZone zone, CalendarSystem calendar)
+        {
+            _zdt = instant.InZone(zone).WithCalendar(calendar);
+        }
         public GaianZonedDateTime(GaianLocalDateTime localDateTime, DateTimeZone zone, Offset offset)
         {
             _zdt = localDateTime.Value.InZone(zone, Resolvers.CreateMappingResolver(Resolvers.LenientResolver, zone, localDateTime.Value, offset));
@@ -75,7 +81,7 @@ namespace Gaian
 
 
         // --- Properties taken from LocalDate ---
-        public CalendarSystem Calendar => throw new NotImplementedException();
+        public CalendarSystem Calendar => _zdt.Calendar;
         public int Day => GaianTools.GetDay(nodaDate);
         public IsoDayOfWeek DayOfWeek => GaianTools.GetDayOfWeek(nodaDate);
         public int DayOfYear => GaianTools.GetDayOfYear(nodaDate);
@@ -168,7 +174,7 @@ namespace Gaian
 
 
         public GaianZonedDateTime WithCalendar(CalendarSystem calendar) => throw new NotImplementedException(); // L110-111
-        public GaianZonedDateTime WithZone(DateTimeZone targetZone) => throw new NotImplementedException();     // L111-112
+        public GaianZonedDateTime WithZone(DateTimeZone targetZone) => new GaianZonedDateTime(_zdt.WithZone(targetZone));     // L111-112
 
         // ========= Operators (mirror) =========
         public static GaianZonedDateTime operator +(GaianZonedDateTime zonedDateTime, Duration duration) => new GaianZonedDateTime(zonedDateTime._zdt.Plus(duration)); // L112-117

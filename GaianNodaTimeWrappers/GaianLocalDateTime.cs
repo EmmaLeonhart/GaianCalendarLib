@@ -78,7 +78,7 @@ namespace Gaian
 
 
 
-        public CalendarSystem Calendar => throw new NotImplementedException();
+        public CalendarSystem Calendar => _ldt.Calendar;
         public int Day => GaianTools.GetDay(nodaDate);
         public IsoDayOfWeek DayOfWeek => GaianTools.GetDayOfWeek(nodaDate);
         public int DayOfYear => GaianTools.GetDayOfYear(nodaDate);
@@ -90,7 +90,7 @@ namespace Gaian
 
 
 
-        public int ClockHourOfHalfDay => throw new NotImplementedException();
+        public int ClockHourOfHalfDay => _ldt.ClockHourOfHalfDay;
         public LocalDate nodaDate => this._ldt.Date;
         public GaianLocalDate Date => new GaianLocalDate(nodaDate);
         public int Hour => _ldt.Hour;
