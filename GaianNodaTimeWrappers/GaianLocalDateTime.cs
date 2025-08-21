@@ -158,10 +158,10 @@ namespace Gaian
             => throw new NotImplementedException();
 
         public GaianLocalDateTime Next(IsoDayOfWeek targetDayOfWeek)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(_ldt.Date.Next(targetDayOfWeek).At(_ldt.TimeOfDay));
 
         public GaianLocalDateTime Previous(IsoDayOfWeek targetDayOfWeek)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(_ldt.Date.Previous(targetDayOfWeek).At(_ldt.TimeOfDay));
 
         public GaianLocalDateTime Plus(Period period)
             => throw new NotImplementedException();
@@ -224,8 +224,8 @@ namespace Gaian
         public GaianLocalDateTime WithCalendar(CalendarSystem calendar)
             => throw new NotImplementedException();
 
-        public OffsetDateTime WithOffset(Offset offset)
-            => throw new NotImplementedException();
+        public GaianOffsetDateTime WithOffset(Offset offset)
+            => new GaianOffsetDateTime(_ldt.WithOffset(offset));
 
         // ===== Comparison (mirror) =====
         public int CompareTo(GaianLocalDateTime other)

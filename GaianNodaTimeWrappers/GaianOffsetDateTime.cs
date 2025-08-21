@@ -96,16 +96,16 @@ namespace Gaian
 
         // ===== Static methods =====
         public static GaianOffsetDateTime Add(GaianOffsetDateTime value, Duration duration)
-            => throw new NotImplementedException();
+            => new GaianOffsetDateTime(value._odt.Plus(duration));
 
         public static XmlQualifiedName AddSchema(XmlSchemaSet xmlSchemaSet)
             => throw new NotImplementedException();
 
         public static GaianOffsetDateTime Subtract(GaianOffsetDateTime value, Duration duration)
-            => throw new NotImplementedException();
+            => new GaianOffsetDateTime(value._odt.Minus(duration));
 
         public static Duration Subtract(GaianOffsetDateTime end, GaianOffsetDateTime start)
-            => throw new NotImplementedException();
+            => end._odt.Minus(start._odt);
 
         // ===== Instance methods =====
         public bool Equals(GaianOffsetDateTime other)
@@ -118,7 +118,7 @@ namespace Gaian
             => _odt.GetHashCode();
 
         public GaianOffsetDateTime Plus(Duration duration)
-            => throw new NotImplementedException();
+            => new GaianOffsetDateTime(_odt.Plus(duration));
 
         public GaianOffsetDateTime PlusHours(int hours)
             => new GaianOffsetDateTime(_odt.PlusHours(hours));
@@ -139,10 +139,10 @@ namespace Gaian
             => new GaianOffsetDateTime(_odt.PlusNanoseconds(nanoseconds));
 
         public GaianOffsetDateTime Minus(Duration duration)
-            => throw new NotImplementedException();
+            => new GaianOffsetDateTime(_odt.Minus(duration));
 
         public Duration Minus(GaianOffsetDateTime other)
-            => throw new NotImplementedException();
+            => _odt.Minus(other._odt);
 
         public DateTimeOffset ToDateTimeOffset()
             => _odt.ToDateTimeOffset();
@@ -192,13 +192,13 @@ namespace Gaian
 
         // ===== Operators =====
         public static GaianOffsetDateTime operator +(GaianOffsetDateTime value, Duration duration)
-            => throw new NotImplementedException();
+            => new GaianOffsetDateTime(value._odt.Plus(duration));
 
         public static GaianOffsetDateTime operator -(GaianOffsetDateTime value, Duration duration)
-            => throw new NotImplementedException();
+            => new GaianOffsetDateTime(value._odt.Minus(duration));
 
         public static Duration operator -(GaianOffsetDateTime end, GaianOffsetDateTime start)
-            => throw new NotImplementedException();
+            => end._odt.Minus(start._odt);
 
         public static bool operator ==(GaianOffsetDateTime left, GaianOffsetDateTime right)
             => left._odt == right._odt;

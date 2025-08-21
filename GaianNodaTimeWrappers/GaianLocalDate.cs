@@ -141,8 +141,8 @@ namespace Gaian
         public static GaianLocalDate Subtract(GaianLocalDate date, Period period) => throw new NotImplementedException();
 
         // --- Instance methods (mirror) ---
-        public LocalDateTime At(LocalTime time) => throw new NotImplementedException();
-        public LocalDateTime AtMidnight() => throw new NotImplementedException();
+        public GaianLocalDateTime At(LocalTime time) => new GaianLocalDateTime(_date.At(time));
+        public GaianLocalDateTime AtMidnight() => new GaianLocalDateTime(_date.AtMidnight());
         public ZonedDateTime AtStartOfDayInZone(DateTimeZone zone) => throw new NotImplementedException();
 
         //public int CompareTo(GaianLocalDate other) => throw new NotImplementedException();
@@ -158,8 +158,8 @@ namespace Gaian
         public GaianLocalDate Minus(Period period) => throw new NotImplementedException();
         public Period Minus(GaianLocalDate date) => throw new NotImplementedException();
 
-        public GaianLocalDate Next(IsoDayOfWeek targetDayOfWeek) => throw new NotImplementedException();
-        public GaianLocalDate Previous(IsoDayOfWeek targetDayOfWeek) => throw new NotImplementedException();
+        public GaianLocalDate Next(IsoDayOfWeek targetDayOfWeek) => new GaianLocalDate(_date.Next(targetDayOfWeek));
+        public GaianLocalDate Previous(IsoDayOfWeek targetDayOfWeek) => new GaianLocalDate(_date.Previous(targetDayOfWeek));
 
         public GaianLocalDate Plus(Period period) => throw new NotImplementedException();
         public GaianLocalDate PlusDays(int days) => new GaianLocalDate(_date.PlusDays(days));
@@ -199,7 +199,7 @@ namespace Gaian
         public YearMonth ToYearMonth() => throw new NotImplementedException();
         public GaianLocalDate With(Func<GaianLocalDate, GaianLocalDate> adjuster) => throw new NotImplementedException();
         public GaianLocalDate WithCalendar(CalendarSystem calendar) => throw new NotImplementedException();
-        public OffsetDate WithOffset(Offset offset) => throw new NotImplementedException();
+        public GaianOffsetDateTime WithOffset(Offset offset) => new GaianOffsetDateTime(_date.AtMidnight().WithOffset(offset));
 
         // --- Operators (mirror) ---
         public static LocalDateTime operator +(GaianLocalDate date, LocalTime time) => throw new NotImplementedException();

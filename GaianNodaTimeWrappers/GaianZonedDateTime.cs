@@ -40,7 +40,7 @@ namespace Gaian
         public GaianZonedDateTime(Instant instant, DateTimeZone zone, CalendarSystem calendar) => throw new NotImplementedException();
         public GaianZonedDateTime(GaianLocalDateTime localDateTime, DateTimeZone zone, Offset offset)
         {
-            _zdt = localDateTime.Value.InZone(zone, ZoneLocalMappingResolver.CreateMappingResolver(Resolvers.LenientResolver, zone, localDateTime.Value, offset));
+            _zdt = localDateTime.Value.InZone(zone, Resolvers.CreateMappingResolver(Resolvers.LenientResolver, zone, localDateTime.Value, offset));
         }
 
         public GaianZonedDateTime(int year, int month, int day, int hour, int minute, DateTimeZone zone)
@@ -83,8 +83,8 @@ namespace Gaian
         public int Year => GaianTools.GetYear(nodaDate);
 
 
-        public int ClockHourOfHalfDay => throw new NotImplementedException();
-        public GaianLocalDate Date => throw new NotImplementedException();
+        public int ClockHourOfHalfDay => _zdt.ClockHourOfHalfDay;
+        public GaianLocalDate Date => new GaianLocalDate(_zdt.Date);
         public int Hour => _zdt.Hour;
         public GaianLocalDateTime LocalDateTime => new GaianLocalDateTime(_zdt.LocalDateTime);
         public int Millisecond => _zdt.Millisecond;
@@ -96,10 +96,10 @@ namespace Gaian
         public long TickOfDay => _zdt.TickOfDay;
         public int TickOfSecond => _zdt.TickOfSecond;
         public LocalTime TimeOfDay => _zdt.TimeOfDay;
-        public DateTimeZone Zone => throw new NotImplementedException();
+        public DateTimeZone Zone => _zdt.Zone;
 
         // ========= Static helpers (mirror) =========
-        public static GaianZonedDateTime Add(GaianZonedDateTime zonedDateTime, Duration duration) => throw new NotImplementedException();      // L36-41
+        public static GaianZonedDateTime Add(GaianZonedDateTime zonedDateTime, Duration duration) => new GaianZonedDateTime(zonedDateTime._zdt.Plus(duration));      // L36-41
         public static XmlQualifiedName AddSchema(XmlSchemaSet xmlSchemaSet) => throw new NotImplementedException();                           // L41-42
         public static GaianZonedDateTime FromDateTimeOffset(DateTimeOffset dateTimeOffset)
         {
@@ -107,8 +107,8 @@ namespace Gaian
             throw new NotImplementedException();            // L47-48
         }
 
-        public static GaianZonedDateTime Subtract(GaianZonedDateTime zonedDateTime, Duration duration) => throw new NotImplementedException(); // L84-88
-        public static Duration Subtract(GaianZonedDateTime end, GaianZonedDateTime start) => throw new NotImplementedException();             // L89-91
+        public static GaianZonedDateTime Subtract(GaianZonedDateTime zonedDateTime, Duration duration) => new GaianZonedDateTime(zonedDateTime._zdt.Minus(duration)); // L84-88
+        public static Duration Subtract(GaianZonedDateTime end, GaianZonedDateTime start) => end._zdt.Minus(start._zdt);             // L89-91
 
         // ========= Instance methods (mirror) =========
         public void Deconstruct(out GaianLocalDateTime localDateTime, out DateTimeZone dateTimeZone, out Offset offset) => throw new NotImplementedException(); // L42-43 (Gaian-adapted)
@@ -120,9 +120,9 @@ namespace Gaian
         public ZoneInterval GetZoneInterval() => _zdt.GetZoneInterval();
         public bool IsDaylightSavingTime() => _zdt.IsDaylightSavingTime();
 
-        public GaianZonedDateTime Minus(Duration duration) => throw new NotImplementedException();      // L56-60
-        public Duration Minus(GaianZonedDateTime other) => throw new NotImplementedException();         // L61-63
-        public GaianZonedDateTime Plus(Duration duration) => throw new NotImplementedException();       // L64-68
+        public GaianZonedDateTime Minus(Duration duration) => new GaianZonedDateTime(_zdt.Minus(duration));      // L56-60
+        public Duration Minus(GaianZonedDateTime other) => _zdt.Minus(other._zdt);         // L61-63
+        public GaianZonedDateTime Plus(Duration duration) => new GaianZonedDateTime(_zdt.Plus(duration));       // L64-68
 
         public GaianZonedDateTime PlusHours(int hours) => new GaianZonedDateTime(_zdt.PlusHours(hours));
         public GaianZonedDateTime PlusMilliseconds(long milliseconds) => new GaianZonedDateTime(_zdt.PlusMilliseconds(milliseconds));
@@ -168,11 +168,11 @@ namespace Gaian
         public GaianZonedDateTime WithZone(DateTimeZone targetZone) => throw new NotImplementedException();     // L111-112
 
         // ========= Operators (mirror) =========
-        public static GaianZonedDateTime operator +(GaianZonedDateTime zonedDateTime, Duration duration) => throw new NotImplementedException(); // L112-117
+        public static GaianZonedDateTime operator +(GaianZonedDateTime zonedDateTime, Duration duration) => new GaianZonedDateTime(zonedDateTime._zdt.Plus(duration)); // L112-117
         public static bool operator ==(GaianZonedDateTime left, GaianZonedDateTime right) => left._zdt == right._zdt;
         public static bool operator !=(GaianZonedDateTime left, GaianZonedDateTime right) => left._zdt != right._zdt;
-        public static GaianZonedDateTime operator -(GaianZonedDateTime zonedDateTime, Duration duration) => throw new NotImplementedException(); // L121-125
-        public static Duration operator -(GaianZonedDateTime end, GaianZonedDateTime start) => throw new NotImplementedException();             // L126-128
+        public static GaianZonedDateTime operator -(GaianZonedDateTime zonedDateTime, Duration duration) => new GaianZonedDateTime(zonedDateTime._zdt.Minus(duration)); // L121-125
+        public static Duration operator -(GaianZonedDateTime end, GaianZonedDateTime start) => end._zdt.Minus(start._zdt);             // L126-128
 
         // ========= XML serialization (explicit) =========
         XmlSchema? IXmlSerializable.GetSchema() => throw new NotImplementedException();         // L129-133 (3.2.x change)
