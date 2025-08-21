@@ -67,31 +67,12 @@ namespace Gaian
             int dayOfMonth = weekInMonth0 * 7 + day;    // 1..28
 
             return dayOfMonth;
-
-            string monthName = GetMonth(month);
-            int gaianYear = weekYear + 10000;
-            throw new NotImplementedException();
             //return $"{monthName} {dayOfMonth}, {gaianYear}";
         }
 
         internal static IsoDayOfWeek GetDayOfWeek(LocalDate date)
         {
             return date.DayOfWeek;
-            var weekYearRules = WeekYearRules.Iso;
-
-            int weekYear = weekYearRules.GetWeekYear(date);          // ISO week-year
-            int weekOfYear = weekYearRules.GetWeekOfWeekYear(date);    // 1..52/53
-            int day = (int)date.DayOfWeek;                      // Mon=1..Sun=7
-
-            // --- FIXED: zero-based math for 4-week "months" ---
-            int monthIndex0 = (weekOfYear - 1) / 4;      // 0..12 (13 only if week 53)
-            int weekInMonth0 = (weekOfYear - 1) % 4;      // 0..3
-            int month = monthIndex0 + 1;           // 1..14 (14 only if week 53)
-            int dayOfMonth = weekInMonth0 * 7 + day;    // 1..28
-
-            string monthName = GetMonth(month);
-            int gaianYear = weekYear + 10000;
-            throw new NotImplementedException();
             //return $"{monthName} {dayOfMonth}, {gaianYear}";
         }
 
@@ -104,16 +85,6 @@ namespace Gaian
             int day = (int)date.DayOfWeek;                      // Mon=1..Sun=7
 
             return (weekOfYear - 1) * 7 + day;
-
-            // --- FIXED: zero-based math for 4-week "months" ---
-            int monthIndex0 = (weekOfYear - 1) / 4;      // 0..12 (13 only if week 53)
-            int weekInMonth0 = (weekOfYear - 1) % 4;      // 0..3
-            int month = monthIndex0 + 1;           // 1..14 (14 only if week 53)
-            int dayOfMonth = weekInMonth0 * 7 + day;    // 1..28
-
-            string monthName = GetMonth(month);
-            int gaianYear = weekYear + 10000;
-            throw new NotImplementedException();
             //return $"{monthName} {dayOfMonth}, {gaianYear}";
         }
 
@@ -130,11 +101,6 @@ namespace Gaian
             int weekInMonth0 = (weekOfYear - 1) % 4;      // 0..3
             int month = monthIndex0 + 1;           // 1..14 (14 only if week 53)
             return new GaianMonth(month);
-            int dayOfMonth = weekInMonth0 * 7 + day;    // 1..28
-
-            string monthName = GetMonth(month);
-            int gaianYear = weekYear + 10000;
-            throw new NotImplementedException();
             //return $"{monthName} {dayOfMonth}, {gaianYear}";
         }
 
