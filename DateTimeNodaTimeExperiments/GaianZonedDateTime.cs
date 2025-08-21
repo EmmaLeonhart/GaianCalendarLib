@@ -7,91 +7,115 @@ using System.Threading.Tasks;
 using System;
 using NodaTime;
 using Gaian;
+using System;
+using System.Numerics;                // for generic operator interfaces
+using System.Xml;
+using System.Xml.Schema;
+using NodaTime;
+using NodaTime.Calendars;
+using NodaTime.TimeZones;
+using System.Xml.Serialization;
 
-namespace GaianTime
+namespace Gaian
 {
-    public sealed class GaianZonedDateTime : IEquatable<GaianZonedDateTime>, IComparable<GaianZonedDateTime>, IComparable
+    /// <summary>
+    /// Gaian wrapper mirroring NodaTime.ZonedDateTime (3.2.x).
+    /// </summary>
+    public readonly struct GaianZonedDateTime :
+        IEquatable<GaianZonedDateTime>,
+        IFormattable,
+        IXmlSerializable,
+        IAdditionOperators<GaianZonedDateTime, Duration, GaianZonedDateTime>,
+        ISubtractionOperators<GaianZonedDateTime, GaianZonedDateTime, Duration>,
+        ISubtractionOperators<GaianZonedDateTime, Duration, GaianZonedDateTime>,
+        IEqualityOperators<GaianZonedDateTime, GaianZonedDateTime, bool>
     {
-        private readonly ZonedDateTime _inner;
+        // ========= Constructors (mirror Noda) =========
+        public GaianZonedDateTime(Instant instant, DateTimeZone zone) => throw new NotImplementedException();                // docs L8
+        public GaianZonedDateTime(Instant instant, DateTimeZone zone, CalendarSystem calendar) => throw new NotImplementedException(); // docs L9
+        public GaianZonedDateTime(GaianLocalDateTime localDateTime, DateTimeZone zone, Offset offset) => throw new NotImplementedException(); // adapted from docs L10-L11
 
-        public GaianZonedDateTime(ZonedDateTime inner)
-        {
-            _inner = inner;
-        }
+        // ========= Core properties (mirror names/semantics) =========
+        public CalendarSystem Calendar => throw new NotImplementedException();                 // L12
+        public int ClockHourOfHalfDay => throw new NotImplementedException();                  // L12-13
+        public GaianDate Date => throw new NotImplementedException();                          // L14 (Gaian-adapted)
+        public int Day => throw new NotImplementedException();                                 // L15
+        public IsoDayOfWeek DayOfWeek => throw new NotImplementedException();                  // L16
+        public int DayOfYear => throw new NotImplementedException();                           // L16
+        public Era Era => throw new NotImplementedException();                                 // L17
+        public int Hour => throw new NotImplementedException();                                // L17-18
+        public GaianLocalDateTime LocalDateTime => throw new NotImplementedException();        // L18-19 (Gaian-adapted)
+        public int Millisecond => throw new NotImplementedException();                         // L19-20
+        public int Minute => throw new NotImplementedException();                              // L21
+        public int Month => throw new NotImplementedException();                               // L21
+        public long NanosecondOfDay => throw new NotImplementedException();                    // L22-25
+        public int NanosecondOfSecond => throw new NotImplementedException();                  // L26
+        public Offset Offset => throw new NotImplementedException();                           // L27
+        public int Second => throw new NotImplementedException();                              // L28
+        public long TickOfDay => throw new NotImplementedException();                          // L29-31
+        public int TickOfSecond => throw new NotImplementedException();                        // L32
+        public LocalTime TimeOfDay => throw new NotImplementedException();                     // L33
+        public int Year => throw new NotImplementedException();                                // L34
+        public int YearOfEra => throw new NotImplementedException();                           // L35
+        public DateTimeZone Zone => throw new NotImplementedException();                       // L35-36
 
-        // =====================
-        // Properties
-        // =====================
+        // ========= Static helpers (mirror) =========
+        public static GaianZonedDateTime Add(GaianZonedDateTime zonedDateTime, Duration duration) => throw new NotImplementedException();      // L36-41
+        public static XmlQualifiedName AddSchema(XmlSchemaSet xmlSchemaSet) => throw new NotImplementedException();                           // L41-42
+        public static GaianZonedDateTime FromDateTimeOffset(DateTimeOffset dateTimeOffset) => throw new NotImplementedException();            // L47-48
+        public static GaianZonedDateTime Subtract(GaianZonedDateTime zonedDateTime, Duration duration) => throw new NotImplementedException(); // L84-88
+        public static Duration Subtract(GaianZonedDateTime end, GaianZonedDateTime start) => throw new NotImplementedException();             // L89-91
 
-        public LocalDateTime LocalDateTime => throw new NotImplementedException();
-        public GaianLocalDate Date => throw new NotImplementedException();
-        public LocalTime TimeOfDay => throw new NotImplementedException();
-        public Offset Offset => throw new NotImplementedException();
-        public DateTimeZone Zone => throw new NotImplementedException();
-        public Instant ToInstant() => throw new NotImplementedException();
-        public long Ticks => throw new NotImplementedException();
-        public int NanosecondOfDay => throw new NotImplementedException();
-        public int NanosecondOfSecond => throw new NotImplementedException();
+        // ========= Instance methods (mirror) =========
+        public void Deconstruct(out GaianLocalDateTime localDateTime, out DateTimeZone dateTimeZone, out Offset offset) => throw new NotImplementedException(); // L42-43 (Gaian-adapted)
 
-        // Calendar fields
-        public int Year => throw new NotImplementedException();
-        public int Month => throw new NotImplementedException();
-        public int Day => throw new NotImplementedException();
-        public int Hour => throw new NotImplementedException();
-        public int Minute => throw new NotImplementedException();
-        public int Second => throw new NotImplementedException();
-        public IsoDayOfWeek DayOfWeek => throw new NotImplementedException();
-        public int DayOfYear => throw new NotImplementedException();
+        public bool Equals(GaianZonedDateTime other) => throw new NotImplementedException();   // L44
+        public override bool Equals(object? obj) => throw new NotImplementedException();       // L45-46
+        public override int GetHashCode() => throw new NotImplementedException();              // L49
 
-        // =====================
-        // Methods
-        // =====================
+        public ZoneInterval GetZoneInterval() => throw new NotImplementedException();          // L49-50
+        public bool IsDaylightSavingTime() => throw new NotImplementedException();             // L51-56
 
-        public GaianZonedDateTime WithZone(DateTimeZone zone) => throw new NotImplementedException();
-        public GaianZonedDateTime WithEarlierOffsetAtOverlap() => throw new NotImplementedException();
-        public GaianZonedDateTime WithLaterOffsetAtOverlap() => throw new NotImplementedException();
+        public GaianZonedDateTime Minus(Duration duration) => throw new NotImplementedException();      // L56-60
+        public Duration Minus(GaianZonedDateTime other) => throw new NotImplementedException();         // L61-63
+        public GaianZonedDateTime Plus(Duration duration) => throw new NotImplementedException();       // L64-68
 
-        public GaianZonedDateTime Plus(Duration duration) => throw new NotImplementedException();
-        public GaianZonedDateTime Minus(Duration duration) => throw new NotImplementedException();
-        public GaianZonedDateTime Plus(Period period) => throw new NotImplementedException();
-        public GaianZonedDateTime Minus(Period period) => throw new NotImplementedException();
+        public GaianZonedDateTime PlusHours(int hours) => throw new NotImplementedException();          // L69-71
+        public GaianZonedDateTime PlusMilliseconds(long milliseconds) => throw new NotImplementedException(); // L71-73
+        public GaianZonedDateTime PlusMinutes(int minutes) => throw new NotImplementedException();      // L74-76
+        public GaianZonedDateTime PlusNanoseconds(long nanoseconds) => throw new NotImplementedException(); // L76-78
+        public GaianZonedDateTime PlusSeconds(long seconds) => throw new NotImplementedException();     // L79-80
+        public GaianZonedDateTime PlusTicks(long ticks) => throw new NotImplementedException();         // L81-83
 
-        public Duration Minus(GaianZonedDateTime other) => throw new NotImplementedException();
+        public DateTimeOffset ToDateTimeOffset() => throw new NotImplementedException();        // L92-96
+        public DateTime ToDateTimeUnspecified() => throw new NotImplementedException();         // L97-101
+        public DateTime ToDateTimeUtc() => throw new NotImplementedException();                 // L101-103
+        public Instant ToInstant() => throw new NotImplementedException();                      // L103-104
+        public OffsetDateTime ToOffsetDateTime() => throw new NotImplementedException();        // L105
 
-        public ZonedDateTime WithZoneSameLocal(DateTimeZone zone) => throw new NotImplementedException();
-        public ZonedDateTime WithZoneSameInstant(DateTimeZone zone) => throw new NotImplementedException();
+        public override string ToString() => throw new NotImplementedException();               // L106
+        public string ToString(string? patternText, IFormatProvider? formatProvider) => throw new NotImplementedException(); // L107-109
 
-        // Conversion helpers
-        public OffsetDateTime ToOffsetDateTime() => throw new NotImplementedException();
-        public LocalDateTime ToLocalDateTime() => throw new NotImplementedException();
+        public GaianZonedDateTime WithCalendar(CalendarSystem calendar) => throw new NotImplementedException(); // L110-111
+        public GaianZonedDateTime WithZone(DateTimeZone targetZone) => throw new NotImplementedException();     // L111-112
 
-        // =====================
-        // Operators
-        // =====================
+        // ========= Operators (mirror) =========
+        public static GaianZonedDateTime operator +(GaianZonedDateTime zonedDateTime, Duration duration) => throw new NotImplementedException(); // L112-117
+        public static bool operator ==(GaianZonedDateTime left, GaianZonedDateTime right) => throw new NotImplementedException();               // L118-119
+        public static bool operator !=(GaianZonedDateTime left, GaianZonedDateTime right) => throw new NotImplementedException();               // L120
+        public static GaianZonedDateTime operator -(GaianZonedDateTime zonedDateTime, Duration duration) => throw new NotImplementedException(); // L121-125
+        public static Duration operator -(GaianZonedDateTime end, GaianZonedDateTime start) => throw new NotImplementedException();             // L126-128
 
-        public static Duration operator -(GaianZonedDateTime left, GaianZonedDateTime right) => throw new NotImplementedException();
-        public static bool operator ==(GaianZonedDateTime left, GaianZonedDateTime right) => throw new NotImplementedException();
-        public static bool operator !=(GaianZonedDateTime left, GaianZonedDateTime right) => throw new NotImplementedException();
-        public static bool operator <(GaianZonedDateTime left, GaianZonedDateTime right) => throw new NotImplementedException();
-        public static bool operator <=(GaianZonedDateTime left, GaianZonedDateTime right) => throw new NotImplementedException();
-        public static bool operator >(GaianZonedDateTime left, GaianZonedDateTime right) => throw new NotImplementedException();
-        public static bool operator >=(GaianZonedDateTime left, GaianZonedDateTime right) => throw new NotImplementedException();
+        // ========= XML serialization (explicit) =========
+        XmlSchema? IXmlSerializable.GetSchema() => throw new NotImplementedException();         // L129-133 (3.2.x change)
+        void IXmlSerializable.ReadXml(XmlReader reader) => throw new NotImplementedException(); // L130-131
+        void IXmlSerializable.WriteXml(XmlWriter writer) => throw new NotImplementedException();// L131-132
 
-        // =====================
-        // Equality / Comparison
-        // =====================
+        // ========= Bridges to raw Noda types (helpers for your impl) =========
+        public static GaianZonedDateTime FromNoda(ZonedDateTime zdt) => throw new NotImplementedException();
+        public ZonedDateTime ToNoda() => throw new NotImplementedException();
 
-        public bool Equals(GaianZonedDateTime other) => throw new NotImplementedException();
-        public override bool Equals(object obj) => throw new NotImplementedException();
-        public override int GetHashCode() => throw new NotImplementedException();
-        public int CompareTo(GaianZonedDateTime other) => throw new NotImplementedException();
-        public int CompareTo(object obj) => throw new NotImplementedException();
-
-        // =====================
-        // Formatting
-        // =====================
-
-        public override string ToString() => throw new NotImplementedException();
-        public string ToString(string patternText, IFormatProvider formatProvider) => throw new NotImplementedException();
+        // Optional: raw deconstruct (for interop)
+        public void Deconstruct(out LocalDateTime localDateTime, out DateTimeZone zone, out Offset offset) => throw new NotImplementedException();
     }
 }
