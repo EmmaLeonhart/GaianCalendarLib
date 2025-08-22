@@ -49,7 +49,7 @@ namespace Gaian
         }
         public GaianZonedDateTime(GaianLocalDateTime localDateTime, DateTimeZone zone, Offset offset)
         {
-            _zdt = localDateTime.Value.InZone(zone, Resolvers.CreateMappingResolver(Resolvers.LenientResolver, zone, localDateTime.Value, offset));
+            _zdt = localDateTime.Value.InZone(zone, Resolvers.LenientResolver);
         }
 
         public GaianZonedDateTime(int year, int month, int day, int hour, int minute, DateTimeZone zone)

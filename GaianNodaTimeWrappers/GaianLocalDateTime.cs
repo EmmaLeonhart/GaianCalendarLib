@@ -114,7 +114,44 @@ namespace Gaian
         public static GaianLocalDateTime FromDateTime(DateTime dateTime)
         {
             return new GaianLocalDateTime(LocalDateTime.FromDateTime(dateTime));    
-            throw new NotImplementedException();
+        }
+
+        public static GaianLocalDateTime Parse(string input)
+        {
+            if (TryParse(input, out var result))
+                return result;
+            throw new FormatException($"Unable to parse '{input}' as a Gaian date time.");
+        }
+
+        public static bool TryParse(string input, out GaianLocalDateTime result)
+        {
+            result = default;
+            
+            // Try to split date and time parts
+            var parts = input.Split(' ');
+            if (parts.Length >= 1 && GaianTools.TryParseGaianDate(parts[0], out int year, out int month, out int day))
+            {
+                try
+                {
+                    if (parts.Length == 1)
+                    {
+                        // Date only
+                        result = new GaianLocalDateTime(year, month, day, 0, 0);
+                        return true;
+                    }
+                    else if (parts.Length >= 2 && TimeSpan.TryParse(parts[1], out var time))
+                    {
+                        // Date and time
+                        result = new GaianLocalDateTime(year, month, day, time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+                        return true;
+                    }
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            return false;
         }
 
         public static GaianLocalDateTime FromDateTime(DateTime dateTime, CalendarSystem calendar)
@@ -214,8 +251,7 @@ namespace Gaian
                 string timeText = _ldt.TimeOfDay.ToString();
                 return $"{gdate.ToString(null, culture)} {timeText}";
             }
-            var pattern = LocalDateTimePattern.Create(patternText, culture);
-            return pattern.Format(_ldt);
+            return GaianDateFormat.Format(_ldt, patternText, culture);
         }
 
         public GaianLocalDateTime With(Func<LocalDate, LocalDate> adjuster)

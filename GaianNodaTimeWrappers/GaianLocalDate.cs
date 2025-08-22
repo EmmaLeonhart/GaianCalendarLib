@@ -129,7 +129,31 @@ namespace Gaian
         public static GaianLocalDate FromDateTime(DateTime dateTime)
         {
             return new GaianLocalDate(LocalDate.FromDateTime(dateTime));
-            throw new NotImplementedException();
+        }
+
+        public static GaianLocalDate Parse(string input)
+        {
+            if (TryParse(input, out var result))
+                return result;
+            throw new FormatException($"Unable to parse '{input}' as a Gaian date.");
+        }
+
+        public static bool TryParse(string input, out GaianLocalDate result)
+        {
+            result = default;
+            if (GaianTools.TryParseGaianDate(input, out int year, out int month, out int day))
+            {
+                try
+                {
+                    result = new GaianLocalDate(year, month, day);
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            return false;
         }
 
         public static GaianLocalDate FromDateTime(DateTime dateTime, CalendarSystem calendar) => throw new NotImplementedException();
@@ -170,21 +194,19 @@ namespace Gaian
         public DateOnly ToDateOnly() => _date.ToDateOnly();
         public DateTime ToDateTimeUnspecified() => _date.ToDateTimeUnspecified();
 
+        public double ToJulianDay() => GaianTools.ToJulianDay(_date);
+        public static GaianLocalDate FromJulianDay(double julianDay) => new GaianLocalDate(GaianTools.FromJulianDay(julianDay));
+
         //public override string ToString() => throw new NotImplementedException();
         public string ToString(string? patternText, IFormatProvider? formatProvider)
         {
             if (patternText == null)
             {
-                // Default formatting
                 return ToString();
             }
 
             var culture = (formatProvider as CultureInfo) ?? CultureInfo.CurrentCulture;
-
-            // For example, if this is a _ldt-like struct:
-            var pattern = LocalDateTimePattern.Create(patternText, culture);
-            throw new NotImplementedException();
-            //return pattern.Format(_date);
+            return GaianDateFormat.Format(_date, patternText, culture);
         }
 
 

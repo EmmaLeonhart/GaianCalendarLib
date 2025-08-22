@@ -1,5 +1,6 @@
 ﻿using NodaTime.Calendars;
 using NodaTime;
+using System.Globalization;
 
 namespace Gaian
 {
@@ -100,6 +101,120 @@ namespace Gaian
             int weekYear = weekYearRules.GetWeekYear(date);          // ISO week-year
             int gaianYear = weekYear + 10000;
             return gaianYear;
+        }
+
+        // Shared parsing utilities
+        public static bool TryParseGaianDate(string input, out int year, out int month, out int day)
+        {
+            year = month = day = 0;
+            if (string.IsNullOrWhiteSpace(input))
+                return false;
+
+            input = input.Trim();
+
+            // Try named format: "Aquarius 15, 12025"
+            if (TryParseNamedFormat(input, out year, out month, out day))
+                return true;
+
+            // Try numeric format: "3/15/12025"
+            if (TryParseNumericFormat(input, out year, out month, out day))
+                return true;
+
+            // Try ISO format: "12025-03-15"
+            if (TryParseIsoFormat(input, out year, out month, out day))
+                return true;
+
+            return false;
+        }
+
+        private static bool TryParseNamedFormat(string input, out int year, out int month, out int day)
+        {
+            year = month = day = 0;
+            try
+            {
+                var parts = input.Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length != 3)
+                    return false;
+
+                var monthName = parts[0];
+                if (!int.TryParse(parts[1], out day))
+                    return false;
+                if (!int.TryParse(parts[2], out year))
+                    return false;
+
+                for (int m = 1; m <= 14; m++)
+                {
+                    var testMonth = new GaianMonth(m);
+                    if (string.Equals(testMonth.ToString("G", CultureInfo.CurrentCulture), monthName, StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(testMonth.ToString("G", CultureInfo.CurrentCulture).Substring(0, 3), monthName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        month = m;
+                        return true;
+                    }
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static bool TryParseNumericFormat(string input, out int year, out int month, out int day)
+        {
+            year = month = day = 0;
+            try
+            {
+                var parts = input.Split('/');
+                if (parts.Length != 3)
+                    return false;
+
+                return int.TryParse(parts[0], out month) &&
+                       int.TryParse(parts[1], out day) &&
+                       int.TryParse(parts[2], out year);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static bool TryParseIsoFormat(string input, out int year, out int month, out int day)
+        {
+            year = month = day = 0;
+            try
+            {
+                var parts = input.Split('-');
+                if (parts.Length != 3)
+                    return false;
+
+                return int.TryParse(parts[0], out year) &&
+                       int.TryParse(parts[1], out month) &&
+                       int.TryParse(parts[2], out day);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // Format utilities - delegates to GaianDateFormat for consistency
+        public static string FormatGaianDate(LocalDate date, string format, CultureInfo culture)
+        {
+            return GaianDateFormat.Format(date, format, culture);
+        }
+
+        // Julian day functionality
+        public static double ToJulianDay(LocalDate date)
+        {
+            var instant = date.AtMidnight().InUtc().ToInstant();
+            return instant.ToJulianDate();
+        }
+
+        public static LocalDate FromJulianDay(double julianDay)
+        {
+            var instant = Instant.FromJulianDate(julianDay);
+            return instant.InUtc().Date;
         }
     }
 }
