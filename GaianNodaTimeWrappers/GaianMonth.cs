@@ -102,20 +102,21 @@ public readonly struct GaianMonth :
         // If you have multiple locales, switch on culture.TwoLetterISOLanguageName.
         return value switch
         {
-            1 => "Aquarius",
-            2 => "Pisces",
-            3 => "Aries",
-            4 => "Taurus",
-            5 => "Gemini",
-            6 => "Cancer",
-            7 => "Leo",
-            8 => "Virgo",
-            9 => "Libra",
-            10 => "Scorpius",
-            11 => "Sagittarius",
-            12 => "Capricorn",
+            1 => "Sagittarius",
+            2 => "Capricorn",
+            3 => "Aquarius",
+            4 => "Pisces",
+            5 => "Aries",
+            6 => "Taurus",
+            7 => "Gemini",
+            8 => "Cancer",
+            9 => "Leo",
+            10 => "Virgo",
+            11 => "Libra",
+            12 => "Scorpius",
             13 => "Ophiuchus",
             14 => "Horus",
+
             _ => $"Month {value}"
         };
     }
