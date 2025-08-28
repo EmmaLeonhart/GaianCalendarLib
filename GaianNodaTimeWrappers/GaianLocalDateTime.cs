@@ -83,8 +83,8 @@ namespace Gaian
         public IsoDayOfWeek DayOfWeek => GaianTools.GetDayOfWeek(nodaDate);
         public int DayOfYear => GaianTools.GetDayOfYear(nodaDate);
         public Era Era => throw new NotImplementedException();
-        public static GaianLocalDate MaxIsoValue => throw new NotImplementedException();
-        public static GaianLocalDate MinIsoValue => throw new NotImplementedException();
+        public static GaianLocalDateTime MaxIsoValue => new GaianLocalDateTime(LocalDateTime.MaxValue);
+        public static GaianLocalDateTime MinIsoValue => new GaianLocalDateTime(LocalDateTime.MinValue);
         public GaianMonth Month => GaianTools.GetMonth(nodaDate);
         public int Year => GaianTools.GetYear(nodaDate);
 
@@ -156,6 +156,18 @@ namespace Gaian
 
         public static GaianLocalDateTime FromDateTime(DateTime dateTime, CalendarSystem calendar)
             => throw new NotImplementedException();
+
+        public static GaianLocalDateTime FromWeekYearWeekAndDay(int weekYear, int weekOfWeekYear, IsoDayOfWeek dayOfWeek)
+        {
+            var gaianDate = GaianLocalDate.FromWeekYearWeekAndDay(weekYear, weekOfWeekYear, dayOfWeek);
+            return gaianDate.AtMidnight();
+        }
+
+        public static GaianLocalDateTime FromWeekYearWeekAndDay(int weekYear, int weekOfWeekYear, IsoDayOfWeek dayOfWeek, LocalTime timeOfDay)
+        {
+            var gaianDate = GaianLocalDate.FromWeekYearWeekAndDay(weekYear, weekOfWeekYear, dayOfWeek);
+            return gaianDate.At(timeOfDay);
+        }
 
         public static GaianLocalDateTime Max(GaianLocalDateTime x, GaianLocalDateTime y)
             => new GaianLocalDateTime(LocalDateTime.Max(x._ldt, y._ldt));

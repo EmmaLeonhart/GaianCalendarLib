@@ -55,6 +55,24 @@ namespace Gaian
                 else
                     Console.WriteLine($"Failed to parse '{input}'");
             }
+            
+            Console.WriteLine("\n=== FromWeekYearWeekAndDay Test ===");
+            // Test: Create date from ISO week-year components
+            // 2024 week 10 (Aquarius period), Monday
+            var fromWeek = GaianLocalDate.FromWeekYearWeekAndDay(2024, 10, IsoDayOfWeek.Monday);
+            Console.WriteLine($"Week-year 2024, week 10, Monday: {fromWeek}");
+            
+            // Test: Create datetime with same components plus time
+            var fromWeekTime = GaianLocalDateTime.FromWeekYearWeekAndDay(2024, 10, IsoDayOfWeek.Monday, new LocalTime(15, 30));
+            Console.WriteLine($"Week-year 2024, week 10, Monday 15:30: {fromWeekTime}");
+            
+            // Verify round-trip: convert back to ISO components
+            var originalDate = fromWeek.Value;  // Get underlying NodaTime LocalDate
+            var weekYearRules = WeekYearRules.Iso;
+            var weekYear = weekYearRules.GetWeekYear(originalDate);
+            var weekOfYear = weekYearRules.GetWeekOfWeekYear(originalDate);
+            var dayOfWeek = originalDate.DayOfWeek;
+            Console.WriteLine($"Round-trip verification: week-year {weekYear}, week {weekOfYear}, {dayOfWeek}");
         }
 
 

@@ -111,8 +111,8 @@ namespace Gaian
         public IsoDayOfWeek DayOfWeek => GaianTools.GetDayOfWeek(_date);
         public int DayOfYear => GaianTools.GetDayOfYear(_date);
         public Era Era => throw new NotImplementedException();
-        public static GaianLocalDate MaxIsoValue => throw new NotImplementedException();
-        public static GaianLocalDate MinIsoValue => throw new NotImplementedException();
+        public static GaianLocalDate MaxIsoValue => new GaianLocalDate(LocalDate.MaxValue);
+        public static GaianLocalDate MinIsoValue => new GaianLocalDate(LocalDate.MinValue);
         public GaianMonth Month => GaianTools.GetMonth(_date);
         public int Year => GaianTools.GetYear(_date);
         //I am not including  => throw new NotImplementedException();
@@ -157,7 +157,12 @@ namespace Gaian
         }
 
         public static GaianLocalDate FromDateTime(DateTime dateTime, CalendarSystem calendar) => throw new NotImplementedException();
-        public static GaianLocalDate FromWeekYearWeekAndDay(int weekYear, int weekOfWeekYear, IsoDayOfWeek dayOfWeek) => throw new NotImplementedException();
+        public static GaianLocalDate FromWeekYearWeekAndDay(int weekYear, int weekOfWeekYear, IsoDayOfWeek dayOfWeek)
+        {
+            var weekYearRules = WeekYearRules.Iso;
+            var localDate = weekYearRules.GetLocalDate(weekYear, weekOfWeekYear, dayOfWeek);
+            return new GaianLocalDate(localDate);
+        }
         public static GaianLocalDate FromYearMonthWeekAndDay(int year, int month, int occurrence, IsoDayOfWeek dayOfWeek) => throw new NotImplementedException();
         public static GaianLocalDate Max(GaianLocalDate x, GaianLocalDate y) => throw new NotImplementedException();
         public static GaianLocalDate Min(GaianLocalDate x, GaianLocalDate y) => throw new NotImplementedException();
