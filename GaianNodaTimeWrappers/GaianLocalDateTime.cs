@@ -83,10 +83,11 @@ namespace Gaian
         public IsoDayOfWeek DayOfWeek => GaianTools.GetDayOfWeek(nodaDate);
         public int DayOfYear => GaianTools.GetDayOfYear(nodaDate);
         public Era Era => throw new NotImplementedException();
-        public static GaianLocalDateTime MaxIsoValue => new GaianLocalDateTime(LocalDateTime.MaxValue);
-        public static GaianLocalDateTime MinIsoValue => new GaianLocalDateTime(LocalDateTime.MinValue);
+        public static GaianLocalDateTime MaxIsoValue => new GaianLocalDateTime(new LocalDateTime(9999, 12, 31, 23, 59, 59));
+        public static GaianLocalDateTime MinIsoValue => new GaianLocalDateTime(new LocalDateTime(1, 1, 1, 0, 0, 0));
         public GaianMonth Month => GaianTools.GetMonth(nodaDate);
         public int Year => GaianTools.GetYear(nodaDate);
+        public static GaianLocalDateTime Now => new GaianLocalDateTime(SystemClock.Instance.GetCurrentInstant().InUtc().LocalDateTime);
 
 
 

@@ -111,10 +111,11 @@ namespace Gaian
         public IsoDayOfWeek DayOfWeek => GaianTools.GetDayOfWeek(_date);
         public int DayOfYear => GaianTools.GetDayOfYear(_date);
         public Era Era => throw new NotImplementedException();
-        public static GaianLocalDate MaxIsoValue => new GaianLocalDate(LocalDate.MaxValue);
-        public static GaianLocalDate MinIsoValue => new GaianLocalDate(LocalDate.MinValue);
+        public static GaianLocalDate MaxIsoValue => new GaianLocalDate(new LocalDate(9999, 12, 31));
+        public static GaianLocalDate MinIsoValue => new GaianLocalDate(new LocalDate(1, 1, 1));
         public GaianMonth Month => GaianTools.GetMonth(_date);
         public int Year => GaianTools.GetYear(_date);
+        public static GaianLocalDate Today => new GaianLocalDate(SystemClock.Instance.GetCurrentInstant().InUtc().Date);
         //I am not including  => throw new NotImplementedException();
 
         // --- Static methods (mirror) ---

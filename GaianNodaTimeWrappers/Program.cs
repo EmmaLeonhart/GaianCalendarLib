@@ -12,9 +12,9 @@ namespace Gaian
         {
             Console.WriteLine("=== Gaian Calendar Advanced Formatting Demo ===\n");
             
-            // Create a test date
-            var gaianDate = new GaianLocalDate(11996, 3, 1); // Aquarius 15, 12025
-            var gaianDateTime = new GaianLocalDateTime(11996, 3, 1, 14, 30, 45);
+            // Use current date
+            var gaianDate = GaianLocalDate.Today;
+            var gaianDateTime = GaianLocalDateTime.Now;
             Console.WriteLine(gaianDate.ToDateTimeUnspecified());
             Console.WriteLine($"Test Date: {gaianDate} (actual month: {gaianDate.Month})\n");
             
