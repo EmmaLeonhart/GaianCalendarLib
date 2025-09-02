@@ -3,7 +3,8 @@
     "allow": [
       "Bash(dotnet run:*)",
       "Bash(dotnet build)",
-      "Bash(move \"Evolutionism+Wiki-20250901223831.xml\" \"GaianCalendar-WikiModule-Export.xml\")"
+      "Bash(move \"Evolutionism+Wiki-20250901223831.xml\" \"GaianCalendar-WikiModule-Export.xml\")",
+      "Bash(python:*)"
     ],
     "deny": [],
     "ask": []

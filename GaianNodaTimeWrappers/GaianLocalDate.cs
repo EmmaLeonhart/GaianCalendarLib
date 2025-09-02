@@ -115,7 +115,7 @@ namespace Gaian
         public static GaianLocalDate MinIsoValue => new GaianLocalDate(new LocalDate(1, 1, 1));
         public GaianMonth Month => GaianTools.GetMonth(_date);
         public int Year => GaianTools.GetYear(_date);
-        public static GaianLocalDate Today => new GaianLocalDate(SystemClock.Instance.GetCurrentInstant().InUtc().Date);
+        public static GaianLocalDate Today => new GaianLocalDate(SystemClock.Instance.GetCurrentInstant().InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).Date);
         //I am not including  => throw new NotImplementedException();
 
         // --- Static methods (mirror) ---

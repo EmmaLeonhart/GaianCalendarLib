@@ -87,7 +87,7 @@ namespace Gaian
         public static GaianLocalDateTime MinIsoValue => new GaianLocalDateTime(new LocalDateTime(1, 1, 1, 0, 0, 0));
         public GaianMonth Month => GaianTools.GetMonth(nodaDate);
         public int Year => GaianTools.GetYear(nodaDate);
-        public static GaianLocalDateTime Now => new GaianLocalDateTime(SystemClock.Instance.GetCurrentInstant().InUtc().LocalDateTime);
+        public static GaianLocalDateTime Now => new GaianLocalDateTime(SystemClock.Instance.GetCurrentInstant().InZone(DateTimeZoneProviders.Tzdb.GetSystemDefault()).LocalDateTime);
 
 
 
