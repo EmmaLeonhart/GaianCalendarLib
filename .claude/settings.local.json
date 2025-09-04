@@ -4,7 +4,12 @@
       "Bash(dotnet run:*)",
       "Bash(dotnet build)",
       "Bash(move \"Evolutionism+Wiki-20250901223831.xml\" \"GaianCalendar-WikiModule-Export.xml\")",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "Read(/C:\\Users\\Immanuelle\\source\\repos\\DateTimeNodaTimeExperiments/**)",
+      "Read(/C:\\Users\\Immanuelle\\source\\repos\\DateTimeNodaTimeExperiments/**)",
+      "Read(/C:\\Users\\Immanuelle\\source\\repos\\DateTimeNodaTimeExperiments/**)",
+      "Read(/C:\\Users\\Immanuelle\\source\\repos\\DateTimeNodaTimeExperiments/**)",
+      "Read(/C:\\Users\\Immanuelle\\source\\repos\\DateTimeNodaTimeExperiments/**)"
     ],
     "deny": [],
     "ask": []
