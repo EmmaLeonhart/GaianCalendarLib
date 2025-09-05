@@ -1,0 +1,11 @@
+GaianYear,StartDate,EndDate,ISOYear,DaysInYear,HasIntercalary,StartWeekday,EndWeekday
+9990,0011-01-01 BC,0011-12-30 BC,-10,364,False,Monday,Sunday
+9991,0010-12-31 BC,0010-12-29 BC,-9,364,False,Monday,Sunday
+9992,0009-12-30 BC,0009-01-03 BC,-8,371,True,Monday,Sunday
+9993,0008-01-04 BC,0008-01-02 BC,-7,364,False,Monday,Sunday
+9994,0007-01-03 BC,0007-01-01 BC,-6,364,False,Monday,Sunday
+9995,0006-01-02 BC,0006-12-31 BC,-5,364,False,Monday,Sunday
+9996,0005-01-01 BC,0005-12-29 BC,-4,364,False,Monday,Sunday
+9997,0004-12-30 BC,0004-12-28 BC,-3,364,False,Monday,Sunday
+9998,0003-12-29 BC,0003-01-03 BC,-2,371,True,Monday,Sunday
+9999,0002-01-04 BC,0002-01-02 BC,-1,364,False,Monday,Sunday

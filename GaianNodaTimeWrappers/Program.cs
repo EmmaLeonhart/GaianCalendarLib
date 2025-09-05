@@ -15,14 +15,21 @@ namespace Gaian
             // Test ancient date: Try year 10000 (= 1 BCE) to see if math works
             try
             {
-                var ancientGaianDate = new GaianLocalDate(10000, 1, 1);
-                Console.WriteLine($"Sagittarius 1, year 10000 = {ancientGaianDate.ToDateTimeUnspecified():yyyy-MM-dd} (proleptic Gregorian)");
-                Console.WriteLine($"That's {ancientGaianDate.ToDateTimeUnspecified().DayOfWeek}\n");
+                var ancientGaianDate = new GaianLocalDate(3, 1, 1);
+                Console.WriteLine(ancientGaianDate.ToString());
+                Console.WriteLine((LocalDate) ancientGaianDate);
+                var ancientGaianDateEnd = new GaianLocalDate(3, 13, 28);
+                Console.WriteLine(ancientGaianDateEnd.ToString());
+                Console.WriteLine((LocalDate)ancientGaianDateEnd);
+                //Console.WriteLine($"Sagittarius 1, year 10000 = {ancientGaianDate.ToDateTimeUnspecified():yyyy-MM-dd} (proleptic Gregorian)");
+                //Console.WriteLine($"That's {ancientGaianDate.ToDateTimeUnspecified().DayOfWeek}\n");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error calculating ancient date: {ex.Message}\n");
             }
+
+
             
             // Use current date
             var gaianDate = GaianLocalDate.Today;
