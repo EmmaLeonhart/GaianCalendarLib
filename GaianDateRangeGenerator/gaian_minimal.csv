@@ -1,0 +1,9 @@
+GaianYear,StartDate,GregorianLeapYear,GaianLeapYear,DaysInYear
+3,December 30, 9998 BC,False,False,364
+4,December 29, 9997 BC,False,True,371
+5,January 3, 9996 BC,True,False,364
+6,January 2, 9995 BC,False,False,364
+7,January 1, 9994 BC,False,False,364
+8,December 31, 9993 BC,False,False,364
+9,December 29, 9992 BC,True,True,371
+10,January 4, 9991 BC,False,False,364
