@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 GaianDateRangeGenerator/detailed_bc_full.csv
 detailed_bc_dates.csv
+make_pages.bat
