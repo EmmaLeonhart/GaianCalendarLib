@@ -9,41 +9,23 @@ namespace GaianDateRangeGenerator
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("=== Fast Gaian Year Generator ===\n");
+            Console.WriteLine("=== Fast Gaian Year Page Generator ===\n");
             
             if (args.Length == 0)
             {
-                Console.WriteLine("Usage:");
-                Console.WriteLine("  dotnet run <gaian_year>           - Generate single year page");
-                Console.WriteLine("  dotnet run csv <start> <end>      - Generate minimal CSV");
-                Console.WriteLine("Examples:");
-                Console.WriteLine("  dotnet run 12024");
-                Console.WriteLine("  dotnet run csv 3 12100");
+                Console.WriteLine("Usage: dotnet run <gaian_year>");
+                Console.WriteLine("Example: dotnet run 12024");
+                Console.WriteLine("Generates year page info for a single Gaian year instantly");
                 return;
             }
             
-            if (args[0].ToLower() == "csv")
+            if (!int.TryParse(args[0], out int gaianYear))
             {
-                if (args.Length < 3 || !int.TryParse(args[1], out int start) || !int.TryParse(args[2], out int end))
-                {
-                    Console.WriteLine("Error: CSV mode needs start and end years");
-                    Console.WriteLine("Example: dotnet run csv 3 12100");
-                    return;
-                }
-                
-                string filename = args.Length >= 4 ? args[3] : "gaian_minimal.csv";
-                GenerateMinimalCSV(start, end, filename);
+                Console.WriteLine("Error: Please provide a valid Gaian year number");
+                return;
             }
-            else
-            {
-                if (!int.TryParse(args[0], out int gaianYear))
-                {
-                    Console.WriteLine("Error: Please provide a valid Gaian year number");
-                    return;
-                }
-                
-                GenerateYearPage(gaianYear);
-            }
+            
+            GenerateYearPage(gaianYear);
         }
         
         static void GenerateYearPage(int gaianYear)
@@ -112,72 +94,6 @@ namespace GaianDateRangeGenerator
             }
         }
         
-        static void GenerateMinimalCSV(int startYear, int endYear, string filename)
-        {
-            Console.WriteLine($"Generating minimal CSV for years {startYear} to {endYear}...");
-            
-            var csv = new StringBuilder();
-            csv.AppendLine("GaianYear,StartDate,GregorianLeapYear,GaianLeapYear,DaysInYear");
-            
-            int count = 0;
-            int total = endYear - startYear + 1;
-            
-            for (int gaianYear = startYear; gaianYear <= endYear; gaianYear++)
-            {
-                try
-                {
-                    var startDate = new GaianLocalDate(gaianYear, 1, 1);
-                    var startGregorian = startDate.Value;
-                    
-                    int isoYear = gaianYear - 10000;
-                    
-                    // Check Gregorian leap year
-                    bool gregorianLeap = false;
-                    if (isoYear > 0)
-                    {
-                        gregorianLeap = DateTime.IsLeapYear(isoYear);
-                    }
-                    else
-                    {
-                        // BC years - convert and check
-                        int bcYear = Math.Abs(isoYear - 1);
-                        if (bcYear % 4 == 0 && (bcYear % 100 != 0 || bcYear % 400 == 0))
-                            gregorianLeap = true;
-                    }
-                    
-                    // Check Gaian leap year (has Horus month)
-                    bool gaianLeap;
-                    try
-                    {
-                        new GaianLocalDate(gaianYear, 14, 1);
-                        gaianLeap = true;
-                    }
-                    catch
-                    {
-                        gaianLeap = false;
-                    }
-                    
-                    int daysInYear = gaianLeap ? 371 : 364;
-                    string startDateStr = FormatHumanDate(startGregorian, gaianYear);
-                    
-                    csv.AppendLine($"{gaianYear},{startDateStr},{gregorianLeap},{gaianLeap},{daysInYear}");
-                    count++;
-                    
-                    if (count % 1000 == 0)
-                    {
-                        Console.WriteLine($"Progress: {count}/{total} ({100.0 * count / total:F1}%)");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error processing year {gaianYear}: {ex.Message}");
-                }
-            }
-            
-            File.WriteAllText(filename, csv.ToString());
-            Console.WriteLine($"Generated {filename} with {count} years");
-        }
-        
         static string FormatGregorianDate(LocalDate date, int gaianYear)
         {
             int isoYear = gaianYear - 10000;
@@ -190,23 +106,6 @@ namespace GaianDateRangeGenerator
             else
             {
                 return $"{date.Year:D4}-{date.Month:D2}-{date.Day:D2}";
-            }
-        }
-        
-        static string FormatHumanDate(LocalDate date, int gaianYear)
-        {
-            int isoYear = gaianYear - 10000;
-            string[] monthNames = { "January", "February", "March", "April", "May", "June",
-                                   "July", "August", "September", "October", "November", "December" };
-            
-            if (isoYear <= 0)
-            {
-                int bcYear = Math.Abs(isoYear - 1);
-                return $"{monthNames[date.Month - 1]} {date.Day}, {bcYear} BC";
-            }
-            else
-            {
-                return $"{monthNames[date.Month - 1]} {date.Day}, {date.Year}";
             }
         }
     }
