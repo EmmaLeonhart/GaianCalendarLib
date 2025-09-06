@@ -68,7 +68,8 @@ namespace Gaian
             }
 
                 // Check if this is a leap year (has 53 weeks, allowing month 14)
-                int isoWeekYear = year - 10000;
+                // Convert Gaian year to ISO year, handling year zero properly
+                int isoWeekYear = year < 10000 ? year - 10001 : year - 10000;
             var weekYearRules = WeekYearRules.Iso;
             int weeksInYear = weekYearRules.GetWeeksInWeekYear(isoWeekYear);
             bool isLeapYear = weeksInYear == 53;

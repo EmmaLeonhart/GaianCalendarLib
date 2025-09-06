@@ -160,7 +160,7 @@ namespace GaianDateRangeGenerator
                     int daysInYear = gaianLeap ? 371 : 364;
                     string startDateStr = FormatHumanDate(startGregorian, gaianYear);
                     
-                    csv.AppendLine($"{gaianYear},{startDateStr},{gregorianLeap},{gaianLeap},{daysInYear}");
+                    csv.AppendLine($"{gaianYear},\"{startDateStr}\",{gregorianLeap},{gaianLeap},{daysInYear}");
                     count++;
                     
                     if (count % 1000 == 0)
@@ -180,12 +180,13 @@ namespace GaianDateRangeGenerator
         
         static string FormatGregorianDate(LocalDate date, int gaianYear)
         {
-            int isoYear = gaianYear - 10000;
-            
-            if (isoYear <= 0)
+            if (gaianYear < 10000)
             {
-                int bcYear = Math.Abs(isoYear - 1);
-                return $"{bcYear:D4}-{date.Month:D2}-{date.Day:D2} BC";
+                // For BC dates, NodaTime uses astronomical years (0, -1, -2, etc.)
+                // Convert to BC format (1 BC, 2 BC, 3 BC, etc.)
+                int bcYear = date.Year <= 0 ? Math.Abs(date.Year - 1) : date.Year;
+                string era = date.Year <= 0 ? " BC" : "";
+                return $"{bcYear:D4}-{date.Month:D2}-{date.Day:D2}{era}";
             }
             else
             {
@@ -195,14 +196,16 @@ namespace GaianDateRangeGenerator
         
         static string FormatHumanDate(LocalDate date, int gaianYear)
         {
-            int isoYear = gaianYear - 10000;
             string[] monthNames = { "January", "February", "March", "April", "May", "June",
                                    "July", "August", "September", "October", "November", "December" };
             
-            if (isoYear <= 0)
+            if (gaianYear < 10000)
             {
-                int bcYear = Math.Abs(isoYear - 1);
-                return $"{monthNames[date.Month - 1]} {date.Day}, {bcYear} BC";
+                // For BC dates, NodaTime uses astronomical years (0, -1, -2, etc.)
+                // Convert to BC format (1 BC, 2 BC, 3 BC, etc.)
+                int bcYear = date.Year <= 0 ? Math.Abs(date.Year - 1) : date.Year;
+                string era = date.Year <= 0 ? " BC" : "";
+                return $"{monthNames[date.Month - 1]} {date.Day}, {bcYear}{era}";
             }
             else
             {

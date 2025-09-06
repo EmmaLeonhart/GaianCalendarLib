@@ -31,7 +31,8 @@
       "Read(/C:\\Users\\Immanuelle\\source\\repos\\DateTimeNodaTimeExperiments/**)",
       "Read(/C:\\Users\\Immanuelle\\source\\repos\\DateTimeNodaTimeExperiments/**)",
       "Read(/C:\\Users\\Immanuelle\\source\\repos\\DateTimeNodaTimeExperiments/**)",
-      "Read(/C:\\Users\\Immanuelle\\source\\repos\\DateTimeNodaTimeExperiments/**)"
+      "Read(/C:\\Users\\Immanuelle\\source\\repos\\DateTimeNodaTimeExperiments/**)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []
