@@ -32,7 +32,9 @@
       "Read(/C:\\Users\\Immanuelle\\source\\repos\\DateTimeNodaTimeExperiments/**)",
       "Read(/C:\\Users\\Immanuelle\\source\\repos\\DateTimeNodaTimeExperiments/**)",
       "Read(/C:\\Users\\Immanuelle\\source\\repos\\DateTimeNodaTimeExperiments/**)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(del test_year_changes.py debug_bc_date.py)",
+      "Bash(git restore:*)"
     ],
     "deny": [],
     "ask": []
