@@ -10,6 +10,13 @@ namespace Gaian
     {
         static void Main(string[] args)
         {
+            // Check if user wants to generate iCal file
+            if (args.Length > 0 && args[0].ToLower() == "ical")
+            {
+                GenerateICalFile();
+                return;
+            }
+
             Console.WriteLine("=== Gaian Calendar Advanced Formatting Demo ===\n");
             
             // Test ancient date: Try year 10000 (= 1 BCE) to see if math works
@@ -116,6 +123,37 @@ namespace Gaian
         //        default: throw new ArgumentOutOfRangeException(nameof(month), "Month must be 1–12.");
         //    }
         //}
+
+        static void GenerateICalFile()
+        {
+            try
+            {
+                Console.WriteLine("=== Gaian Calendar iCal Generator (Google Calendar Compatible) ===\n");
+                Console.WriteLine("Generating yearly files for optimal Google Calendar import...\n");
+
+                var exporter = new GaianCalendarExporterGoogleCompatible();
+                var startTime = DateTime.Now;
+
+                string outputDir = Environment.CurrentDirectory;
+
+                // Generate one file per year (2020-2030)
+                for (int year = 2020; year <= 2030; year++)
+                {
+                    Console.WriteLine($"Generating {year}...");
+                    exporter.GenerateDateRangeEvents(year, Path.Combine(outputDir, $"gaian_calendar_{year}.ics"));
+                }
+
+                var generationTime = DateTime.Now - startTime;
+                Console.WriteLine($"\n✓ Generation completed in {generationTime.TotalSeconds:F2} seconds.");
+                Console.WriteLine("\n11 files created (2020-2030) - ready to import into Google Calendar!");
+                Console.WriteLine("Import each .ics file separately into Google Calendar.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error generating iCal file: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+            }
+        }
 
     }
 }
