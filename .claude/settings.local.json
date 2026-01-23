@@ -39,7 +39,8 @@
       "Bash(grep -i ical|ics|vcalendar|vevent ./.vs/GaianNodaTimeWrappers/v17/DocumentLayout.json)",
       "Bash(dotnet clean:*)",
       "Bash(dotnet build:*)",
-      "Bash(start \"\" \"C:\\\\Users\\\\Immanuelle\\\\AndroidStudioProjects\\\\DateTimeNodaTimeExperiments\\\\gaian-date-picker.html\")"
+      "Bash(start \"\" \"C:\\\\Users\\\\Immanuelle\\\\AndroidStudioProjects\\\\DateTimeNodaTimeExperiments\\\\gaian-date-picker.html\")",
+      "Bash(explorer \"C:\\\\Users\\\\Immanuelle\\\\AndroidStudioProjects\\\\DateTimeNodaTimeExperiments\\\\gaian-date-picker.html\")"
     ],
     "deny": [],
     "ask": []
