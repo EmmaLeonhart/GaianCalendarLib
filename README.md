@@ -1,203 +1,545 @@
 # Gaian Calendar System
 
-A custom calendar system built as NodaTime wrappers featuring astrological month names and a 4-week month structure based on ISO week numbering.
+A custom calendar system built as NodaTime wrapper types for .NET, featuring 14 astrological month names, a 4-week month structure based on ISO week numbering, and a year offset of +10,000. Includes iCal export, a web date picker, a date-range CSV generator, and MediaWiki module exports.
 
-## Main Objects
+---
 
-The Gaian Calendar provides four primary wrapper classes that mirror NodaTime's date/time types while presenting dates in the Gaian calendar format:
+## Table of Contents
+
+1. [Calendar Overview](#calendar-overview)
+2. [Project Structure](#project-structure)
+3. [Requirements & Building](#requirements--building)
+4. [Running the Main App](#running-the-main-app)
+5. [Core Types](#core-types)
+   - [GaianLocalDate](#gaianlocaldате)
+   - [GaianLocalDateTime](#gaianlocaldatetime)
+   - [GaianOffsetDateTime](#gaianoffsetdatetime)
+   - [GaianZonedDateTime](#gaianzoneddatetime)
+   - [GaianMonth](#gaianmonth)
+   - [GaianPeriod](#gaianperiod)
+6. [Date Formatting Reference](#date-formatting-reference)
+7. [Parsing](#parsing)
+8. [iCal Export](#ical-export)
+9. [GaianDateRangeGenerator Tool](#gaian-date-range-generator-tool)
+10. [Implementation Status](#implementation-status)
+11. [Design Notes](#design-notes)
+
+---
+
+## Calendar Overview
+
+### Month Structure
+
+The Gaian calendar divides a year into weeks first, then groups weeks into months:
+
+| # | Month Name  | ISO Weeks | Days |
+|---|-------------|-----------|------|
+| 1 | Sagittarius | 1–4       | 28   |
+| 2 | Capricorn   | 5–8       | 28   |
+| 3 | Aquarius    | 9–12      | 28   |
+| 4 | Pisces      | 13–16     | 28   |
+| 5 | Aries       | 17–20     | 28   |
+| 6 | Taurus      | 21–24     | 28   |
+| 7 | Gemini      | 25–28     | 28   |
+| 8 | Cancer      | 29–32     | 28   |
+| 9 | Leo         | 33–36     | 28   |
+|10 | Virgo       | 37–40     | 28   |
+|11 | Libra       | 41–44     | 28   |
+|12 | Scorpio     | 45–48     | 28   |
+|13 | Ophiuchus   | 49–52     | 28   |
+|14 | **Horus**   | 53        | **7** (intercalary, leap years only) |
+
+- **Regular year**: 13 months × 28 days = **364 days**
+- **Leap year** (53 ISO weeks): 13 months + Horus = **371 days**
+- A "Gaian leap year" occurs whenever the ISO week-year has 53 weeks (roughly every 5–6 years)
+
+### Year Numbering
+
+```
+Gaian year = ISO week-year + 10,000
+```
+
+Examples:
+- 2024 CE → **12024**
+- 1 CE → **10001**
+- 1 BCE → **9999**
+- 3000 BCE → **7000**
+
+### Weekday Symbols
+
+Each weekday maps to a classical planetary symbol used in the `"W"` format pattern:
+
+| Day       | Symbol | Planet  |
+|-----------|--------|---------|
+| Monday    | ☽      | Moon    |
+| Tuesday   | ♂      | Mars    |
+| Wednesday | ☿      | Mercury |
+| Thursday  | ♃      | Jupiter |
+| Friday    | ♀      | Venus   |
+| Saturday  | ♄      | Saturn  |
+| Sunday    | ☉      | Sun     |
+
+### Month Symbols
+
+Each month maps to its astrological Unicode symbol used in the `"MMM*"` format pattern:
+
+♐ ♑ ♒ ♓ ♈ ♉ ♊ ♋ ♌ ♍ ♎ ♏ ⛎ 𓅃
+
+---
+
+## Project Structure
+
+```
+GaianCalendarLib/
+│
+├── GaianNodaTimeWrappers/            # Main library + demo app (.NET 8)
+│   ├── GaianNodaTimeWrappers.csproj
+│   ├── Program.cs                    # Demo: formatting, parsing, round-trip tests
+│   ├── GaianTools.cs                 # Core conversion algorithms
+│   ├── GaianDateFormat.cs            # Custom format pattern engine
+│   ├── GaianLocalDate.cs             # Date wrapper (no time/zone)
+│   ├── GaianLocalDateTime.cs         # Date + time wrapper
+│   ├── GaianOffsetDateTime.cs        # Date + time + UTC offset wrapper
+│   ├── GaianZonedDateTime.cs         # Date + time + timezone wrapper
+│   ├── GaianMonth.cs                 # Month value type (1–14)
+│   ├── GaianPeriod.cs                # Period/duration stub
+│   ├── GaianCalendarExporter*.cs     # iCal exporters (several variants)
+│   └── gaian_calendar_20XX.ics(.gz)  # Pre-generated iCal files (2020–2030)
+│
+├── GaianDateRangeGenerator/          # CLI tool for CSV/year-page generation
+│   ├── GaianDateRangeGenerator.csproj
+│   ├── Program.cs
+│   └── *.csv                         # Pre-generated date range CSVs
+│
+├── GaianNodaTimeWrappers.sln         # Solution file
+└── README.md
+```
+
+---
+
+## Requirements & Building
+
+- **.NET 8.0 SDK** or later
+- NuGet packages (restored automatically):
+  - `NodaTime` 3.2.2
+  - `NodaTime.Serialization.JsonNet` 3.2.0
+  - `NodaTime.Serialization.SystemTextJson` 1.3.0
+  - `Ical.Net` 5.0.7
+
+```bash
+# Restore and build both projects
+dotnet build GaianNodaTimeWrappers.sln
+```
+
+---
+
+## Running the Main App
+
+```bash
+cd GaianNodaTimeWrappers
+
+# Run the formatting/parsing demo
+dotnet run
+
+# Generate iCal files (one per year, 2020–2030)
+dotnet run ical
+```
+
+Sample demo output:
+```
+=== Gaian Calendar Advanced Formatting Demo ===
+
+=== Date Formatting Patterns ===
+Default:        Aquarius 15, 12026
+"MMMM d, yyyy": Aquarius 15, 12026
+"MMM d, yy":    Aqu 15, 26
+"M/d/yyyy":     3/15/12026
+"ddd":          15th
+"dddd":         Fifteenth
+"MMM*":         ♒
+"W":            ☽
+"WWW":          Mon
+"WWWW":         Monday
+"DDD":          099
+
+=== Parsing Demo ===
+Parsed 'Aquarius 15, 12025' -> Aquarius 15, 12025
+Parsed '3/15/12025' -> Aquarius 15, 12025
+Parsed '12025-03-15' -> Aquarius 15, 12025
+Parsed 'Aqu 15, 12025' -> Aquarius 15, 12025
+```
+
+---
+
+## Core Types
+
+All Gaian types are `readonly struct`s that wrap their NodaTime counterparts. They implement the same interfaces as the NodaTime equivalents (IEquatable, IComparable, IFormattable, IXmlSerializable, generic math operators) and support implicit conversion to and from the underlying NodaTime type.
 
 ### GaianLocalDate
-Represents a date without time or timezone information in the Gaian calendar.
 
-**What you can do:**
-- Create dates using Gaian components: `new GaianLocalDate(12025, 3, 15)` (Aquarius 15, 12025)
-- Convert to/from regular .NET DateTime and NodaTime LocalDate
-- Format dates with custom patterns (e.g., `"MMMM d, yyyy"` → "Aquarius 15, 12025")
-- Parse from multiple formats: named ("Aquarius 15, 12025"), numeric ("3/15/12025"), or ISO ("12025-03-15")
-- Perform day-based arithmetic: `date.PlusDays(7)`, `date.PlusWeeks(2)`
-- Navigate to next/previous weekdays: `date.Next(IsoDayOfWeek.Friday)`
-- Convert to Julian day numbers for astronomical calculations
+A date without time or timezone, expressed in Gaian calendar terms.
 
-### GaianLocalDateTime  
-Combines a Gaian date with time-of-day information.
+```csharp
+// Construction
+var date = new GaianLocalDate(12025, 3, 15);    // Aquarius 15, 12025
+var today = GaianLocalDate.Today;
+var fromNoda = (GaianLocalDate)someLocalDate;   // implicit conversion
 
-**What you can do:**
-- Create with date and time: `new GaianLocalDateTime(12025, 3, 15, 14, 30, 45)`
-- All date operations from GaianLocalDate plus time manipulation
-- Time-based arithmetic: `PlusHours()`, `PlusMinutes()`, `PlusSeconds()`, `PlusMilliseconds()`
-- Format with time patterns: `"MMMM d, yyyy HH:mm"` → "Aquarius 15, 12025 14:30"
-- Convert to timezone-aware types (GaianZonedDateTime, GaianOffsetDateTime)
-- Parse date-time combinations
+// Construction from ISO week components
+var fromWeek = GaianLocalDate.FromWeekYearWeekAndDay(2025, 10, IsoDayOfWeek.Monday);
+
+// From .NET / Julian
+var fromDt = GaianLocalDate.FromDateTime(DateTime.Now);
+var fromJd  = GaianLocalDate.FromJulianDay(2460000.5);
+
+// Formatting
+date.ToString()                         // "Aquarius 15, 12025"
+date.ToString("MMMM d, yyyy", null)     // "Aquarius 15, 12025"
+date.ToString("MMM* dd", null)          // "♒ 15"
+date.ToString("W WWWW", null)           // "☽ Monday"
+date.ToString("DDD", null)              // "099"
+
+// Parsing
+GaianLocalDate.Parse("Aquarius 15, 12025")
+GaianLocalDate.Parse("Aqu 15, 12025")
+GaianLocalDate.Parse("3/15/12025")
+GaianLocalDate.Parse("12025-03-15")
+GaianLocalDate.TryParse(input, out var result)
+
+// Arithmetic
+date.PlusDays(7)
+date.PlusWeeks(2)
+date.Next(IsoDayOfWeek.Friday)
+date.Previous(IsoDayOfWeek.Monday)
+
+// Conversion
+date.ToDateTimeUnspecified()   // DateTime
+date.ToDateOnly()              // DateOnly
+date.ToJulianDay()             // double
+(LocalDate)date                // NodaTime LocalDate (implicit)
+
+// Combining with time
+date.At(new LocalTime(14, 30))     // → GaianLocalDateTime
+date.AtMidnight()                  // → GaianLocalDateTime
+
+// Properties
+date.Year       // int (Gaian year, e.g. 12025)
+date.Month      // GaianMonth
+date.Day        // int (1–28)
+date.DayOfWeek  // IsoDayOfWeek
+date.DayOfYear  // int (1–364 or 1–371)
+```
+
+**Implemented operators:** `==`, `!=`, `<`, `<=`, `>`, `>=`
+
+### GaianLocalDateTime
+
+Combines a Gaian date with a time-of-day.
+
+```csharp
+// Construction
+var dt = new GaianLocalDateTime(12025, 3, 15, 14, 30);
+var dt = new GaianLocalDateTime(12025, 3, 15, 14, 30, 45);
+var dt = new GaianLocalDateTime(12025, 3, 15, 14, 30, 45, 123); // with ms
+var now = GaianLocalDateTime.Now;
+
+// Formatting
+dt.ToString()                              // "Aquarius 15, 12025 14:30:45"
+dt.ToString("MMMM d, yyyy HH:mm", null)   // "Aquarius 15, 12025 14:30"
+dt.ToString("MMM* d h:mm tt", null)       // "♒ 15 2:30 PM"
+
+// Time arithmetic
+dt.PlusHours(3)
+dt.PlusMinutes(45)
+dt.PlusSeconds(30)
+dt.PlusMilliseconds(500)
+dt.PlusNanoseconds(1000)
+dt.PlusTicks(100)
+dt.PlusDays(1)
+dt.PlusWeeks(2)
+dt.Next(IsoDayOfWeek.Friday)
+dt.Previous(IsoDayOfWeek.Monday)
+
+// Timezone conversion
+dt.InUtc()
+dt.InZoneLeniently(DateTimeZoneProviders.Tzdb["America/New_York"])
+dt.InZoneStrictly(zone)
+dt.InZone(zone, resolver)
+dt.WithOffset(Offset.FromHours(5))           // → GaianOffsetDateTime
+
+// Properties
+dt.Date        // GaianLocalDate
+dt.TimeOfDay   // LocalTime
+dt.Hour, dt.Minute, dt.Second, dt.Millisecond
+dt.NanosecondOfDay, dt.TickOfDay
+dt.Year, dt.Month, dt.Day, dt.DayOfWeek, dt.DayOfYear
+```
 
 ### GaianOffsetDateTime
-A Gaian date-time with a fixed UTC offset (like "+05:30" or "-08:00").
 
-**What you can do:**
-- Create with specific offset: `new GaianOffsetDateTime(year, month, day, hour, minute, offset)`
-- All datetime operations plus offset-aware conversions
-- Convert to .NET DateTimeOffset for interoperability
-- Handle time zones with fixed offsets (no DST transitions)
+A Gaian date-time with a fixed UTC offset (no DST awareness).
+
+```csharp
+var odt = new GaianOffsetDateTime(12025, 3, 15, 14, 30, Offset.FromHours(5));
+var odt = new GaianOffsetDateTime(12025, 3, 15, 14, 30, 45, Offset.FromHours(-8));
+
+odt.PlusHours(2)
+odt.ToDateTimeOffset()   // DateTimeOffset
+odt.ToInstant()          // NodaTime Instant
+```
 
 ### GaianZonedDateTime
-A Gaian date-time in a specific timezone that handles DST transitions.
 
-**What you can do:**
-- Create in specific timezone: `gaianDateTime.InZone(DateTimeZone.ForId("America/New_York"))`
-- All datetime operations with full timezone support
-- Handle daylight saving time transitions automatically
-- Convert between timezones while maintaining Gaian date formatting
-
-## Calendar System
-
-**Month Structure:** 13 months of 28 days each (4 weeks), plus 1 intercalary month (Horus) in leap years
-**Month Names:** Sagittarius, Capricorn, Aquarius, Pisces, Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio, Ophiuchus, Horus
-**Year Numbering:** Gaian year = ISO week-year + 10,000 (e.g., 2025 → 12025)
-
-## Parsing Capabilities
-
-All date types support parsing from multiple input formats:
+A Gaian date-time in a named timezone with full DST support.
 
 ```csharp
-// Named format with full month names
-GaianLocalDate.Parse("Aquarius 15, 12025")
+var zdt = new GaianZonedDateTime(instant, DateTimeZoneProviders.Tzdb["America/New_York"]);
+var zdt = new GaianZonedDateTime(12025, 3, 15, 14, 30, zone);
 
-// Abbreviated month names  
+zdt.ToString()   // "Aquarius 15, 12025 14:30 [America/New_York] -05"
+zdt.IsDaylightSavingTime()
+zdt.WithZone(newZone)
+zdt.ToInstant()
+```
+
+### GaianMonth
+
+A value type representing a Gaian month (1–14).
+
+```csharp
+var month = new GaianMonth(3);       // Aquarius
+var month = (GaianMonth)3;           // implicit from int
+
+month.ToString()            // "Aquarius"
+month.ToString("G", null)   // "Aquarius" (full name)
+month.ToString("N", null)   // "3" (number)
+month.ToString("NN", null)  // "03" (zero-padded)
+
+GaianMonth.Parse("Aquarius")
+GaianMonth.Parse("3")
+GaianMonth.TryParse("Aqu", out var m)
+
+month.Next()       // GaianMonth(4) = Pisces
+month.Previous()   // GaianMonth(2) = Capricorn
+```
+
+### GaianPeriod
+
+A skeleton wrapper around NodaTime's `Period`. All members currently throw `NotImplementedException` — placeholder for future month/year-based arithmetic.
+
+---
+
+## Date Formatting Reference
+
+### Date Patterns
+
+| Pattern | Description                        | Example          |
+|---------|------------------------------------|------------------|
+| `MMMM`  | Full month name                    | `Aquarius`       |
+| `MMM`   | Abbreviated month name (3 chars)   | `Aqu`            |
+| `MMM*`  | Astrological month symbol          | `♒`              |
+| `MM`    | Month number, zero-padded          | `03`             |
+| `M`     | Month number                       | `3`              |
+| `dddd`  | Day of month in words              | `Fifteenth`      |
+| `ddd`   | Day of month with ordinal suffix   | `15th`           |
+| `dd`    | Day of month, zero-padded          | `15`             |
+| `d`     | Day of month                       | `15`             |
+| `WWWW`  | Full weekday name                  | `Monday`         |
+| `WWW`   | Abbreviated weekday (3 chars)      | `Mon`            |
+| `WW`    | Super-short weekday (2 chars)      | `Mo`             |
+| `W`     | Planetary weekday symbol           | `☽`              |
+| `yyyy`  | Full Gaian year                    | `12025`          |
+| `yy`    | Last two digits of Gaian year      | `25`             |
+| `DDD`   | Day of year, zero-padded to 3      | `099`            |
+
+### Time Patterns (GaianLocalDateTime only)
+
+| Pattern | Description              | Example |
+|---------|--------------------------|---------|
+| `HH`    | 24-hour, zero-padded     | `14`    |
+| `H`     | 24-hour                  | `14`    |
+| `hh`    | 12-hour, zero-padded     | `02`    |
+| `h`     | 12-hour                  | `2`     |
+| `mm`    | Minute, zero-padded      | `05`    |
+| `ss`    | Second, zero-padded      | `07`    |
+| `fff`   | Milliseconds             | `345`   |
+| `tt`    | AM/PM designator         | `PM`    |
+
+### Examples
+
+```csharp
+var date = new GaianLocalDate(12025, 3, 15);  // Aquarius 15, 12025 (a Monday)
+
+date.ToString("MMMM d, yyyy", null)           // "Aquarius 15, 12025"
+date.ToString("MMM d, yy", null)              // "Aqu 15, 25"
+date.ToString("M/d/yyyy", null)               // "3/15/12025"
+date.ToString("ddd", null)                    // "15th"
+date.ToString("dddd", null)                   // "Fifteenth"
+date.ToString("MMM*", null)                   // "♒"
+date.ToString("W WWWW, MMMM ddd, yyyy", null) // "☽ Monday, Aquarius 15th, 12025"
+
+var dt = new GaianLocalDateTime(12025, 3, 15, 14, 30, 0);
+dt.ToString("MMMM d, yyyy HH:mm", null)       // "Aquarius 15, 12025 14:30"
+dt.ToString("MMM* d h:mm tt", null)           // "♒ 15 2:30 PM"
+```
+
+---
+
+## Parsing
+
+All date types support parsing from three input formats:
+
+```csharp
+// Named format (full or abbreviated month name)
+GaianLocalDate.Parse("Aquarius 15, 12025")
 GaianLocalDate.Parse("Aqu 15, 12025")
 
-// Numeric format (month/day/year)
+// Numeric format: month/day/year
 GaianLocalDate.Parse("3/15/12025")
 
-// ISO format (year-month-day)
+// ISO format: year-month-day
 GaianLocalDate.Parse("12025-03-15")
 
-// Safe parsing with TryParse
-if (GaianLocalDate.TryParse(input, out var result))
-{
-    Console.WriteLine($"Parsed: {result}");
-}
+// Safe parsing
+GaianLocalDate.TryParse(input, out var result)
+
+// DateTime parsing
+GaianLocalDateTime.Parse("12025-03-15 14:30:00")
+GaianLocalDateTime.TryParse(input, out var result)
 ```
 
-## Advanced Formatting
+---
 
-Comprehensive format patterns inspired by traditional date formatting:
+## iCal Export
 
-```csharp
-var date = new GaianLocalDate(12025, 3, 15);
+Annotates every calendar day with its Gaian date, compatible with Google Calendar, Apple Calendar, and Outlook.
 
-// Month patterns
-date.ToString("MMMM")    // "Aquarius" (full name)
-date.ToString("MMM")     // "Aqu" (abbreviated)
-date.ToString("MMM*")    // "♒" (astrological symbol)
-date.ToString("MM")      // "03" (zero-padded number)
-date.ToString("M")       // "3" (number)
-
-// Day patterns  
-date.ToString("dd")      // "15" (zero-padded)
-date.ToString("d")       // "15" (number)
-date.ToString("ddd")     // "15th" (ordinal)
-date.ToString("dddd")    // "Fifteenth" (word form)
-
-// Weekday patterns
-date.ToString("WWWW")    // "Monday" (full name)
-date.ToString("WWW")     // "Mon" (abbreviated)
-date.ToString("W")       // "☽" (planetary symbol)
-
-// Year patterns
-date.ToString("yyyy")    // "12025" (full year)
-date.ToString("yy")      // "25" (two digits)
-
-// Combined patterns
-date.ToString("MMMM d, yyyy")           // "Aquarius 15, 12025"
-date.ToString("MMM* dd, yy")            // "♒ 15, 25"
-date.ToString("W WWW d")                // "☽ Mon 15"
+```bash
+cd GaianNodaTimeWrappers
+dotnet run ical
 ```
 
-## Common Methods
+Produces 11 files for years 2020–2030 (`gaian_calendar_YYYY.ics` + `.gz`). Pre-generated files are included in the repository.
 
-All four wrapper classes share these capabilities:
+**Importing into Google Calendar:** Settings → Import & Export → import each `.ics` file separately.
 
-### Conversion & Interoperability
-- Implicit conversion to/from corresponding NodaTime types
-- `FromDateTime()` - Create from .NET DateTime
-- `ToDateTimeUnspecified()` - Convert to .NET DateTime
+---
 
-### Comparison & Equality
-- Full comparison support (`==`, `!=`, `<`, `>`, `<=`, `>=`)
-- `Equals()` and `GetHashCode()` implementation
-- `CompareTo()` for sorting
+## GaianDateRangeGenerator Tool
 
-### Formatting & Parsing
-- `ToString()` - Default Gaian format
-- `ToString(pattern, culture)` - Custom formatting with culture support
-- `Parse()` and `TryParse()` - Multiple input format support
+CLI tool for generating year summaries and CSV date tables.
 
-### Basic Arithmetic
-- `PlusDays()`, `PlusWeeks()` - Duration-based arithmetic
-- `Next()`, `Previous()` - Weekday navigation
+```bash
+cd GaianDateRangeGenerator
 
-## Class-Specific Methods
+# Show info for a specific Gaian year
+dotnet run 12024
 
-### GaianLocalDate Only
-- `At(LocalTime)` - Combine with time to create GaianLocalDateTime
-- `AtMidnight()` - Create datetime at 00:00
-- `ToJulianDay()` - Convert to Julian day number
-- `FromJulianDay()` - Create from Julian day number
-
-### GaianLocalDateTime Only  
-- `PlusHours()`, `PlusMinutes()`, `PlusSeconds()`, `PlusMilliseconds()`, `PlusTicks()`, `PlusNanoseconds()`
-- `InUtc()` - Convert to UTC timezone
-- `InZone()`, `InZoneLeniently()`, `InZoneStrictly()` - Convert to specific timezone
-- `WithOffset()` - Add UTC offset
-
-### GaianOffsetDateTime Only
-- `ToDateTimeOffset()` - Convert to .NET DateTimeOffset
-- Offset-aware arithmetic and comparisons
-
-### GaianZonedDateTime Only
-- Full timezone transition handling
-- DST-aware arithmetic
-
-## Current Limitations & TODOs
-
-⚠️ **Important:** The current implementation is limited to dates within NodaTime's supported range. Future versions will implement support for dates outside this range to fully utilize the Gaian calendar's extended year numbering system.
-
-**Not Yet Implemented:**
-- Period-based arithmetic (months/years) - only duration-based arithmetic works
-- Some advanced NodaTime features (custom calendars, some static methods)
-- Dates outside NodaTime's range (future enhancement planned)
-
-**Fully Working:**
-- All formatting and parsing operations
-- Duration-based arithmetic (days, hours, minutes, etc.)
-- Timezone conversions
-- Comparison and equality operations
-- Julian day conversions
-
-## Example Usage
-
-```csharp
-// Create a Gaian date
-var date = new GaianLocalDate(12025, 3, 15); // Aquarius 15, 12025
-
-// Format in different ways
-Console.WriteLine(date);                              // "Aquarius 15, 12025"
-Console.WriteLine(date.ToString("MMM* d, yy"));      // "♒ 15, 25"
-Console.WriteLine(date.ToString("WWWW, MMMM d"));    // "Monday, Aquarius 15"
-
-// Parse from different formats
-var parsed1 = GaianLocalDate.Parse("Aquarius 15, 12025");
-var parsed2 = GaianLocalDate.Parse("3/15/12025");
-var parsed3 = GaianLocalDate.Parse("12025-03-15");
-
-// Date arithmetic
-var nextWeek = date.PlusWeeks(1);
-var nextFriday = date.Next(IsoDayOfWeek.Friday);
-
-// Create datetime and add time
-var dateTime = date.At(new LocalTime(14, 30));
-var futureTime = dateTime.PlusHours(3).PlusMinutes(45);
-
-// Timezone operations
-var utc = dateTime.InUtc();
-var eastern = dateTime.InZone(DateTimeZone.ForId("America/New_York"));
+# Generate a CSV of year metadata
+dotnet run csv <start> <end> [filename]
+dotnet run csv 3 12100
 ```
+
+### Year Page Output
+
+```
+=== Gaian Year 12024 ===
+Corresponds to: 2024 CE
+Duration: 2023-12-25 to 2024-12-29
+Total days: 371 (intercalary year)
+Intercalary month (Horus): Yes
+
+Month breakdown:
+ 1. Sagittarius  | 2023-12-25 to 2024-01-21
+ 2. Capricorn    | 2024-01-22 to 2024-02-18
+...
+14. Horus        | 2024-12-23 to 2024-12-29 (intercalary)
+```
+
+### CSV Format
+
+```csv
+GaianYear,StartDate,GregorianLeapYear,GaianLeapYear,DaysInYear
+12024,"December 25, 2023",true,true,371
+12025,"December 30, 2024",false,false,364
+```
+
+---
+
+## Implementation Status
+
+### GaianLocalDate
+
+| Feature | Status |
+|---------|--------|
+| Construction from (year, month, day) | ✅ |
+| `Today`, `FromDateTime()`, `FromDateOnly()` | ✅ |
+| `FromWeekYearWeekAndDay()` | ✅ |
+| `FromJulianDay()` / `ToJulianDay()` | ✅ |
+| Formatting and parsing | ✅ |
+| `PlusDays()`, `PlusWeeks()`, `Next()`, `Previous()` | ✅ |
+| Comparison operators | ✅ |
+| `At()`, `AtMidnight()`, `WithOffset()` | ✅ |
+| `PlusMonths()`, `PlusYears()`, `Plus(Period)` | ❌ |
+| XML serialization | ❌ |
+
+### GaianLocalDateTime
+
+| Feature | Status |
+|---------|--------|
+| Construction, `Now`, `FromDateTime()` | ✅ |
+| Formatting and parsing | ✅ |
+| All time-unit Plus methods | ✅ |
+| `InUtc()`, `InZone*()`, `WithOffset()` | ✅ |
+| `Max()`, `Min()`, comparison operators | ✅ |
+| `PlusMonths()`, `PlusYears()`, `Plus(Period)` | ❌ |
+
+### GaianOffsetDateTime / GaianZonedDateTime
+
+| Feature | Status |
+|---------|--------|
+| Construction and duration arithmetic | ✅ |
+| Conversion methods and formatting | ✅ |
+| Period arithmetic | ❌ |
+
+### GaianMonth
+
+| Feature | Status |
+|---------|--------|
+| All formatting, parsing, navigation, operators | ✅ |
+
+### GaianPeriod
+
+All members are stubs. Exists as an API placeholder.
+
+---
+
+## Design Notes
+
+### ISO Week-Year Math
+
+```
+weekYear   = IsoRules.GetWeekYear(date)
+weekOfYear = IsoRules.GetWeekOfWeekYear(date)   // 1..52 or 1..53
+dayOfWeek  = (int)date.DayOfWeek                // Mon=1 .. Sun=7
+
+month      = (weekOfYear - 1) / 4 + 1           // 1..14
+dayOfMonth = (weekOfYear - 1) % 4 * 7 + dayOfWeek  // 1..28
+gaianYear  = weekYear + 10000
+```
+
+Reverse (Gaian → NodaTime):
+```
+weekOfYear = (month - 1) * 4 + (day - 1) / 7 + 1
+dayOfWeek  = (day - 1) % 7 + 1
+date       = IsoRules.GetLocalDate(isoWeekYear, weekOfYear, dayOfWeek)
+```
+
+### Relationship to NodaTime
+
+Every Gaian type stores a single NodaTime value internally and delegates all arithmetic and timezone operations to it. The Gaian layer adds:
+1. Alternative string representation (Gaian month names, year offset)
+2. Construction from Gaian (year, month, day) components
+3. Custom format pattern engine (`GaianDateFormat`)
+
+Gaian types are fully interoperable with NodaTime via implicit conversions.
