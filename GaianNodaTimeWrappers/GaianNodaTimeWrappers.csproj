@@ -1,11 +1,39 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <!-- Library, not an exe -->
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <!-- NuGet package metadata -->
+    <PackageId>NodaTime.GaianCalendar</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Emma Leonhart</Authors>
+    <Copyright>Copyright © 2025 Emma Leonhart</Copyright>
+    <Description>
+      A custom calendar system built as NodaTime wrapper types.
+      Features 14 astrological month names (Sagittarius–Ophiuchus + Horus),
+      4-week months based on ISO week numbering, and Gaian year numbering
+      (ISO week-year + 10,000). Includes iCal export for Google/Apple Calendar.
+    </Description>
+    <PackageTags>noda-time;calendar;datetime;gaian;astrological;ical</PackageTags>
+    <PackageProjectUrl>https://github.com/Emma-Leonhart/GaianCalendarLib</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Emma-Leonhart/GaianCalendarLib.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    <!-- Pack settings -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <!-- Include README in the package -->
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="NodaTime" Version="3.2.2" />
