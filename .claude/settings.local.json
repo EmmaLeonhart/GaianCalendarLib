@@ -42,7 +42,14 @@
       "Bash(start \"\" \"C:\\\\Users\\\\Immanuelle\\\\AndroidStudioProjects\\\\DateTimeNodaTimeExperiments\\\\gaian-date-picker.html\")",
       "Bash(explorer \"C:\\\\Users\\\\Immanuelle\\\\AndroidStudioProjects\\\\DateTimeNodaTimeExperiments\\\\gaian-date-picker.html\")",
       "Bash(cd /c/Users/Immanuelle/AndroidStudioProjects/DateTimeNodaTimeExperiments && git remote add origin https://github.com/Emma-Leonhart/GaianCalendarLib.git && git push --force origin master 2>&1)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(do echo:*)",
+      "Bash(grep:*)",
+      "WebSearch",
+      "Bash(ls:*)",
+      "Bash(dotnet new:*)",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet pack:*)"
     ],
     "deny": [],
     "ask": []
