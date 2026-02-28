@@ -125,6 +125,35 @@
 
 ---
 
+## ❓ Open Questions / Uncertainty
+
+### What even is NodaTime Period?
+
+**Short answer:** `Period` is NodaTime's version of "a span of time expressed in calendar units" — like "3 months and 5 days" — as opposed to a fixed duration in milliseconds.
+
+**Key distinction from `Duration`:**
+- `Duration` = fixed number of nanoseconds (like a `TimeSpan`). Easy to add to any instant.
+- `Period` = "3 months + 2 days" — the actual elapsed time depends on *which* month you're counting from (February + 1 month ≠ August + 1 month in terms of days).
+
+**Why this matters for Gaian calendar:**
+- Gaian months are *always* exactly 28 days (unlike ISO months which are 28–31 days), so `GaianPeriod.FromMonths(1)` is unambiguous — it always means 28 days.
+- Gaian years have 364 *or* 371 days depending on whether the ISO week-year has 52 or 53 weeks. So `PlusYears(1)` navigates by ISO week-year, not by counting 365 days.
+- `GaianPeriod` wraps a NodaTime `Period` for the sub-monthly units (weeks, days, hours, minutes, seconds, etc.) and adds its own `Years` and `Months` fields with Gaian semantics.
+
+**When to use what:**
+```
+date + NodaTime.Period.FromDays(7)   → adds exactly 7 days (ISO)
+date.PlusDays(7)                     → same thing (delegates to NodaTime)
+date + NodaTime.Period.FromMonths(1) → adds 1 ISO calendar month (28-31 days)
+date.PlusMonths(1)                   → adds 28 days (1 Gaian month, always)
+date.PlusYears(1)                    → advances by 1 ISO week-year (with week-53 clamping)
+GaianPeriod.Between(a, b)            → difference in Gaian years/months/days (approx)
+```
+
+**Still uncertain:** Whether `GaianPeriod` is actually useful to end users, or whether just having clean `PlusMonths`/`PlusYears` methods is enough. The whole `GaianPeriod` type exists to mirror NodaTime's API surface — but it may be over-engineering for this use case.
+
+---
+
 ## 🏗️ Architecture Notes
 
 ### Why wrap NodaTime?

@@ -87,35 +87,36 @@ namespace Gaian
             var gaianYear = GaianTools.GetYear(date);
             var gaianDayOfYear = GaianTools.GetDayOfYear(date);
             var dayOfWeek = date.DayOfWeek;
+            var monthName = gaianMonth.ToString("G", culture);
+            var monthAbbr = monthName.Length >= 3 ? monthName.Substring(0, 3) : monthName;
 
-            var result = format;
+            // Token table: ordered longest-first so greedy matching works correctly.
+            // Scanning the format string left-to-right ensures replacement values never
+            // accidentally match other tokens (fixes the "Friday → Frida26" bug).
+            var tokens = new (string Token, string Value)[]
+            {
+                ("MMMMM", monthName),
+                ("MMMM",  monthName),
+                ("MMM*",  MonthSymbols[gaianMonth.Value - 1]),
+                ("MMM",   monthAbbr),
+                ("MM",    gaianMonth.ToString("NN", culture)),
+                ("M",     gaianMonth.ToString("N", culture)),
+                ("dddd",  NumberWords[Math.Min(gaianDay, NumberWords.Length - 1)]),
+                ("ddd",   gaianDay + OrdinalSuffixes[Math.Min(gaianDay, OrdinalSuffixes.Length - 1)]),
+                ("dd",    gaianDay.ToString("00", culture)),
+                ("d",     gaianDay.ToString("0", culture)),
+                ("WWWW",  dayOfWeek.ToString()),
+                ("WWW",   dayOfWeek.ToString().Substring(0, 3)),
+                ("WW",    dayOfWeek.ToString().Substring(0, 2)),
+                ("W",     GetDaySymbol(dayOfWeek)),
+                ("yyyyy", gaianYear.ToString("00000", culture)),
+                ("yyyy",  gaianYear.ToString("0000", culture)),
+                ("yy",    (gaianYear % 100).ToString("00", culture)),
+                ("y",     (gaianYear % 100).ToString("0", culture)),
+                ("DDD",   gaianDayOfYear.ToString("000", culture)),
+            };
 
-            // Process patterns in order of specificity (longest first to avoid substring conflicts)
-            result = ReplacePattern(result, "MMMMM", gaianMonth.ToString("G", culture));
-            result = ReplacePattern(result, "MMMM", gaianMonth.ToString("G", culture));
-            result = ReplacePattern(result, "MMM*", MonthSymbols[gaianMonth.Value - 1]);
-            result = ReplacePattern(result, "MMM", gaianMonth.ToString("G", culture).Substring(0, Math.Min(3, gaianMonth.ToString("G", culture).Length)));
-            result = ReplacePattern(result, "MM", gaianMonth.ToString("NN", culture));
-            result = ReplacePattern(result, "M", gaianMonth.ToString("N", culture));
-
-            result = ReplacePattern(result, "dddd", NumberWords[Math.Min(gaianDay, NumberWords.Length - 1)]);
-            result = ReplacePattern(result, "ddd", gaianDay + OrdinalSuffixes[Math.Min(gaianDay, OrdinalSuffixes.Length - 1)]);
-            result = ReplacePattern(result, "dd", gaianDay.ToString("00", culture));
-            result = ReplacePattern(result, "d", gaianDay.ToString("0", culture));
-
-            result = ReplacePattern(result, "WWWW", dayOfWeek.ToString());
-            result = ReplacePattern(result, "WWW", dayOfWeek.ToString().Substring(0, 3));
-            result = ReplacePattern(result, "WW", dayOfWeek.ToString().Substring(0, 2));
-            result = ReplacePattern(result, "W", GetDaySymbol(dayOfWeek));
-
-            result = ReplacePattern(result, "yyyyy", gaianYear.ToString("00000", culture));
-            result = ReplacePattern(result, "yyyy", gaianYear.ToString("0000", culture));
-            result = ReplacePattern(result, "yy", (gaianYear % 100).ToString("00", culture));
-            result = ReplacePattern(result, "y", (gaianYear % 100).ToString("0", culture));
-
-            result = ReplacePattern(result, "DDD", gaianDayOfYear.ToString("000", culture));
-
-            return result;
+            return ScanAndReplace(format, tokens);
         }
 
         public static string Format(LocalDateTime dateTime, string format, CultureInfo culture)
@@ -126,30 +127,86 @@ namespace Gaian
                 return $"{gdate.ToString()} {dateTime.TimeOfDay:HH:mm}";
             }
 
-            var result = Format(dateTime.Date, format, culture);
             var time = dateTime.TimeOfDay;
+            var gaianMonth = GaianTools.GetMonth(dateTime.Date);
+            var gaianDay = GaianTools.GetDay(dateTime.Date);
+            var gaianYear = GaianTools.GetYear(dateTime.Date);
+            var gaianDayOfYear = GaianTools.GetDayOfYear(dateTime.Date);
+            var dayOfWeek = dateTime.Date.DayOfWeek;
+            var monthName = gaianMonth.ToString("G", culture);
+            var monthAbbr = monthName.Length >= 3 ? monthName.Substring(0, 3) : monthName;
+            int hour12 = time.Hour % 12 == 0 ? 12 : time.Hour % 12;
 
-            // Time patterns - process in order of specificity (longest first)
-            result = ReplacePattern(result, "hh", (time.Hour % 12 == 0 ? 12 : time.Hour % 12).ToString("00", culture));
-            result = ReplacePattern(result, "h", (time.Hour % 12 == 0 ? 12 : time.Hour % 12).ToString("0", culture));
-            result = ReplacePattern(result, "HH", time.Hour.ToString("00", culture));
-            result = ReplacePattern(result, "H", time.Hour.ToString("0", culture));
-            result = ReplacePattern(result, "mm", time.Minute.ToString("00", culture));
-            result = ReplacePattern(result, "m", time.Minute.ToString("0", culture));
-            result = ReplacePattern(result, "ss", time.Second.ToString("00", culture));
-            result = ReplacePattern(result, "s", time.Second.ToString("0", culture));
-            result = ReplacePattern(result, "fff", time.Millisecond.ToString("000", culture));
-            result = ReplacePattern(result, "ff", (time.Millisecond / 10).ToString("00", culture));
-            result = ReplacePattern(result, "f", (time.Millisecond / 100).ToString("0", culture));
-            result = ReplacePattern(result, "tt", time.Hour >= 12 ? "PM" : "AM");
-            result = ReplacePattern(result, "t", time.Hour >= 12 ? "P" : "A");
+            var tokens = new (string Token, string Value)[]
+            {
+                ("MMMMM", monthName),
+                ("MMMM",  monthName),
+                ("MMM*",  MonthSymbols[gaianMonth.Value - 1]),
+                ("MMM",   monthAbbr),
+                ("MM",    gaianMonth.ToString("NN", culture)),
+                ("M",     gaianMonth.ToString("N", culture)),
+                ("dddd",  NumberWords[Math.Min(gaianDay, NumberWords.Length - 1)]),
+                ("ddd",   gaianDay + OrdinalSuffixes[Math.Min(gaianDay, OrdinalSuffixes.Length - 1)]),
+                ("dd",    gaianDay.ToString("00", culture)),
+                ("d",     gaianDay.ToString("0", culture)),
+                ("WWWW",  dayOfWeek.ToString()),
+                ("WWW",   dayOfWeek.ToString().Substring(0, 3)),
+                ("WW",    dayOfWeek.ToString().Substring(0, 2)),
+                ("W",     GetDaySymbol(dayOfWeek)),
+                ("yyyyy", gaianYear.ToString("00000", culture)),
+                ("yyyy",  gaianYear.ToString("0000", culture)),
+                ("yy",    (gaianYear % 100).ToString("00", culture)),
+                ("y",     (gaianYear % 100).ToString("0", culture)),
+                ("DDD",   gaianDayOfYear.ToString("000", culture)),
+                // Time tokens
+                ("hh",    hour12.ToString("00", culture)),
+                ("h",     hour12.ToString("0", culture)),
+                ("HH",    time.Hour.ToString("00", culture)),
+                ("H",     time.Hour.ToString("0", culture)),
+                ("mm",    time.Minute.ToString("00", culture)),
+                ("m",     time.Minute.ToString("0", culture)),
+                ("ss",    time.Second.ToString("00", culture)),
+                ("s",     time.Second.ToString("0", culture)),
+                ("fff",   time.Millisecond.ToString("000", culture)),
+                ("ff",    (time.Millisecond / 10).ToString("00", culture)),
+                ("f",     (time.Millisecond / 100).ToString("0", culture)),
+                ("tt",    time.Hour >= 12 ? "PM" : "AM"),
+                ("t",     time.Hour >= 12 ? "P" : "A"),
+            };
 
-            return result;
+            return ScanAndReplace(format, tokens);
         }
 
-        private static string ReplacePattern(string input, string pattern, string replacement)
+        /// <summary>
+        /// Scans <paramref name="format"/> left-to-right, replacing known tokens with their values.
+        /// Unrecognized characters are emitted as-is. Replacement values are never re-scanned,
+        /// so day/month names that happen to contain token characters are safe.
+        /// </summary>
+        private static string ScanAndReplace(string format, (string Token, string Value)[] tokens)
         {
-            return input.Replace(pattern, replacement);
+            var sb = new System.Text.StringBuilder(format.Length * 2);
+            int i = 0;
+            while (i < format.Length)
+            {
+                bool matched = false;
+                foreach (var (token, value) in tokens)
+                {
+                    if (i + token.Length <= format.Length &&
+                        string.CompareOrdinal(format, i, token, 0, token.Length) == 0)
+                    {
+                        sb.Append(value);
+                        i += token.Length;
+                        matched = true;
+                        break;
+                    }
+                }
+                if (!matched)
+                {
+                    sb.Append(format[i]);
+                    i++;
+                }
+            }
+            return sb.ToString();
         }
 
         private static string GetDaySymbol(IsoDayOfWeek dayOfWeek)

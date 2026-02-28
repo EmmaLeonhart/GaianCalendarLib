@@ -107,7 +107,7 @@ namespace Gaian
 
         // ===== Static methods (mirror) =====
         public static GaianLocalDateTime Add(GaianLocalDateTime localDateTime, Period period)
-            => throw new NotImplementedException();
+            => localDateTime.Plus(period);
 
         public static XmlQualifiedName AddSchema(XmlSchemaSet xmlSchemaSet)
             => throw new NotImplementedException();
@@ -177,10 +177,10 @@ namespace Gaian
             => new GaianLocalDateTime(LocalDateTime.Min(x._ldt, y._ldt));
 
         public static Period Subtract(GaianLocalDateTime lhs, GaianLocalDateTime rhs)
-            => throw new NotImplementedException();
+            => lhs._ldt.Minus(rhs._ldt);
 
         public static GaianLocalDateTime Subtract(GaianLocalDateTime localDateTime, Period period)
-            => throw new NotImplementedException();
+            => localDateTime.Minus(period);
 
         // ===== Instance methods (mirror) =====
         public bool Equals(GaianLocalDateTime other)
@@ -205,10 +205,10 @@ namespace Gaian
             => new GaianZonedDateTime(_ldt.InZoneStrictly(zone));
 
         public GaianLocalDateTime Minus(Period period)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(_ldt.Minus(period));
 
         public Period Minus(GaianLocalDateTime localDateTime)
-            => throw new NotImplementedException();
+            => _ldt.Minus(localDateTime._ldt);
 
         public GaianLocalDateTime Next(IsoDayOfWeek targetDayOfWeek)
             => new GaianLocalDateTime(_ldt.Date.Next(targetDayOfWeek).At(_ldt.TimeOfDay));
@@ -217,7 +217,7 @@ namespace Gaian
             => new GaianLocalDateTime(_ldt.Date.Previous(targetDayOfWeek).At(_ldt.TimeOfDay));
 
         public GaianLocalDateTime Plus(Period period)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(_ldt.Plus(period));
 
         public GaianLocalDateTime PlusDays(int days)
             => new GaianLocalDateTime(_ldt.PlusDays(days));
@@ -231,8 +231,9 @@ namespace Gaian
         public GaianLocalDateTime PlusMinutes(long minutes)
             => new GaianLocalDateTime(_ldt.PlusMinutes(minutes));
 
+        /// <summary>Adds the given number of Gaian months (each = 4 ISO weeks = 28 days).</summary>
         public GaianLocalDateTime PlusMonths(int months)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(_ldt.PlusWeeks(months * 4));
 
         public GaianLocalDateTime PlusNanoseconds(long nanoseconds)
             => new GaianLocalDateTime(_ldt.PlusNanoseconds(nanoseconds));
@@ -246,8 +247,15 @@ namespace Gaian
         public GaianLocalDateTime PlusWeeks(int weeks)
             => new GaianLocalDateTime(_ldt.PlusWeeks(weeks));
 
+        /// <summary>
+        /// Advances by the given number of Gaian (ISO week) years, preserving week-of-year and
+        /// day-of-week. If the target year lacks a week 53, the date is clamped to week 52.
+        /// </summary>
         public GaianLocalDateTime PlusYears(int years)
-            => throw new NotImplementedException();
+        {
+            var newDate = Date.PlusYears(years);
+            return new GaianLocalDateTime(newDate.Value.At(_ldt.TimeOfDay));
+        }
 
         public DateTime ToDateTimeUnspecified()
             => _ldt.ToDateTimeUnspecified();
@@ -268,10 +276,10 @@ namespace Gaian
         }
 
         public GaianLocalDateTime With(Func<LocalDate, LocalDate> adjuster)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(adjuster(_ldt.Date).At(_ldt.TimeOfDay));
 
         public GaianLocalDateTime With(Func<LocalTime, LocalTime> adjuster)
-            => throw new NotImplementedException();
+            => new GaianLocalDateTime(_ldt.Date.At(adjuster(_ldt.TimeOfDay)));
 
         public GaianLocalDateTime WithCalendar(CalendarSystem calendar)
             => throw new NotImplementedException();
@@ -288,7 +296,7 @@ namespace Gaian
 
         // ===== Operators (mirror) =====
         public static GaianLocalDateTime operator +(GaianLocalDateTime localDateTime, Period period)
-            => throw new NotImplementedException();
+            => localDateTime.Plus(period);
 
         public static bool operator ==(GaianLocalDateTime left, GaianLocalDateTime right)
             => left._ldt == right._ldt;
@@ -309,10 +317,10 @@ namespace Gaian
             => lhs._ldt <= rhs._ldt;
 
         public static Period operator -(GaianLocalDateTime lhs, GaianLocalDateTime rhs)
-            => throw new NotImplementedException();
+            => lhs._ldt.Minus(rhs._ldt);
 
         public static GaianLocalDateTime operator -(GaianLocalDateTime localDateTime, Period period)
-            => throw new NotImplementedException();
+            => localDateTime.Minus(period);
 
         // ===== XML serialization (explicit) =====
         XmlSchema? IXmlSerializable.GetSchema()

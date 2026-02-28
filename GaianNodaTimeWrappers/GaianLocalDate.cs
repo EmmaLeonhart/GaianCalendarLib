@@ -111,7 +111,7 @@ namespace Gaian
         public int Day => GaianTools.GetDay(_date);
         public IsoDayOfWeek DayOfWeek => GaianTools.GetDayOfWeek(_date);
         public int DayOfYear => GaianTools.GetDayOfYear(_date);
-        public Era Era => throw new NotImplementedException();
+        public Era Era => _date.Era;
         public static GaianLocalDate MaxIsoValue => new GaianLocalDate(new LocalDate(9999, 12, 31));
         public static GaianLocalDate MinIsoValue => new GaianLocalDate(new LocalDate(1, 1, 1));
         public GaianMonth Month => GaianTools.GetMonth(_date);
@@ -120,7 +120,7 @@ namespace Gaian
         //I am not including  => throw new NotImplementedException();
 
         // --- Static methods (mirror) ---
-        public static GaianLocalDate Add(GaianLocalDate date, Period period) => throw new NotImplementedException();
+        public static GaianLocalDate Add(GaianLocalDate date, Period period) => date.Plus(period);
         public static XmlQualifiedName AddSchema(XmlSchemaSet xmlSchemaSet) => throw new NotImplementedException();
         public static GaianLocalDate FromDateOnly(DateOnly date)
         {
@@ -166,37 +166,57 @@ namespace Gaian
             return new GaianLocalDate(localDate);
         }
         public static GaianLocalDate FromYearMonthWeekAndDay(int year, int month, int occurrence, IsoDayOfWeek dayOfWeek) => throw new NotImplementedException();
-        public static GaianLocalDate Max(GaianLocalDate x, GaianLocalDate y) => throw new NotImplementedException();
-        public static GaianLocalDate Min(GaianLocalDate x, GaianLocalDate y) => throw new NotImplementedException();
-        public static Period Subtract(GaianLocalDate lhs, GaianLocalDate rhs) => throw new NotImplementedException();
-        public static GaianLocalDate Subtract(GaianLocalDate date, Period period) => throw new NotImplementedException();
+        public static GaianLocalDate Max(GaianLocalDate x, GaianLocalDate y) => x > y ? x : y;
+        public static GaianLocalDate Min(GaianLocalDate x, GaianLocalDate y) => x < y ? x : y;
+        public static Period Subtract(GaianLocalDate lhs, GaianLocalDate rhs) => lhs._date.Minus(rhs._date);
+        public static GaianLocalDate Subtract(GaianLocalDate date, Period period) => date.Minus(period);
 
         // --- Instance methods (mirror) ---
         public GaianLocalDateTime At(LocalTime time) => new GaianLocalDateTime(_date.At(time));
         public GaianLocalDateTime AtMidnight() => new GaianLocalDateTime(_date.AtMidnight());
-        public ZonedDateTime AtStartOfDayInZone(DateTimeZone zone) => throw new NotImplementedException();
+        public ZonedDateTime AtStartOfDayInZone(DateTimeZone zone) => _date.AtStartOfDayInZone(zone);
 
         //public int CompareTo(GaianLocalDate other) => throw new NotImplementedException();
         //int IComparable.CompareTo(object? obj) => throw new NotImplementedException();
 
-        public void Deconstruct(out int year, out int month, out int day) => throw new NotImplementedException();
+        public void Deconstruct(out int year, out int month, out int day)
+        {
+            year = Year;
+            month = Month.Value;
+            day = Day;
+        }
         public void Deconstruct(out int year, out int month, out int day, out CalendarSystem calendar) => throw new NotImplementedException();
 
         //public bool Equals(GaianLocalDate other) => throw new NotImplementedException();
         //public override bool Equals(object? obj) => throw new NotImplementedException();
         //public override int GetHashCode() => throw new NotImplementedException();
 
-        public GaianLocalDate Minus(Period period) => throw new NotImplementedException();
-        public Period Minus(GaianLocalDate date) => throw new NotImplementedException();
+        public GaianLocalDate Minus(Period period) => new GaianLocalDate(_date.Minus(period));
+        public Period Minus(GaianLocalDate date) => _date.Minus(date._date);
 
         public GaianLocalDate Next(IsoDayOfWeek targetDayOfWeek) => new GaianLocalDate(_date.Next(targetDayOfWeek));
         public GaianLocalDate Previous(IsoDayOfWeek targetDayOfWeek) => new GaianLocalDate(_date.Previous(targetDayOfWeek));
 
-        public GaianLocalDate Plus(Period period) => throw new NotImplementedException();
+        public GaianLocalDate Plus(Period period) => new GaianLocalDate(_date.Plus(period));
         public GaianLocalDate PlusDays(int days) => new GaianLocalDate(_date.PlusDays(days));
-        public GaianLocalDate PlusMonths(int months) => throw new NotImplementedException();
+        /// <summary>Adds the given number of Gaian months (each = 4 ISO weeks = 28 days).</summary>
+        public GaianLocalDate PlusMonths(int months) => new GaianLocalDate(_date.PlusWeeks(months * 4));
         public GaianLocalDate PlusWeeks(int weeks) => new GaianLocalDate(_date.PlusWeeks(weeks));
-        public GaianLocalDate PlusYears(int years) => throw new NotImplementedException();
+        /// <summary>
+        /// Advances by the given number of Gaian (ISO week) years, preserving week-of-year and
+        /// day-of-week. If the target year lacks a week 53, the date is clamped to week 52.
+        /// </summary>
+        public GaianLocalDate PlusYears(int years)
+        {
+            var weekYearRules = WeekYearRules.Iso;
+            int weekYear = weekYearRules.GetWeekYear(_date);
+            int weekOfYear = weekYearRules.GetWeekOfWeekYear(_date);
+            IsoDayOfWeek dayOfWeek = _date.DayOfWeek;
+            int newWeekYear = weekYear + years;
+            int weeksInNewYear = weekYearRules.GetWeeksInWeekYear(newWeekYear);
+            int clampedWeek = Math.Min(weekOfYear, weeksInNewYear);
+            return new GaianLocalDate(weekYearRules.GetLocalDate(newWeekYear, clampedWeek, dayOfWeek));
+        }
 
         public DateOnly ToDateOnly() => _date.ToDateOnly();
         public DateTime ToDateTimeUnspecified() => _date.ToDateTimeUnspecified();
@@ -226,13 +246,13 @@ namespace Gaian
 
 
         public YearMonth ToYearMonth() => throw new NotImplementedException();
-        public GaianLocalDate With(Func<GaianLocalDate, GaianLocalDate> adjuster) => throw new NotImplementedException();
+        public GaianLocalDate With(Func<GaianLocalDate, GaianLocalDate> adjuster) => adjuster(this);
         public GaianLocalDate WithCalendar(CalendarSystem calendar) => throw new NotImplementedException();
         public GaianOffsetDateTime WithOffset(Offset offset) => new GaianOffsetDateTime(_date.AtMidnight().WithOffset(offset));
 
         // --- Operators (mirror) ---
-        public static LocalDateTime operator +(GaianLocalDate date, LocalTime time) => throw new NotImplementedException();
-        public static GaianLocalDate operator +(GaianLocalDate date, Period period) => throw new NotImplementedException();
+        public static LocalDateTime operator +(GaianLocalDate date, LocalTime time) => date._date.At(time);
+        public static GaianLocalDate operator +(GaianLocalDate date, Period period) => date.Plus(period);
         // Equality / inequality
         public static bool operator ==(GaianLocalDate lhs, GaianLocalDate rhs) => lhs._date == rhs._date;
         public static bool operator !=(GaianLocalDate lhs, GaianLocalDate rhs) => lhs._date != rhs._date;
@@ -242,8 +262,8 @@ namespace Gaian
         public static bool operator <=(GaianLocalDate lhs, GaianLocalDate rhs) => lhs._date <= rhs._date;
         public static bool operator >(GaianLocalDate lhs, GaianLocalDate rhs) => lhs._date > rhs._date;
         public static bool operator >=(GaianLocalDate lhs, GaianLocalDate rhs) => lhs._date >= rhs._date;
-        public static Period operator -(GaianLocalDate lhs, GaianLocalDate rhs) => throw new NotImplementedException();
-        public static GaianLocalDate operator -(GaianLocalDate date, Period period) => throw new NotImplementedException();
+        public static Period operator -(GaianLocalDate lhs, GaianLocalDate rhs) => lhs._date.Minus(rhs._date);
+        public static GaianLocalDate operator -(GaianLocalDate date, Period period) => date.Minus(period);
 
 
 
