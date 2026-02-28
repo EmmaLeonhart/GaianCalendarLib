@@ -1,14 +1,12 @@
-﻿using NodaTime;
-using NodaTime.Calendars;
-using System.Numerics;
-using System.Xml.Schema;
-using System.Xml;
-using System.Xml.Serialization;
-using NodaTime.Text;
+﻿using System;
 using System.Globalization;
-using System.Runtime.CompilerServices;
-using System;
-using System.ComponentModel.Design;
+using System.Numerics;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
+using NodaTime;
+using NodaTime.Calendars;
+using NodaTime.Text;
 
 namespace Gaian
 {
@@ -273,10 +271,21 @@ namespace Gaian
 
 
 
-        // --- XML serialization (explicit, mirror) ---
-        XmlSchema? IXmlSerializable.GetSchema() => throw new NotImplementedException();
-        void IXmlSerializable.ReadXml(XmlReader reader) => throw new NotImplementedException();
-        void IXmlSerializable.WriteXml(XmlWriter writer) => throw new NotImplementedException();
+        // --- XML serialization (explicit) ---
+        // Serializes as ISO 8601 date string (e.g. "2026-02-28"), matching NodaTime conventions.
+        XmlSchema? IXmlSerializable.GetSchema() => null;
+
+        void IXmlSerializable.ReadXml(XmlReader reader)
+        {
+            var text = reader.ReadElementContentAsString();
+            var parsed = LocalDatePattern.Iso.Parse(text).GetValueOrThrow();
+            this = new GaianLocalDate(parsed);
+        }
+
+        void IXmlSerializable.WriteXml(XmlWriter writer)
+        {
+            writer.WriteString(LocalDatePattern.Iso.Format(_date));
+        }
 
     }
 }

@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System;
-using System.Numerics;       // for generic operator interfaces
+using System.Globalization;
+using System.Numerics;
 using System.Xml;
 using System.Xml.Schema;
+using System.Xml.Serialization;
 using NodaTime;
 using NodaTime.Calendars;
-using System.Xml.Serialization;
 using NodaTime.Text;
-using System.Globalization;
 
 namespace Gaian
 {
@@ -210,14 +204,20 @@ namespace Gaian
             => left._odt != right._odt;
 
         // ===== XML serialization (explicit) =====
-        XmlSchema? IXmlSerializable.GetSchema()
-            => throw new NotImplementedException();
+        // Serializes as ISO 8601 offset date-time string (e.g. "2026-02-28T14:30:00+05:30").
+        XmlSchema? IXmlSerializable.GetSchema() => null;
 
         void IXmlSerializable.ReadXml(XmlReader reader)
-            => throw new NotImplementedException();
+        {
+            var text = reader.ReadElementContentAsString();
+            var parsed = OffsetDateTimePattern.GeneralIso.Parse(text).GetValueOrThrow();
+            System.Runtime.CompilerServices.Unsafe.AsRef(in this) = new GaianOffsetDateTime(parsed);
+        }
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
-            => throw new NotImplementedException();
+        {
+            writer.WriteString(OffsetDateTimePattern.GeneralIso.Format(_odt));
+        }
 
         // ===== Bridge helpers (optional, for your implementation) =====
         public static GaianOffsetDateTime FromNoda(OffsetDateTime odt)

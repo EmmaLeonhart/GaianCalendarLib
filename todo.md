@@ -1,8 +1,7 @@
 # NodaTime.GaianCalendar – TODO
 
 **Package:** `NodaTime.GaianCalendar`
-**Current version:** `0.1.0-preview`
-**Target:** `0.1.0` stable once all high-priority stubs are filled
+**Current version:** `0.1.0`
 
 ---
 
@@ -89,18 +88,19 @@
 - [x] `GaianOffsetDateTime.With()`, `WithCalendar()`, `WithOffset()`
 - [x] `GaianZonedDateTime.Deconstruct()`, `WithCalendar()`
 
-### Low priority / future work
+### Low priority (all done)
 
-- [ ] XML serialization (`IXmlSerializable`) on all types
-- [ ] Unit test project (`GaianNodaTimeWrappers.Tests`)
+- [x] XML serialization (`IXmlSerializable`) on all types — ISO 8601 format
+- [x] Unit test project (`GaianNodaTimeWrappers.Tests`) — 8,074 tests
   - Round-trip: every day in 2020–2030 → GaianLocalDate → back
   - Leap year boundary (week 53 clamping)
   - PlusMonths/PlusYears edge cases
   - Parsing all three input formats
   - GaianPeriod.Between vs manual calculation
-- [ ] JSON serialization (NodaTime.Serialization refs already in .csproj)
-- [ ] Clean up duplicate `using` directives in several files
-- [ ] Remove commented-out dead code in Program.cs
+  - JSON and XML serialization round-trips
+- [x] JSON serialization (`GaianJsonConverters.cs` — System.Text.Json converters, ISO 8601 format)
+- [x] Clean up duplicate `using` directives in several files
+- [x] Remove commented-out dead code in Program.cs
 
 ---
 

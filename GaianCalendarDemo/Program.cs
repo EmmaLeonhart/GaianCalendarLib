@@ -1,8 +1,5 @@
 ﻿using NodaTime;
 using NodaTime.Calendars;
-using System.ComponentModel;
-using System.Net.Http.Headers;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Gaian
 {
@@ -28,8 +25,6 @@ namespace Gaian
                 var ancientGaianDateEnd = new GaianLocalDate(3, 13, 28);
                 Console.WriteLine(ancientGaianDateEnd.ToString());
                 Console.WriteLine((LocalDate)ancientGaianDateEnd);
-                //Console.WriteLine($"Sagittarius 1, year 10000 = {ancientGaianDate.ToDateTimeUnspecified():yyyy-MM-dd} (proleptic Gregorian)");
-                //Console.WriteLine($"That's {ancientGaianDate.ToDateTimeUnspecified().DayOfWeek}\n");
             }
             catch (Exception ex)
             {
@@ -100,29 +95,6 @@ namespace Gaian
             var dayOfWeek = originalDate.DayOfWeek;
             Console.WriteLine($"Round-trip verification: week-year {weekYear}, week {weekOfYear}, {dayOfWeek}");
         }
-
-
-        //private static string GetMonth(int month)
-        //{
-        //    switch (month)
-        //    {
-        //        case 1: return "Sagittarius";
-        //        case 2: return "Capricorn";
-        //        case 3: return "Aquarius";
-        //        case 4: return "Pisces";
-        //        case 5: return "Aries";
-        //        case 6: return "Taurus";
-        //        case 7: return "Gemini";
-        //        case 8: return "Cancer";
-        //        case 9: return "Leo";
-        //        case 10: return "Virgo";
-        //        case 11: return "Libra";
-        //        case 12: return "Scorpio";
-        //        case 13: return "Ophiuchus";
-        //        case 14: return "Horus";
-        //        default: throw new ArgumentOutOfRangeException(nameof(month), "Month must be 1–12.");
-        //    }
-        //}
 
         static void GenerateICalFile()
         {

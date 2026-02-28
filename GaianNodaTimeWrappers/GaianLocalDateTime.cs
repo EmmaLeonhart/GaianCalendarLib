@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System;
+using System.Globalization;
+using System.Numerics;
 using System.Xml;
 using System.Xml.Schema;
-using System.Numerics;               // for generic math operator interfaces
+using System.Xml.Serialization;
 using NodaTime;
 using NodaTime.Calendars;
-using NodaTime.TimeZones;
-using System.Xml.Serialization;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using NodaTime.Text;
-using System.Globalization;
+using NodaTime.TimeZones;
 
 namespace Gaian
 {
@@ -331,13 +325,19 @@ namespace Gaian
             => localDateTime.Minus(period);
 
         // ===== XML serialization (explicit) =====
-        XmlSchema? IXmlSerializable.GetSchema()
-            => throw new NotImplementedException();
+        // Serializes as ISO 8601 date-time string (e.g. "2026-02-28T14:30:00"), matching NodaTime conventions.
+        XmlSchema? IXmlSerializable.GetSchema() => null;
 
         void IXmlSerializable.ReadXml(XmlReader reader)
-            => throw new NotImplementedException();
+        {
+            var text = reader.ReadElementContentAsString();
+            var parsed = LocalDateTimePattern.GeneralIso.Parse(text).GetValueOrThrow();
+            System.Runtime.CompilerServices.Unsafe.AsRef(in this) = new GaianLocalDateTime(parsed);
+        }
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
-            => throw new NotImplementedException();
+        {
+            writer.WriteString(LocalDateTimePattern.GeneralIso.Format(_ldt));
+        }
     }
 }

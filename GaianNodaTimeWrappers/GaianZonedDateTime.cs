@@ -1,22 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System;
-using NodaTime;
-using Gaian;
-using System;
-using System.Numerics;                // for generic operator interfaces
+using System.Globalization;
+using System.Numerics;
 using System.Xml;
 using System.Xml.Schema;
+using System.Xml.Serialization;
 using NodaTime;
 using NodaTime.Calendars;
-using NodaTime.TimeZones;
-using System.Xml.Serialization;
 using NodaTime.Text;
-using System.Globalization;
+using NodaTime.TimeZones;
 
 namespace Gaian
 {
@@ -188,9 +179,29 @@ namespace Gaian
         public static Duration operator -(GaianZonedDateTime end, GaianZonedDateTime start) => end._zdt.Minus(start._zdt);             // L126-128
 
         // ========= XML serialization (explicit) =========
-        XmlSchema? IXmlSerializable.GetSchema() => throw new NotImplementedException();         // L129-133 (3.2.x change)
-        void IXmlSerializable.ReadXml(XmlReader reader) => throw new NotImplementedException(); // L130-131
-        void IXmlSerializable.WriteXml(XmlWriter writer) => throw new NotImplementedException();// L131-132
+        // Serializes as ISO 8601 offset date-time + IANA zone ID (e.g. "2026-02-28T14:30:00+05:30 America/New_York").
+        XmlSchema? IXmlSerializable.GetSchema() => null;
+
+        void IXmlSerializable.ReadXml(XmlReader reader)
+        {
+            var text = reader.ReadElementContentAsString();
+            // Format: "ISO-offset-datetime zoneId"
+            var spaceIndex = text.LastIndexOf(' ');
+            if (spaceIndex < 0)
+                throw new FormatException($"Invalid GaianZonedDateTime XML format: '{text}'. Expected 'offset-datetime zoneId'.");
+            var odtText = text.Substring(0, spaceIndex);
+            var zoneId = text.Substring(spaceIndex + 1);
+            var odt = OffsetDateTimePattern.GeneralIso.Parse(odtText).GetValueOrThrow();
+            var zone = DateTimeZoneProviders.Tzdb[zoneId];
+            var zdt = odt.InZone(zone);
+            System.Runtime.CompilerServices.Unsafe.AsRef(in this) = new GaianZonedDateTime(zdt);
+        }
+
+        void IXmlSerializable.WriteXml(XmlWriter writer)
+        {
+            var odtText = OffsetDateTimePattern.GeneralIso.Format(_zdt.ToOffsetDateTime());
+            writer.WriteString($"{odtText} {_zdt.Zone.Id}");
+        }
 
         // ========= Bridges to raw Noda types (helpers for your impl) =========
         public static GaianZonedDateTime FromNoda(ZonedDateTime zdt) => new GaianZonedDateTime(zdt);
