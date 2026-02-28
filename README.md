@@ -1,6 +1,42 @@
 # Gaian Calendar System
 
-A custom calendar system built as NodaTime wrapper types for .NET, featuring 14 astrological month names, a 4-week month structure based on ISO week numbering, and a year offset of +10,000. Includes iCal export, a web date picker, a date-range CSV generator, and MediaWiki module exports.
+[![NuGet](https://img.shields.io/badge/nuget-0.1.0--preview-blue)](https://www.nuget.org/packages/NodaTime.GaianCalendar)
+[![.NET](https://img.shields.io/badge/.NET-8.0-purple)](https://dotnet.microsoft.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+
+A custom calendar system built as NodaTime wrapper types for .NET, featuring 14 astrological month names, a 4-week month structure based on ISO week numbering, and a year offset of +10,000. Includes iCal export, a date-range CSV generator, rich format patterns, and full NodaTime interop via implicit conversions.
+
+> **Status:** `0.1.0-preview` — core date/time types and formatting are complete. Period arithmetic (`PlusMonths`, `PlusYears`, `GaianPeriod`) is in progress. See [`todo.md`](todo.md) for full status.
+
+---
+
+## Installation
+
+### NuGet (pre-release)
+
+```sh
+dotnet add package NodaTime.GaianCalendar --prerelease
+```
+
+Or in your `.csproj`:
+
+```xml
+<PackageReference Include="NodaTime.GaianCalendar" Version="0.1.0-preview" />
+```
+
+### Build from Source
+
+```sh
+git clone https://github.com/Emma-Leonhart/GaianCalendarLib.git
+cd GaianCalendarLib
+dotnet build GaianCalendarLib.sln
+```
+
+To produce a local NuGet package:
+
+```sh
+dotnet pack GaianNodaTimeWrappers/GaianNodaTimeWrappers.csproj -c Release
+```
 
 ---
 

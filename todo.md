@@ -1,0 +1,143 @@
+# NodaTime.GaianCalendar – TODO
+
+**Package:** `NodaTime.GaianCalendar`
+**Current version:** `0.1.0-preview`
+**Target:** `0.1.0` stable once all high-priority stubs are filled
+
+---
+
+## ✅ Done
+
+### Core utilities
+- [x] `GaianTools` – date conversion, parsing (named/numeric/ISO), Julian day support
+- [x] `GaianDateFormat` – custom format pattern engine (`M`, `d`, `W`, `y`, `D`, `H`, `h`, `m`, `s`, `f`, `t` tokens, astrological symbols)
+- [x] `GaianMonth` – complete: construction, formatting (G/N/NN), parsing, navigation, all operators
+
+### GaianLocalDate
+- [x] Construction from `(year, month, day)` with leap-year validation
+- [x] `Today`, `FromDateTime()`, `FromDateOnly()`
+- [x] `FromWeekYearWeekAndDay()`
+- [x] `FromJulianDay()` / `ToJulianDay()`
+- [x] `ToString()` and `ToString(format, culture)`
+- [x] `Parse()` / `TryParse()` (named, numeric, ISO)
+- [x] `PlusDays()`, `PlusWeeks()`
+- [x] `Next(IsoDayOfWeek)`, `Previous(IsoDayOfWeek)`
+- [x] `At(LocalTime)`, `AtMidnight()`, `WithOffset()`
+- [x] `ToDateTimeUnspecified()`, `ToDateOnly()`
+- [x] Comparison operators (`==`, `!=`, `<`, `<=`, `>`, `>=`), `IComparable`
+- [x] Implicit conversions to/from `LocalDate`
+- [x] `IEquatable`, `IFormattable`
+
+### GaianLocalDateTime
+- [x] Construction from Gaian components (all overloads: h/m, h/m/s, h/m/s/ms)
+- [x] `Now`, `FromDateTime()`, `FromWeekYearWeekAndDay()`
+- [x] `ToString()` and `ToString(format, culture)`
+- [x] `Parse()` / `TryParse()`
+- [x] `PlusDays()`, `PlusWeeks()`, `PlusHours()`, `PlusMinutes()`, `PlusSeconds()`, `PlusMilliseconds()`, `PlusNanoseconds()`, `PlusTicks()`
+- [x] `InUtc()`, `InZoneLeniently()`, `InZoneStrictly()`, `InZone(zone, resolver)`, `WithOffset()`
+- [x] `Next()`, `Previous()`
+- [x] `Max()`, `Min()`
+- [x] Comparison operators, `IComparable`
+- [x] Implicit conversions to/from `LocalDateTime`
+
+### GaianOffsetDateTime
+- [x] Construction from Gaian components + `Offset`
+- [x] Duration arithmetic: `Plus()`, `Minus()`, all `Plus*()` variants
+- [x] `ToInstant()`, `ToDateTimeOffset()`, `ToOffsetDate()`, `ToOffsetTime()`
+- [x] `ToString()` and `ToString(format, culture)`
+- [x] `operator +`, `operator -`, `==`, `!=`
+
+### GaianZonedDateTime
+- [x] Construction from `Instant`+zone and from Gaian components+zone
+- [x] Duration arithmetic: `Plus()`, `Minus()`, all `Plus*()` variants
+- [x] `ToInstant()`, `ToDateTimeOffset()`, `ToOffsetDateTime()`
+- [x] `IsDaylightSavingTime()`, `GetZoneInterval()`, `WithZone()`, `FromDateTimeOffset()`
+- [x] `ToString()` and `ToString(format, culture)`
+- [x] `operator +`, `operator -`, `==`, `!=`
+
+### Extras
+- [x] iCal exporter (Google/Apple Calendar compatible, 2020–2030 pre-generated)
+- [x] `GaianDateRangeGenerator` CLI (year info pages, CSV output)
+- [x] `.csproj` NuGet metadata (package ID, version, author, description, tags, README, symbols)
+
+---
+
+## 🔴 Not Implemented (stubs) — v0.1.0 targets
+
+### High priority — unblock Period arithmetic
+
+- [ ] **`GaianPeriod`** — implement wrapping NodaTime `Period`
+  - Static: `Zero`, `AdditiveIdentity`, `MinValue`, `MaxValue`
+  - Factories: `FromYears`, `FromMonths`, `FromWeeks`, `FromDays`, `FromHours`, `FromMinutes`, `FromSeconds`, `FromMilliseconds`, `FromTicks`, `FromNanoseconds`
+  - Properties: `Years`, `Months`, `Weeks`, `Days`, `Hours`, `Minutes`, `Seconds`, `Milliseconds`, `Ticks`, `Nanoseconds`, `HasDateComponent`, `HasTimeComponent`
+  - Static arithmetic: `Add()`, `Subtract()`, `Between()` overloads, `DaysBetween()`, `CreateComparer()`, `NormalizingEqualityComparer`
+  - Instance: `Normalize()`, `ToDuration()`, `ToBuilder()`, `ToString()`
+  - Operators: `+`, binary `-`, unary `-`, unary `+`
+  - Bridges: `FromNoda(Period)`, `ToNoda()`
+  - _Design note: Gaian month = 4 ISO weeks; Gaian years use ISO week-year arithmetic_
+
+- [ ] **`GaianLocalDate.PlusMonths(int)`** — n Gaian months = n × 4 weeks
+- [ ] **`GaianLocalDate.PlusYears(int)`** — advance n ISO week-years, clamp to week 52 if target lacks week 53
+- [ ] **`GaianLocalDate.Plus(Period)` / `Minus(Period)`** — delegate to `LocalDate.Plus/Minus`
+- [ ] **`GaianLocalDate` Period operators** — `operator+(date, Period)`, `operator-(date, Period)`, `operator-(lhs, rhs)` → Period
+- [ ] **`GaianLocalDate.Add()/Subtract()` statics** — delegate to Plus/Minus
+- [ ] **`GaianLocalDateTime.PlusMonths(int)`**
+- [ ] **`GaianLocalDateTime.PlusYears(int)`**
+- [ ] **`GaianLocalDateTime.Plus(Period)` / `Minus(Period)` / operators**
+
+### Medium priority
+
+- [ ] `GaianLocalDate.Deconstruct(out year, out month, out day)` — `year=Year; month=Month.Value; day=Day`
+- [ ] `GaianLocalDate.With(Func<GaianLocalDate, GaianLocalDate>)` — apply adjuster function
+- [ ] `GaianLocalDate.Min(x, y)` / `Max(x, y)` — trivial comparison
+- [ ] `GaianLocalDate.Era` — delegate to `_date.Era`
+- [ ] `GaianLocalDate.AtStartOfDayInZone(DateTimeZone)`
+- [ ] `GaianLocalDate` `operator+(date, LocalTime)` — returns `LocalDateTime`
+- [ ] `GaianLocalDateTime.Deconstruct()`
+- [ ] `GaianLocalDateTime.With(Func<LocalDate, LocalDate>)` / `With(Func<LocalTime, LocalTime>)`
+- [ ] `GaianOffsetDateTime.With()`, `WithCalendar()`, `WithOffset()`
+- [ ] `GaianZonedDateTime.Deconstruct()`, `WithCalendar()`
+
+### Low priority / future work
+
+- [ ] XML serialization (`IXmlSerializable`) on all types
+- [ ] Unit test project (`GaianNodaTimeWrappers.Tests`)
+  - Round-trip: every day in 2020–2030 → GaianLocalDate → back
+  - Leap year boundary (week 53 clamping)
+  - PlusMonths/PlusYears edge cases
+  - Parsing all three input formats
+  - GaianPeriod.Between vs manual calculation
+- [ ] JSON serialization (NodaTime.Serialization refs already in .csproj)
+- [ ] Clean up duplicate `using` directives in several files
+- [ ] Remove commented-out dead code in Program.cs
+
+---
+
+## 📦 Publishing
+
+- [x] `.csproj` NuGet metadata configured
+- [ ] Update version: `0.1.0-preview` → `0.1.0` once stubs complete
+- [ ] Create GitHub repo: `Emma-Leonhart/GaianCalendarLib` (referenced in .csproj)
+- [ ] Tag `v0.1.0-preview` in git
+- [ ] `dotnet pack GaianNodaTimeWrappers -c Release`
+- [ ] `dotnet nuget push *.nupkg -s https://api.nuget.org/v3/index.json --api-key <KEY>`
+- [ ] Create GitHub release
+
+---
+
+## 🏗️ Architecture Notes
+
+### Why wrap NodaTime?
+The Gaian calendar doesn't fit NodaTime's `CalendarSystem` extension model cleanly (ISO week-year boundaries don't align with gregorian month boundaries). Wrapper types are simpler and keep full NodaTime interop via implicit conversions.
+
+### Month/Year arithmetic design
+- **`PlusMonths(n)`** = `PlusWeeks(n * 4)` — a Gaian month is always exactly 28 days
+- **`PlusYears(n)`** = advance the ISO week-year component, clamp week-53 dates to week 52 in regular years
+- **`GaianPeriod`** stores Gaian years and months as separate int fields; all sub-monthly units delegate to `NodaTime.Period`
+- **`operator +(GaianLocalDate, Period)`** uses ISO arithmetic (NodaTime semantics), not Gaian month arithmetic — this is intentional and consistent with how NodaTime handles calendar-specific vs generic arithmetic
+
+### Leap years
+A Gaian leap year is any ISO week-year with 53 weeks (roughly every 5–6 years: 2015, 2020, 2026, 2032…). Check with:
+```csharp
+WeekYearRules.Iso.GetWeeksInWeekYear(isoYear) == 53
+```
