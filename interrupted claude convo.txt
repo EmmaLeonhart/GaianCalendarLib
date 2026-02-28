@@ -1,0 +1,169 @@
+● All clean now — "Friday", "Aquarius 5, 12026 23:10", "5th 23:10:27" all correct. Now let me commit everything and then
+   answer your question about GaianPeriod:
+
+● Bash(cd /c/Users/Immanuelle/AndroidStudioProjects/DateTimeNodaTimeExperiments && git add
+      GaianNodaTimeWrappers/GaianPeriod.cs GaianNodaTimeWrappers/GaianLocalDate.cs…)
+  ⎿  On branch master
+     Your branch is up to date with 'origin/master'.
+     … +7 lines (ctrl+o to expand)
+
+● Bash(cd /c/Users/Immanuelle/AndroidStudioProjects/DateTimeNodaTimeExperiments && git commit -m "Implement stubs:
+      GaianPeriod, PlusMonths/PlusYears, operators, format…)
+  ⎿  [master f54c9f8] Implement stubs: GaianPeriod, PlusMonths/PlusYears, operators, format fix
+      5 files changed, 538 insertions(+), 175 deletions(-)
+
+● Bash(cd /c/Users/Immanuelle/AndroidStudioProjects/DateTimeNodaTimeExperiments && git push)
+  ⎿  To https://github.com/Emma-Leonhart/GaianCalendarLib.git
+        b0bd32e..f54c9f8  master -> master
+
+● Both pushes done. Now to answer your GaianPeriod question:
+
+  ---
+  What are GaianPeriods?
+
+  You got the intuition exactly right. Think of them as a "how many Gaian time units" type:
+
+  GaianMonth = always 28 days. No ambiguity. 1 month = 4 weeks = 28 days = 672 hours. So date.PlusMonths(1) always jumps
+   exactly 28 days forward. This is one of the nicest properties of the Gaian calendar — months are always identical.
+
+  GaianYear = harder. Here's the exact behavior I implemented:
+
+  Adding 1 Gaian year means: find what week-of-year and day-of-week you're on, then land on that same week + day in the
+  next ISO week-year.
+
+  So "Feb 4, 2024 (= Capricorn 28, week 5, Sunday) + 1 year" = "week 5, Sunday of ISO week-year 2025" = Feb 2, 2025, not
+   Feb 4. The Gregorian date can shift by ±1–2 days because the ISO week-year calendar doesn't perfectly align with the
+  Gregorian one. The Gaian date (Capricorn 28) stays the same — which is the right behavior for a Gaian calendar.
+
+  The leap year edge case: if you're on week 53 of a leap year (Horus month) and add 1 year to a non-leap year, it
+  clamps to week 52 — you land in Ophiuchus instead. That's the only weird case.
+
+  ---
+  GaianPeriod is really just a container: "3 Gaian months and 5 days" as a reusable value. It's useful for things like:
+  var oneQuarter = GaianPeriod.FromMonths(3);
+  var nextQuarter = date + oneQuarter.ToNoda(); // apply it
+  var diff = GaianPeriod.Between(start, end);   // how far apart are these?
+
+  For most day-to-day use, PlusMonths(1), PlusYears(1), PlusDays(7) are enough. GaianPeriod is for when you want to
+  store or pass around "a span of Gaian time" as a value.
+
+✻ Worked for 13m 51s
+
+> Oh so you implemented it?
+
+  Yes that is what I would want. Basically you are just constructing the date again with an iterated year. I guess
+  month can be the same. idk if it was that easy?
+
+  But what is the normal year + 1 for Feb 28? I would think March 1? I think it should be in week 1 of the year
+  after. So in this case from the Horus week it would be += 364 days. Is that not right?
+
+● Yes, the implementation is exactly what you described — the code grabs the week-of-year and day-of-week, then
+  reconstructs the same position in the target year. The heavy lifting is just 5 lines. PlusMonths is even simpler:
+  literally just PlusWeeks(months * 4).
+
+  The Horus edge case is where it gets interesting — let me show you what mine does vs what you're describing:
+
+  My current implementation (clamp backward):
+  Horus 12026 (week 53) + 1 year → week 53 doesn't exist in 12027 → clamp to week 52 = Ophiuchus of 12027. Like Feb 29 →
+   Feb 28.
+
+  What you're describing (roll forward):
+  Horus 12026 + 1 year → week 53 doesn't exist in 12027 → overflow forward to week 1 = Sagittarius of 12027. Like Feb 29
+   → March 1.
+
+  The "+=364 days" phrasing I think is slightly off — from Horus to the next Sagittarius is only about 7 days forward,
+  not 364. I think what you mean is: the general year-jumping mechanism adds ~364 days per year, and for Horus
+  specifically, since you're at the "tail end" of year Y, the result should land at the start of year Y+1 rather than
+  the end.
+
+  Which do you want? I can flip it to the roll-forward version — it's a one-line change:
+
+  // Current (clamp):
+  int clampedWeek = Math.Min(weekOfYear, weeksInNewYear);
+  return weekYearRules.GetLocalDate(newWeekYear, clampedWeek, dayOfWeek);
+
+  // Roll-forward:
+  if (weekOfYear <= weeksInNewYear)
+      return weekYearRules.GetLocalDate(newWeekYear, weekOfYear, dayOfWeek);
+  else
+      return weekYearRules.GetLocalDate(newWeekYear + 1, 1, dayOfWeek);
+
+  The roll-forward version is more elegant for the Gaian calendar since Horus is conceptually "overflow time" — it makes
+   sense that jumping over it lands you at the fresh start of the next year rather than the tail of the previous one.
+  Tell me which you want and I'll update it.
+
+✻ Churned for 2m 9s
+
+> just do roll forward and commit and push please.
+
+  And no, 1 year after Horus 2, 12026 should be Sagittarius 2, 12028. So yes 364 days forward. It is completely
+  skipping over one calendar year
+
+● Update(GaianNodaTimeWrappers\GaianLocalDate.cs)
+  ⎿  Added 10 lines, removed 2 lines
+      206          /// Advances by the given number of Gaian (ISO week) years, preserving week-of-year and
+      207          /// day-of-week. If the target year lacks a week 53, the date is clamped to week 52.
+      208          /// </summary>
+      209 +        /// <summary>
+      210 +        /// Advances by the given number of Gaian (ISO week) years, preserving week-of-year and
+      211 +        /// day-of-week. If the date is in Horus (week 53) and the target year has no week 53,
+      212 +        /// rolls forward to week 1 of the year after the target — effectively skipping the
+      213 +        /// non-leap year entirely, so Horus N + 1 year = Sagittarius N, target+1.
+      214 +        /// </summary>
+      215          public GaianLocalDate PlusYears(int years)
+      216          {
+      217              var weekYearRules = WeekYearRules.Iso;
+     ...
+      214              IsoDayOfWeek dayOfWeek = _date.DayOfWeek;
+      215              int newWeekYear = weekYear + years;
+      216              int weeksInNewYear = weekYearRules.GetWeeksInWeekYear(newWeekYear);
+      217 -            int clampedWeek = Math.Min(weekOfYear, weeksInNewYear);
+      218 -            return new GaianLocalDate(weekYearRules.GetLocalDate(newWeekYear, clampedWeek
+          -, dayOfWeek));
+      217 +            if (weekOfYear <= weeksInNewYear)
+      218 +                return new GaianLocalDate(weekYearRules.GetLocalDate(newWeekYear, weekOfYear
+          +, dayOfWeek));
+      219 +            else
+      220 +                return new GaianLocalDate(weekYearRules.GetLocalDate(newWeekYear + 1, 1, dayOfWeek));
+      221          }
+      222
+      223          public DateOnly ToDateOnly() => _date.ToDateOnly();
+
+● Now update the Architecture Notes in todo.md to document this:
+
+● Update(todo.md)
+  ⎿  Added 1 line, removed 1 line
+      161
+      162  ### Month/Year arithmetic design
+      163  - **`PlusMonths(n)`** = `PlusWeeks(n * 4)` — a Gaian month is always exactly 28 days
+      164 -- **`PlusYears(n)`** = advance the ISO week-year component, clamp week-53 dates to week 52 in regular
+          - years
+      164 +- **`PlusYears(n)`** = advance the ISO week-year component; if the date is in Horus (week 53) and the
+          + target year has no week 53, roll forward to week 1 of the year *after* the target (skip the non-leap
+          + year). Example: Horus 2, 12026 + 1 year = Sagittarius 2, 12028 (12027 is skipped because it has no
+          +week 53)
+      165  - **`GaianPeriod`** stores Gaian years and months as separate int fields; all sub-monthly units
+           delegate to `NodaTime.Period`
+      166  - **`operator +(GaianLocalDate, Period)`** uses ISO arithmetic (NodaTime semantics), not Gaian month
+           arithmetic — this is intentional and consistent with how NodaTime handles calendar-specific vs
+           generic arithmetic
+      167
+
+● Bash(cd /c/Users/Immanuelle/AndroidStudioProjects/DateTimeNodaTimeExperiments && dotnet build GaianCalendarLib.sln -c
+      Release 2>&1 | grep -E "error|Build succeeded|B…)
+  ⎿  Build succeeded.
+         0 Error(s)
+  ⎿  (timeout 30s)
+  ⎿  You're out of extra usage · resets 3am (America/Vancouver)
+
+✻ Worked for 42s
+
+> /rate-limit-options
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ What do you want to do?
+
+   1. Stop and wait for limit to reset
+ > 2. Add funds to continue with extra usage
+   3. Upgrade your plan
+
+ Enter to confirm · Esc to cancel

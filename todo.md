@@ -6,6 +6,10 @@
 
 ---
 
+## HIGHEST PRIORITY
+
+GET THE CLAUDE TEXT THING RESOLVED SINCE IT WAS IN THE MIDDLE OF SOMETHIGN
+
 ## ✅ Done
 
 ### Core utilities
@@ -161,7 +165,7 @@ The Gaian calendar doesn't fit NodaTime's `CalendarSystem` extension model clean
 
 ### Month/Year arithmetic design
 - **`PlusMonths(n)`** = `PlusWeeks(n * 4)` — a Gaian month is always exactly 28 days
-- **`PlusYears(n)`** = advance the ISO week-year component, clamp week-53 dates to week 52 in regular years
+- **`PlusYears(n)`** = advance the ISO week-year component; if the date is in Horus (week 53) and the target year has no week 53, roll forward to week 1 of the year *after* the target (skip the non-leap year). Example: Horus 2, 12026 + 1 year = Sagittarius 2, 12028 (12027 is skipped because it has no week 53)
 - **`GaianPeriod`** stores Gaian years and months as separate int fields; all sub-monthly units delegate to `NodaTime.Period`
 - **`operator +(GaianLocalDate, Period)`** uses ISO arithmetic (NodaTime semantics), not Gaian month arithmetic — this is intentional and consistent with how NodaTime handles calendar-specific vs generic arithmetic
 

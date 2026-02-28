@@ -206,6 +206,12 @@ namespace Gaian
         /// Advances by the given number of Gaian (ISO week) years, preserving week-of-year and
         /// day-of-week. If the target year lacks a week 53, the date is clamped to week 52.
         /// </summary>
+        /// <summary>
+        /// Advances by the given number of Gaian (ISO week) years, preserving week-of-year and
+        /// day-of-week. If the date is in Horus (week 53) and the target year has no week 53,
+        /// rolls forward to week 1 of the year after the target — effectively skipping the
+        /// non-leap year entirely, so Horus N + 1 year = Sagittarius N, target+1.
+        /// </summary>
         public GaianLocalDate PlusYears(int years)
         {
             var weekYearRules = WeekYearRules.Iso;
@@ -214,8 +220,10 @@ namespace Gaian
             IsoDayOfWeek dayOfWeek = _date.DayOfWeek;
             int newWeekYear = weekYear + years;
             int weeksInNewYear = weekYearRules.GetWeeksInWeekYear(newWeekYear);
-            int clampedWeek = Math.Min(weekOfYear, weeksInNewYear);
-            return new GaianLocalDate(weekYearRules.GetLocalDate(newWeekYear, clampedWeek, dayOfWeek));
+            if (weekOfYear <= weeksInNewYear)
+                return new GaianLocalDate(weekYearRules.GetLocalDate(newWeekYear, weekOfYear, dayOfWeek));
+            else
+                return new GaianLocalDate(weekYearRules.GetLocalDate(newWeekYear + 1, 1, dayOfWeek));
         }
 
         public DateOnly ToDateOnly() => _date.ToDateOnly();
