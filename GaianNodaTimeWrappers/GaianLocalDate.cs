@@ -125,7 +125,6 @@ namespace Gaian
         public static GaianLocalDate FromDateOnly(DateOnly date)
         {
             return new GaianLocalDate(LocalDate.FromDateOnly(date));
-            throw new NotImplementedException();
         }
 
         public static GaianLocalDate FromDateTime(DateTime dateTime)
@@ -202,10 +201,6 @@ namespace Gaian
         /// <summary>Adds the given number of Gaian months (each = 4 ISO weeks = 28 days).</summary>
         public GaianLocalDate PlusMonths(int months) => new GaianLocalDate(_date.PlusWeeks(months * 4));
         public GaianLocalDate PlusWeeks(int weeks) => new GaianLocalDate(_date.PlusWeeks(weeks));
-        /// <summary>
-        /// Advances by the given number of Gaian (ISO week) years, preserving week-of-year and
-        /// day-of-week. If the target year lacks a week 53, the date is clamped to week 52.
-        /// </summary>
         /// <summary>
         /// Advances by the given number of Gaian (ISO week) years, preserving week-of-year and
         /// day-of-week. If the date is in Horus (week 53) and the target year has no week 53,

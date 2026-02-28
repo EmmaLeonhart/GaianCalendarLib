@@ -113,14 +113,18 @@ namespace Gaian
         public static GaianZonedDateTime FromDateTimeOffset(DateTimeOffset dateTimeOffset)
         {
             return new GaianZonedDateTime(ZonedDateTime.FromDateTimeOffset(dateTimeOffset));
-            throw new NotImplementedException();            // L47-48
         }
 
         public static GaianZonedDateTime Subtract(GaianZonedDateTime zonedDateTime, Duration duration) => new GaianZonedDateTime(zonedDateTime._zdt.Minus(duration)); // L84-88
         public static Duration Subtract(GaianZonedDateTime end, GaianZonedDateTime start) => end._zdt.Minus(start._zdt);             // L89-91
 
         // ========= Instance methods (mirror) =========
-        public void Deconstruct(out GaianLocalDateTime localDateTime, out DateTimeZone dateTimeZone, out Offset offset) => throw new NotImplementedException(); // L42-43 (Gaian-adapted)
+        public void Deconstruct(out GaianLocalDateTime localDateTime, out DateTimeZone dateTimeZone, out Offset offset)
+        {
+            localDateTime = new GaianLocalDateTime(_zdt.LocalDateTime);
+            dateTimeZone = _zdt.Zone;
+            offset = _zdt.Offset;
+        }
 
         public bool Equals(GaianZonedDateTime other) => _zdt.Equals(other._zdt);
         public override bool Equals(object? obj) => obj is GaianZonedDateTime other && Equals(other);
@@ -173,7 +177,7 @@ namespace Gaian
         }
 
 
-        public GaianZonedDateTime WithCalendar(CalendarSystem calendar) => throw new NotImplementedException(); // L110-111
+        public GaianZonedDateTime WithCalendar(CalendarSystem calendar) => new GaianZonedDateTime(_zdt.WithCalendar(calendar));
         public GaianZonedDateTime WithZone(DateTimeZone targetZone) => new GaianZonedDateTime(_zdt.WithZone(targetZone));     // L111-112
 
         // ========= Operators (mirror) =========
@@ -192,7 +196,12 @@ namespace Gaian
         public static GaianZonedDateTime FromNoda(ZonedDateTime zdt) => new GaianZonedDateTime(zdt);
         public ZonedDateTime ToNoda() => _zdt;
 
-        // Optional: raw deconstruct (for interop)
-        public void Deconstruct(out LocalDateTime localDateTime, out DateTimeZone zone, out Offset offset) => throw new NotImplementedException();
+        // Raw deconstruct (for interop)
+        public void Deconstruct(out LocalDateTime localDateTime, out DateTimeZone zone, out Offset offset)
+        {
+            localDateTime = _zdt.LocalDateTime;
+            zone = _zdt.Zone;
+            offset = _zdt.Offset;
+        }
     }
 }

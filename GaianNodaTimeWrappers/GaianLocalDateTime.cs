@@ -249,7 +249,8 @@ namespace Gaian
 
         /// <summary>
         /// Advances by the given number of Gaian (ISO week) years, preserving week-of-year and
-        /// day-of-week. If the target year lacks a week 53, the date is clamped to week 52.
+        /// day-of-week. If the date is in Horus (week 53) and the target year has no week 53,
+        /// rolls forward to week 1 of the year after the target.
         /// </summary>
         public GaianLocalDateTime PlusYears(int years)
         {
@@ -281,8 +282,15 @@ namespace Gaian
         public GaianLocalDateTime With(Func<LocalTime, LocalTime> adjuster)
             => new GaianLocalDateTime(_ldt.Date.At(adjuster(_ldt.TimeOfDay)));
 
-        public GaianLocalDateTime WithCalendar(CalendarSystem calendar)
-            => throw new NotImplementedException();
+        public void Deconstruct(out int year, out int month, out int day, out int hour, out int minute, out int second)
+        {
+            year = Year;
+            month = Month.Value;
+            day = Day;
+            hour = Hour;
+            minute = Minute;
+            second = Second;
+        }
 
         public GaianOffsetDateTime WithOffset(Offset offset)
             => new GaianOffsetDateTime(_ldt.WithOffset(offset));

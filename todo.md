@@ -6,10 +6,6 @@
 
 ---
 
-## HIGHEST PRIORITY
-
-GET THE CLAUDE TEXT THING RESOLVED SINCE IT WAS IN THE MIDDLE OF SOMETHIGN
-
 ## ✅ Done
 
 ### Core utilities
@@ -66,41 +62,32 @@ GET THE CLAUDE TEXT THING RESOLVED SINCE IT WAS IN THE MIDDLE OF SOMETHIGN
 
 ---
 
-## 🔴 Not Implemented (stubs) — v0.1.0 targets
+## ✅ Implemented (previously stubs)
 
-### High priority — unblock Period arithmetic
+### High priority — Period arithmetic (all done)
 
-- [ ] **`GaianPeriod`** — implement wrapping NodaTime `Period`
-  - Static: `Zero`, `AdditiveIdentity`, `MinValue`, `MaxValue`
-  - Factories: `FromYears`, `FromMonths`, `FromWeeks`, `FromDays`, `FromHours`, `FromMinutes`, `FromSeconds`, `FromMilliseconds`, `FromTicks`, `FromNanoseconds`
-  - Properties: `Years`, `Months`, `Weeks`, `Days`, `Hours`, `Minutes`, `Seconds`, `Milliseconds`, `Ticks`, `Nanoseconds`, `HasDateComponent`, `HasTimeComponent`
-  - Static arithmetic: `Add()`, `Subtract()`, `Between()` overloads, `DaysBetween()`, `CreateComparer()`, `NormalizingEqualityComparer`
-  - Instance: `Normalize()`, `ToDuration()`, `ToBuilder()`, `ToString()`
-  - Operators: `+`, binary `-`, unary `-`, unary `+`
-  - Bridges: `FromNoda(Period)`, `ToNoda()`
-  - _Design note: Gaian month = 4 ISO weeks; Gaian years use ISO week-year arithmetic_
+- [x] **`GaianPeriod`** — full implementation wrapping NodaTime `Period`
+- [x] **`GaianLocalDate.PlusMonths(int)`** — n Gaian months = n × 4 weeks
+- [x] **`GaianLocalDate.PlusYears(int)`** — roll-forward semantics for Horus → Sagittarius
+- [x] **`GaianLocalDate.Plus(Period)` / `Minus(Period)`** — delegate to `LocalDate.Plus/Minus`
+- [x] **`GaianLocalDate` Period operators** — `operator+(date, Period)`, `operator-(date, Period)`, `operator-(lhs, rhs)` → Period
+- [x] **`GaianLocalDate.Add()/Subtract()` statics** — delegate to Plus/Minus
+- [x] **`GaianLocalDateTime.PlusMonths(int)`**
+- [x] **`GaianLocalDateTime.PlusYears(int)`**
+- [x] **`GaianLocalDateTime.Plus(Period)` / `Minus(Period)` / operators**
 
-- [ ] **`GaianLocalDate.PlusMonths(int)`** — n Gaian months = n × 4 weeks
-- [ ] **`GaianLocalDate.PlusYears(int)`** — advance n ISO week-years, clamp to week 52 if target lacks week 53
-- [ ] **`GaianLocalDate.Plus(Period)` / `Minus(Period)`** — delegate to `LocalDate.Plus/Minus`
-- [ ] **`GaianLocalDate` Period operators** — `operator+(date, Period)`, `operator-(date, Period)`, `operator-(lhs, rhs)` → Period
-- [ ] **`GaianLocalDate.Add()/Subtract()` statics** — delegate to Plus/Minus
-- [ ] **`GaianLocalDateTime.PlusMonths(int)`**
-- [ ] **`GaianLocalDateTime.PlusYears(int)`**
-- [ ] **`GaianLocalDateTime.Plus(Period)` / `Minus(Period)` / operators**
+### Medium priority (all done)
 
-### Medium priority
-
-- [ ] `GaianLocalDate.Deconstruct(out year, out month, out day)` — `year=Year; month=Month.Value; day=Day`
-- [ ] `GaianLocalDate.With(Func<GaianLocalDate, GaianLocalDate>)` — apply adjuster function
-- [ ] `GaianLocalDate.Min(x, y)` / `Max(x, y)` — trivial comparison
-- [ ] `GaianLocalDate.Era` — delegate to `_date.Era`
-- [ ] `GaianLocalDate.AtStartOfDayInZone(DateTimeZone)`
-- [ ] `GaianLocalDate` `operator+(date, LocalTime)` — returns `LocalDateTime`
-- [ ] `GaianLocalDateTime.Deconstruct()`
-- [ ] `GaianLocalDateTime.With(Func<LocalDate, LocalDate>)` / `With(Func<LocalTime, LocalTime>)`
-- [ ] `GaianOffsetDateTime.With()`, `WithCalendar()`, `WithOffset()`
-- [ ] `GaianZonedDateTime.Deconstruct()`, `WithCalendar()`
+- [x] `GaianLocalDate.Deconstruct(out year, out month, out day)`
+- [x] `GaianLocalDate.With(Func<GaianLocalDate, GaianLocalDate>)`
+- [x] `GaianLocalDate.Min(x, y)` / `Max(x, y)`
+- [x] `GaianLocalDate.Era`
+- [x] `GaianLocalDate.AtStartOfDayInZone(DateTimeZone)`
+- [x] `GaianLocalDate` `operator+(date, LocalTime)`
+- [x] `GaianLocalDateTime.Deconstruct()`
+- [x] `GaianLocalDateTime.With(Func<LocalDate, LocalDate>)` / `With(Func<LocalTime, LocalTime>)`
+- [x] `GaianOffsetDateTime.With()`, `WithCalendar()`, `WithOffset()`
+- [x] `GaianZonedDateTime.Deconstruct()`, `WithCalendar()`
 
 ### Low priority / future work
 

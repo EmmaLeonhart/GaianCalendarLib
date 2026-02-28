@@ -182,16 +182,16 @@ namespace Gaian
         }
 
         public GaianOffsetDateTime With(Func<LocalDate, LocalDate> dateAdjuster)
-            => throw new NotImplementedException();
+            => new GaianOffsetDateTime(_odt.With(dateAdjuster));
 
         public GaianOffsetDateTime With(Func<LocalTime, LocalTime> timeAdjuster)
-            => throw new NotImplementedException();
+            => new GaianOffsetDateTime(_odt.With(timeAdjuster));
 
         public GaianOffsetDateTime WithCalendar(CalendarSystem calendar)
-            => throw new NotImplementedException();
+            => new GaianOffsetDateTime(_odt.WithCalendar(calendar));
 
         public GaianOffsetDateTime WithOffset(Offset offset)
-            => throw new NotImplementedException();
+            => new GaianOffsetDateTime(_odt.WithOffset(offset));
 
         // ===== Operators =====
         public static GaianOffsetDateTime operator +(GaianOffsetDateTime value, Duration duration)
