@@ -82,3 +82,9 @@ Aquarius 15, 12024 14:30
 - **Parsing from strings**: ❌ Limited implementation
 
 This is an experimental/proof-of-concept implementation exploring alternative calendar systems using NodaTime's robust date/time infrastructure.
+
+## Long command series run in strict order
+When Emma gives a long series of commands, treat it as a long series of commands to be
+executed in relatively STRICT ORDER, one after another, EVEN IF the order seems not to
+make sense or seems inefficient. The sequencing is intentional — she organizes the steps
+so states change in the order she wants. Do not reorder, merge, or skip steps.
